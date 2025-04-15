@@ -1,44 +1,70 @@
-class User {
+// for request
+class UserRequest {
+  final String nickname;
+  final int age;
+  final String gender;
+  final String country;
+  final String region;
+
+  UserRequest({
+    required this.nickname,
+    required this.age,
+    required this.gender,
+    required this.country,
+    required this.region,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'nickname': nickname,
+        'age': age,
+        'gender': gender,
+        'country': country,
+        'region': region,
+      };
+}
+
+// response
+class UserResponse {
   final int? id;
   final String? email;
-  final String? name;
   final String? nickname;
+  final int? age;
   final String? country;
   final String? region;
   final String? role;
   final String? gender;
 
-  User({
+  UserResponse({
     required this.id,
     required this.email,
-    required this.name,
     required this.nickname,
+    required this.age,
     required this.country,
     required this.region,
     required this.role,
     required this.gender,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserResponse.fromJson(Map<String, dynamic> json) {
+    return UserResponse(
       id: json['id'],
       email: json['email'],
-      name: json['name'],
       nickname: json['nickname'],
+      age: json['age'],
+      gender: json['gender'],
       country: json['country'],
       region: json['region'],
       role: json['role'],
-      gender: json['gender'],
     );
   }
   Map<String, dynamic> toJson() => {
         'id': id,
         'email': email,
-        'name': name,
         'nickname': nickname,
+        'age': age,
+        'gender': gender,
         'country': country,
         'region': region,
         'role': role,
-        'gender': gender,
       };
 }
