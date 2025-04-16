@@ -7,7 +7,7 @@ class NextPageButton extends StatelessWidget {
 
   const NextPageButton({
     super.key,
-    this.label = 'Next',
+    this.label = 'label',
     required this.route,
   });
 

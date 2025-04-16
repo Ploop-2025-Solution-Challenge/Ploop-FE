@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../home/ploop_appbar.dart';
 import 'next_button.dart';
-import 'set_difficulty.dart';
 
 class InfoSetupPage extends StatelessWidget {
   const InfoSetupPage(
       {super.key,
+      this.lastPage = false,
       this.firstPage = false,
       this.question,
       this.widget1,
@@ -16,6 +16,7 @@ class InfoSetupPage extends StatelessWidget {
       this.title2,
       required this.nextRoute});
   final bool firstPage;
+  final bool lastPage;
   final String? question;
   final String? title1;
   final Widget? widget1;
@@ -37,8 +38,7 @@ class InfoSetupPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: NextPageButton(
-                  route: nextRoute,
-                ),
+                    route: nextRoute, label: lastPage ? 'Continue' : 'Next'),
               ),
             ),
             Column(
