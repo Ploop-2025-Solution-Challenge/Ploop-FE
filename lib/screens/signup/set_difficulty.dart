@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/screens/signup/info_setup.dart';
+import 'package:ploop_fe/screens/signup/option_button_set.dart';
+import 'package:ploop_fe/screens/signup/set_motivation.dart';
 
 import '../home/ploop_appbar.dart';
 import 'next_button.dart';
-import 'set_userinfo.dart';
 import 'signup.dart';
 
-class SetUserRegion extends StatelessWidget {
-  const SetUserRegion({super.key});
+class SetDifficulty extends StatelessWidget {
+  SetDifficulty({super.key});
+
+  final List<String> labelList = [
+    "I'm a complete beginner",
+    "I've tried it a few times",
+    "I do it regularly"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +30,23 @@ class SetUserRegion extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: NextPageButton(
-                  route: SetUserInfo(),
+                  route: SetMotivation(),
                 ),
               ),
             ),
             Column(
+              spacing: 12.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // title
                 PloopAppBar(
                   showUserInfo: false,
                 ),
-                SizedBox(
-                  height: 70.h,
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Image.asset('assets/images/navigate-back-icon.png'),
                 ),
                 // body
                 Container(
@@ -44,13 +54,15 @@ class SetUserRegion extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Please select your country and region',
+                      Text(
+                          'What is the difficulty level of the plogging activity?',
                           style: Theme.of(context).textTheme.headlineMedium),
 
                       SizedBox(height: 60.h),
                       // dropdown options
                       Column(
                         spacing: 82.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // option 1
                           Column(
@@ -58,34 +70,15 @@ class SetUserRegion extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Country',
+                                'Plogging Experience Level',
                                 style: Theme.of(context).textTheme.labelLarge,
                               ),
-                              CustomDropDownMenu(entryList: const [
-                                'KR',
-                                'UK',
-                                'test3',
-                                'test4',
-                                'test5',
-                                'test6',
-                                'test7',
-                                'test8',
-                                'test9',
-                                'test10',
-                                'test11',
-                              ]),
-                            ],
-                          ),
-                          Column(
-                            spacing: 8.h,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Region',
-                                style: Theme.of(context).textTheme.labelLarge,
-                              ),
-                              CustomDropDownMenu(
-                                entryList: ['Seoul', 'London'],
+                              OptionButtonSet(
+                                alignColumn: true,
+                                options: [
+                                  ...labelList,
+                                ],
+                                isMultiSelect: false,
                               ),
                             ],
                           ),
@@ -96,7 +89,6 @@ class SetUserRegion extends StatelessWidget {
                 ),
               ],
             ),
-            // next page button
           ],
         ),
       ),

@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/main.dart';
+import 'package:ploop_fe/screens/signup/finish_setup.dart';
+import 'package:ploop_fe/screens/signup/option_button_set.dart';
 
 import '../home/ploop_appbar.dart';
+import 'next_button.dart';
 import 'signup.dart';
 
-class SetUserGender extends StatelessWidget {
-  const SetUserGender({super.key});
+class SetPlaceKeyword extends StatelessWidget {
+  SetPlaceKeyword({super.key});
+
+  final List<String> labelList = [
+    "Nature (riverside paths, forest trails, parks)",
+    "Urban alleys",
+    "Historic sites / Cultural streets",
+    "Coastal areas",
+    "Around university campuses",
+    "Hidden gems"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +30,10 @@ class SetUserGender extends StatelessWidget {
           children: [
             Positioned.fill(
               bottom: 60.h,
-              child: const Align(
+              child: Align(
                 alignment: Alignment.bottomCenter,
                 child: NextPageButton(
-                  route: MainScaffold(),
+                  route: FinishSetup(),
                 ),
               ),
             ),
@@ -42,17 +53,18 @@ class SetUserGender extends StatelessWidget {
                 ),
                 // body
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 10.w, 16.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Select your date of birth and gender',
+                      Text('Please select your preferred keywords\n(up to 3)',
                           style: Theme.of(context).textTheme.headlineMedium),
 
                       SizedBox(height: 60.h),
                       // dropdown options
                       Column(
                         spacing: 82.h,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // option 1
                           Column(
@@ -60,34 +72,16 @@ class SetUserGender extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Country',
+                                'Where do you prefer?',
                                 style: Theme.of(context).textTheme.labelLarge,
                               ),
-                              CustomDropDownMenu(entryList: [
-                                'KR',
-                                'UK',
-                                'test3',
-                                'test4',
-                                'test5',
-                                'test6',
-                                'test7',
-                                'test8',
-                                'test9',
-                                'test10',
-                                'test11',
-                              ]),
-                            ],
-                          ),
-                          Column(
-                            spacing: 8.h,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Region',
-                                style: Theme.of(context).textTheme.labelLarge,
-                              ),
-                              CustomDropDownMenu(
-                                entryList: ['Seoul', 'London'],
+                              OptionButtonSet(
+                                alignColumn: true,
+                                options: [
+                                  ...labelList,
+                                ],
+                                isMultiSelect: true,
+                                maxMultiSelect: 3,
                               ),
                             ],
                           ),
