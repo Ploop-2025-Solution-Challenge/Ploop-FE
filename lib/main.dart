@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await ScreenUtil.ensureScreenSize();
+  await _passAllApiKeysToIOS();
   runApp(const MyApp());
+}
+
+Future<void> _passAllApiKeysToIOS() async {
+  const platform = MethodChannel('com.example.ploopFe/env');
+
+  try {
+    final String mapsApiKey = dotenv.env['GMS_API_KEY'] ?? '';
+    if (mapsApiKey.isNotEmpty) {
+      await platform.invokeMethod('setGoogleMapsApiKey', {
+        'gmsApiKey': mapsApiKey,
+      });
+    }
+  } catch (e) {
+    print('Error passing API keys to iOS: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
