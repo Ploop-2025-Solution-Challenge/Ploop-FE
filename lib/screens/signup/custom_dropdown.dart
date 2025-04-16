@@ -38,7 +38,6 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
       builder: (context) {
         return Stack(
           children: [
-            // 바깥 클릭 감지용 투명 레이어
             Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -48,11 +47,9 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
                     isOpened = false;
                   });
                 },
-                child: Container(), // 비워두면 터치만 감지
+                child: Container(),
               ),
             ),
-
-            // 드롭다운 본체
             Positioned(
               width: size.width,
               left: offset.dx,
