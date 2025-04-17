@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/screens/home/challenge.dart';
-
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
 
@@ -20,7 +19,7 @@ class MainPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
             children: [
-              PloopAppBar(showUserInfo: true),
+              PloopAppBar(),
               // SizedBox(
               //   height: 22.h,
               // ),
@@ -48,6 +47,7 @@ class MainPage extends StatelessWidget {
                       child: Row(
                         spacing: 8.w,
                         children: [
+                          // TODO: get current mission from server
                           ChallengeCard(
                             title: 'Pick up 7 cigarette butts',
                             isVerified: false,

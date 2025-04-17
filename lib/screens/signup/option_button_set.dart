@@ -57,6 +57,9 @@ class _OptionButtonSetState extends State<OptionButtonSet> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(
+            height: 12.h,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,

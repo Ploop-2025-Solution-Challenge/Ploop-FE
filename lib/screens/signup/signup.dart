@@ -54,7 +54,7 @@ class SetUserInfoPage extends StatelessWidget {
       title1: 'Date of Birth',
       // TODO: remove const when connecting database
       widget1: const UserBirthDatePicker(),
-      title2: 'Region',
+      title2: 'Gender',
       widget2: OptionButtonSet(
         options: [
           ...labelList,

@@ -107,6 +107,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
         );
       },
     );
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   void _removeOverlay() {

@@ -38,16 +38,15 @@ class InfoSetupPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: NextPageButton(
-                    route: nextRoute, label: lastPage ? 'Continue' : 'Next'),
+                  route: nextRoute,
+                ),
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // title
-                PloopAppBar(
-                  showUserInfo: false,
-                ),
+                const PloopTitleBar(),
                 !firstPage
                     ? IconButton(
                         onPressed: () {

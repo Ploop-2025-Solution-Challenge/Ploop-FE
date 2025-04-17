@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static Future<void> sendIdTokenToServer(String idToken) async {
-    final url = Uri.parse('');
+    final url = Uri.parse('https://api.ploop.store/api/auth/login');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'idToken': idToken});
 
@@ -13,7 +13,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        final jwt = responseData['accessToken'];
+        final jwt = responseData['jwt'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt', jwt);
