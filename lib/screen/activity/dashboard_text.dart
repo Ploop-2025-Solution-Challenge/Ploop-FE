@@ -48,7 +48,7 @@ class DashboardTextWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2.h,
               children: [
-                Text('0.0', style: Theme.of(context).textTheme.headlineSmall),
+                Text('0.0', style: Theme.of(context).textTheme.displaySmall),
                 Text(
                   'Miles',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -61,7 +61,7 @@ class DashboardTextWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2.h,
               children: [
-                Text('0.0', style: Theme.of(context).textTheme.headlineSmall),
+                Text('0.0', style: Theme.of(context).textTheme.displaySmall),
                 Text(
                   'Time',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -76,7 +76,7 @@ class DashboardTextWidget extends StatelessWidget {
               children: [
                 Text(
                   '2/3',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
                 Text(
                   'Challenges Completed',

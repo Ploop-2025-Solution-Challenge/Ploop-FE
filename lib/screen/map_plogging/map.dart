@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
+import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
@@ -21,7 +23,7 @@ class _MapPageState extends State<MapPage> {
   XFile? _image;
   bool _isMapShrunk = false;
   bool _isButtonEnabled = true;
-  bool _isPlogging = false;
+  bool _isPloggingEnabled = false;
 
   final ImagePicker picker = ImagePicker();
 
@@ -29,7 +31,7 @@ class _MapPageState extends State<MapPage> {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {
       setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
+        _image = XFile(pickedFile.path);
       });
     }
   }
@@ -38,61 +40,150 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       _isMapShrunk = true;
       _isButtonEnabled = false;
-      _isPlogging = true;
+      _isPloggingEnabled = true;
+    });
+  }
+
+  void _pausePlogging() {
+    setState(() {
+      _isPloggingEnabled = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-          height: _isMapShrunk ? 502.h : double.maxFinite,
-          child: const MapSample(),
-        ),
-        SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
-            child: Row(
-              spacing: 12.w,
-              children: const [
-                MapFilterButton(
-                  label: 'Litter Area',
+    return Container(
+      color: Colors.white,
+      child: SizedBox.expand(
+        child: Stack(
+          children: [
+            if (_isPloggingEnabled)
+              Positioned(
+                bottom: 19.h,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      spacing: 24.h,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 41.w,
+                          children: [
+                            Column(
+                              spacing: 2.h,
+                              children: [
+                                Text('0.0',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall),
+                                Text(
+                                  'Miles',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                        color: Color(0xFFA1A1A1),
+                                      ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              spacing: 2.h,
+                              children: [
+                                Text('0.0',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall),
+                                Text(
+                                  'Time',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                        color: Color(0xFFA1A1A1),
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          spacing: 12.h,
+                          children: [
+                            Text(
+                              'Picked Up',
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                            PickupCounter(),
+                          ],
+                        ),
+                        StopPloggingButton(onPressed: () {}),
+                      ],
+                    ),
+                  ),
                 ),
-                MapFilterButton(
-                  label: 'Bin',
+              ),
+            Stack(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                  height: _isMapShrunk ? 502.h : double.maxFinite,
+                  child: const MapSample(),
                 ),
-                MapFilterButton(
-                  label: 'Route Recommendation',
+                SafeArea(
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
+                    child: Row(
+                      spacing: 12.w,
+                      children: const [
+                        MapFilterButton(
+                          label: 'Litter Area',
+                        ),
+                        MapFilterButton(
+                          label: 'Bin',
+                        ),
+                        MapFilterButton(
+                          label: 'Route Recommendation',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 32.h,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _isButtonEnabled
+                        ? StartPloggingButton(onPressed: _startPlogging)
+                        : const SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 32.h,
+                  right: 16.h,
+                  child: CameraButton(
+                    onPressed: () {
+                      print('camera pressed');
+                      getImage(ImageSource.camera);
+                      if (_image != null) {
+                        // TODO: navigate to a screen to pick which kind of photo it is
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
-        Positioned.fill(
-          bottom: 32.h,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: _isButtonEnabled
-                ? StartPloggingButton(onPressed: _startPlogging)
-                : SizedBox(
-                    height: 0,
-                  ),
-          ),
-        ),
-        Positioned(
-          bottom: 32.h,
-          right: 16.h,
-          child: CameraButton(
-            onPressed: () {
-              print('camera pressed');
-              getImage(ImageSource.camera);
-            },
-          ),
-        )
-      ],
+      ),
     );
   }
 }
