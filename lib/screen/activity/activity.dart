@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/screen/activity/dashboard_graph.dart';
 import 'package:ploop_fe/screen/activity/date_range_picker.dart';
-import 'package:ploop_fe/screen/signup/option_button_set.dart';
 
 import '../home/ploop_appbar.dart';
+import 'dashboard_text.dart';
 
 class ActivityPage extends StatelessWidget {
   const ActivityPage({super.key});
@@ -22,10 +23,8 @@ class ActivityPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(16.w),
                 child: Column(
-                  spacing: 12.h,
+                  spacing: 16.h,
                   crossAxisAlignment: CrossAxisAlignment.start,
-
-                  // Weekly Challenge
                   children: [
                     Text(
                       'Activity',
@@ -33,6 +32,23 @@ class ActivityPage extends StatelessWidget {
                     ),
                     DateRangePicker(
                       ranges: ['W', 'M', '3M', 'Y'],
+                    ),
+                    // text info
+                    DashboardTextWidget(
+                      dateRange: (
+                        DateTime.now(),
+                        DateTime.now().add(
+                          const Duration(days: 6),
+                        ),
+                      ),
+                    ),
+                    GraphField(
+                      dateRange: (
+                        DateTime.now(),
+                        DateTime.now().add(
+                          const Duration(days: 6),
+                        ),
+                      ),
                     ),
                   ],
                 ),

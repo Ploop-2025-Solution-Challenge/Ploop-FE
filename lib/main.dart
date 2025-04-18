@@ -94,6 +94,13 @@ class MyApp extends StatelessWidget {
               height: 1.25,
               letterSpacing: -0.45,
             ),
+            headlineSmall: TextStyle(
+              fontSize: 22.sp,
+              fontFamily: 'SF-Pro-Display',
+              fontWeight: FontWeight.w700,
+              height: 1.27,
+              letterSpacing: -0.26,
+            ),
             // Section Title
             titleLarge: TextStyle(
               fontSize: 16.sp,
