@@ -20,10 +20,6 @@ class MainPage extends StatelessWidget {
             spacing: 8.h,
             children: [
               PloopAppBar(),
-              // SizedBox(
-              //   height: 22.h,
-              // ),
-
               // Page body
               Container(
                 padding: EdgeInsets.all(16.w),
