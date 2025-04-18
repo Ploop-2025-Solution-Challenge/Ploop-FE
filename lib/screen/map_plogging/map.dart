@@ -4,12 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
 
-class MapPage extends StatelessWidget {
-  const MapPage({super.key});
+class MapPage extends StatefulWidget {
+  MapPage({super.key});
+
+  @override
+  State<MapPage> createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+  XFile? _image;
+
+  final ImagePicker picker = ImagePicker();
+
+  Future getImage(ImageSource imageSource) async {
+    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+    if (pickedFile != null) {
+      setState(() {
+        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +64,12 @@ class MapPage extends StatelessWidget {
         Positioned(
           bottom: 32.h,
           right: 16.h,
-          child: const CameraButton(),
+          child: CameraButton(
+            onPressed: () {
+              print('camera pressed');
+              getImage(ImageSource.camera);
+            },
+          ),
         )
       ],
     );

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ploop_fe/main.dart';
-import 'package:ploop_fe/screens/signup/setup_page_template.dart';
+import 'package:ploop_fe/screen/signup/setup_page_template.dart';
 
 import 'custom_input_field.dart';
 import 'custom_datepicker.dart';
 import 'custom_dropdown.dart';
 import 'option_button_set.dart';
 
-class SetRegionPage extends StatelessWidget {
+import '../../model/user_model.dart';
+
+class SetRegionPage extends ConsumerWidget {
   const SetRegionPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final AsyncValue<User> user = ref.watch(userProvider);
     return InfoSetupPage(
       firstPage: true,
       nextRoute: SetUserInfoPage(),
@@ -32,6 +36,9 @@ class SetRegionPage extends StatelessWidget {
           'test10',
           'test11',
         ],
+        // onChanged: (value) {
+        //   ref.read(preferenceProvider.notifier).setCountry(value);
+        // },
       ),
       title2: 'Region',
       widget2: const CustomDropDownMenu(
@@ -178,3 +185,22 @@ class FinishSetup extends StatelessWidget {
     );
   }
 }
+// class FinishSetup extends ConsumerWidget {
+//   const FinishSetup({super.key});
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final preference = ref.read(preferenceProvider);
+
+//     return InfoSetupPage(
+//       lastPage: true,
+//       nextRoute: const MainScaffold(),
+//       question: "Well done!\nNow let's go plogging together!",
+//       onPressed: () async {
+//         final json = preference.toJson();
+//         // 서버 전송 예시
+//         await sendPreferencesToServer(json);
+//       },
+//     );
+//   }
+// }

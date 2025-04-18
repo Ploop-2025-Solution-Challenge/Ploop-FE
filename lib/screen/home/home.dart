@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/screens/home/challenge.dart';
+import 'package:ploop_fe/screen/home/challenge.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
 

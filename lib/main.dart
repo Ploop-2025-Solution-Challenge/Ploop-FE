@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'screens/activity/activity.dart';
-import 'screens/home/home.dart';
-import 'screens/map_plogging/map.dart';
-import 'screens/onboarding/onboarding.dart';
-import 'screens/world/world.dart';
+import 'screen/activity/activity.dart';
+import 'screen/home/home.dart';
+import 'screen/map_plogging/map.dart';
+import 'screen/onboarding/onboarding.dart';
+import 'screen/world/world.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await ScreenUtil.ensureScreenSize();
   await _passAllApiKeysToIOS();
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 Future<void> _passAllApiKeysToIOS() async {
@@ -175,7 +180,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final List<Widget> _pages = [
     const MainPage(),
-    const MapPage(),
+    MapPage(),
     const WorldPage(),
     const ActivityPage(),
   ];

@@ -22,6 +22,7 @@ class InfoSetupPage extends StatelessWidget {
   final Widget? widget1;
   final String? title2;
   final Widget? widget2;
+
   final Widget nextRoute;
 
   @override
