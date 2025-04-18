@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StartPloggingButton extends StatelessWidget {
-  const StartPloggingButton({super.key});
+  final Function()? onPressed;
+
+  const StartPloggingButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => {},
+      onPressed: onPressed,
       style: TextButton.styleFrom(
         backgroundColor: Colors.black,
         padding: EdgeInsets.all(0.w),

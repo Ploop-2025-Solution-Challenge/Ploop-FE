@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
+import 'package:flutter/animation.dart';
 
 class MapPage extends StatefulWidget {
   MapPage({super.key});
@@ -18,6 +19,9 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   XFile? _image;
+  bool _isMapShrunk = false;
+  bool _isButtonEnabled = true;
+  bool _isPlogging = false;
 
   final ImagePicker picker = ImagePicker();
 
@@ -30,11 +34,24 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  void _startPlogging() {
+    setState(() {
+      _isMapShrunk = true;
+      _isButtonEnabled = false;
+      _isPlogging = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const MapSample(),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          height: _isMapShrunk ? 502.h : double.maxFinite,
+          child: const MapSample(),
+        ),
         SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
@@ -56,9 +73,13 @@ class _MapPageState extends State<MapPage> {
         ),
         Positioned.fill(
           bottom: 32.h,
-          child: const Align(
+          child: Align(
             alignment: Alignment.bottomCenter,
-            child: StartPloggingButton(),
+            child: _isButtonEnabled
+                ? StartPloggingButton(onPressed: _startPlogging)
+                : SizedBox(
+                    height: 0,
+                  ),
           ),
         ),
         Positioned(
