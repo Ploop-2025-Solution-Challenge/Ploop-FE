@@ -15,6 +15,8 @@ class PloopAppBar extends StatefulWidget {
 }
 
 class _PloopAppBarState extends State<PloopAppBar> {
+  final Image defaultProfilePic =
+      Image.asset('assets/images/default-user-icon.png');
   late UserResponse userProfile =
       UserResponse(id: -1, nickname: '', role: '', profileImageUrl: '');
 
@@ -64,9 +66,9 @@ class _PloopAppBarState extends State<PloopAppBar> {
             spacing: 9.w,
             children: [
               CircleAvatar(
-                backgroundImage: userProfile.profileImageUrl != ''
-                    ? NetworkImage(userProfile.profileImageUrl!)
-                    : null,
+                foregroundImage: NetworkImage(userProfile.profileImageUrl!),
+                backgroundImage:
+                    const AssetImage('assets/images/default-user-icon.png'),
                 radius: 20.w,
               ),
               Text(
