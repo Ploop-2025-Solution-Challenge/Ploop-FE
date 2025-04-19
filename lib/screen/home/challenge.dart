@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 // maybe consumer widget?
 class ChallengeProgressCard extends StatelessWidget {
-  ChallengeProgressCard({super.key});
+  const ChallengeProgressCard({super.key});
 
   // multiply this factor to colored width of graph
   final int totalChallengeCount = 3;
@@ -52,7 +53,7 @@ class ChallengeProgressCard extends StatelessWidget {
                   // background
                   Container(
                     decoration: BoxDecoration(
-                        color: const Color.fromRGBO(126, 125, 125, 1),
+                        color: GrayScale.gray_500,
                         borderRadius: BorderRadius.circular(5.w)),
                     width: 340.w,
                     height: 24.h,
@@ -61,7 +62,7 @@ class ChallengeProgressCard extends StatelessWidget {
                     width: 340.w * totalPercentage,
                     height: 24.h,
                     decoration: BoxDecoration(
-                        color: const Color.fromRGBO(126, 241, 141, 1),
+                        color: theme().color_600,
                         borderRadius: (totalPercentage == 1.00
                             ? BorderRadius.all(Radius.circular(5.w))
                             : BorderRadius.only(
@@ -89,7 +90,7 @@ class ChallengeProgressCard extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .labelSmall
-                    ?.copyWith(color: const Color.fromRGBO(165, 165, 165, 1)),
+                    ?.copyWith(color: GrayScale.gray_400),
               ),
               SizedBox(
                 height: 6.h,
@@ -132,19 +133,26 @@ class ChallengeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
+      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 8.h),
+      // alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5.w)),
           color: Colors.white),
       width: 166.w,
       height: 57.h,
       child: Row(
-        spacing: 29.w,
+        spacing: 24.w,
         children: [
           Row(
-            spacing: 7.w,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8.w,
             children: [
               CircleAvatar(
+                backgroundImage:
+                    const AssetImage('assets/images/default-user-icon.png'),
+                // foregroundImage: userProfile.profileImageUrl != null
+                //     ? NetworkImage(userProfile.profileImageUrl!)
+                //     : null,
                 radius: 20.w,
               ),
               Text(
@@ -155,7 +163,7 @@ class ChallengeUserCard extends StatelessWidget {
           ),
           Text(
             '$verifiedChallengeCount/$totalChallengeCount',
-            style: Theme.of(context).textTheme.labelMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
@@ -198,8 +206,7 @@ class ChallengeCardState extends State<ChallengeCard> {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.w),
-          color:
-              _isVerified ? const Color(0xFFD2D2D2) : const Color(0xFF7EF18D)),
+          color: _isVerified ? GrayScale.gray_100 : theme().color_600),
       child: Stack(
         children: [
           Text(
@@ -215,7 +222,7 @@ class ChallengeCardState extends State<ChallengeCard> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.w),
-                  color: _isVerified ? const Color(0xFFA1A1A1) : Colors.black),
+                  color: _isVerified ? GrayScale.gray_300 : Colors.black),
               // alignment: Alignment.center,
               width: 53.w,
               height: 25.h,

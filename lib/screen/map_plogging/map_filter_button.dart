@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class MapFilterButton extends StatefulWidget {
   const MapFilterButton({super.key, required this.label});
@@ -32,19 +33,19 @@ class MapFilterState extends State<MapFilterButton> {
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 1.w,
-                color: isActive ? Color(0xFF23BC37) : const Color(0xFFA1A1A1),
+                color: isActive ? theme().color_500 : GrayScale.gray_300,
               ),
               borderRadius: BorderRadius.circular(30.w),
             ),
             shadows: [
               BoxShadow(
-                color: const Color(0x3F000000),
+                color: GrayScale.shadowColor,
                 blurRadius: 2.w,
                 offset: Offset(0.w, 2.h),
                 spreadRadius: 0,
               )
             ],
-            color: isActive ? Color(0xFFC0FFC8) : const Color(0xFFD2D2D2),
+            color: isActive ? theme().color_400 : GrayScale.gray_100,
           ),
           padding: EdgeInsets.symmetric(vertical: 12.5.h, horizontal: 16.w),
           child: Text(

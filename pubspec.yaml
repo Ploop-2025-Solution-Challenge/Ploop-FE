@@ -31,6 +31,13 @@ dependencies:
   riverpod: ^2.6.1
   shared_preferences: ^2.5.3
   flutter_dotenv: ^5.2.1
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  freezed: ^3.0.6
+  image_picker: ^1.1.2
+  intl: ^0.20.2
+  dotted_line: ^3.2.3
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +49,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  riverpod_generator: ^2.6.5
+  build_runner: ^2.4.15
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.6.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -64,6 +75,7 @@ flutter:
     - assets/images/dropdown-down.png
     - assets/images/dropdown-up.png
     - assets/images/navigate-back-icon.png
+    - assets/images/default-user-icon.png
     # An image asset can refer to one or more resolution-specific "variants", see
     - .env
   # https://flutter.dev/to/resolution-aware-images

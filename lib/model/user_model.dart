@@ -1,44 +1,67 @@
-class User {
-  final int? id;
-  final String? email;
-  final String? name;
-  final String? nickname;
-  final String? country;
-  final String? region;
-  final String? role;
-  final String? gender;
+class PatchUserRequest {
+  final String nickname;
+  // final int age;
+  final String gender;
+  final String country;
+  final String region;
+  final DateTime dateOfBirth;
 
-  User({
-    required this.id,
-    required this.email,
-    required this.name,
+  final String difficulty;
+  final String motivation;
+  final List<String> locationPreferences;
+
+  PatchUserRequest({
     required this.nickname,
+    // required this.age,
+    required this.gender,
     required this.country,
     required this.region,
-    required this.role,
-    required this.gender,
+    required this.dateOfBirth,
+    required this.difficulty,
+    required this.motivation,
+    required this.locationPreferences,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  Map<String, dynamic> toJson() => {
+        'nickname': nickname,
+        // 'age': age,
+        'gender': gender,
+        'country': country,
+        'region': region,
+        'date of birth': dateOfBirth,
+        'difficulty': difficulty,
+        'motivation': motivation,
+        'location preferences': locationPreferences,
+      };
+}
+
+// response
+class UserResponse {
+  final int? id;
+  final String? nickname;
+  final String? role;
+  final String? profileImageUrl;
+
+  UserResponse({
+    required this.id,
+    required this.nickname,
+    required this.role,
+    required this.profileImageUrl,
+  });
+
+  // TODO: edit by api
+  factory UserResponse.fromJson(Map<String, dynamic> json) {
+    return UserResponse(
       id: json['id'],
-      email: json['email'],
-      name: json['name'],
       nickname: json['nickname'],
-      country: json['country'],
-      region: json['region'],
       role: json['role'],
-      gender: json['gender'],
+      profileImageUrl: json['picture'],
     );
   }
   Map<String, dynamic> toJson() => {
         'id': id,
-        'email': email,
-        'name': name,
         'nickname': nickname,
-        'country': country,
-        'region': region,
         'role': role,
-        'gender': gender,
+        'picture': profileImageUrl,
       };
 }

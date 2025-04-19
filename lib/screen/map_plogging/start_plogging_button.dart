@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class StartPloggingButton extends StatelessWidget {
-  const StartPloggingButton({super.key});
+  final Function()? onPressed;
+
+  const StartPloggingButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => {},
+      onPressed: onPressed,
       style: TextButton.styleFrom(
         backgroundColor: Colors.black,
         padding: EdgeInsets.all(0.w),
@@ -24,7 +27,7 @@ class StartPloggingButton extends StatelessWidget {
           ),
           shadows: [
             BoxShadow(
-              color: const Color(0x3F000000),
+              color: GrayScale.shadowColor,
               blurRadius: 2.h,
               offset: Offset(0, 2.h),
               spreadRadius: 0,
@@ -41,7 +44,7 @@ class StartPloggingButton extends StatelessWidget {
               'Start Plogging',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: const Color(0xFF7EF18D),
+                    color: theme().color_600,
                     letterSpacing: 0.06,
                   ),
             ),

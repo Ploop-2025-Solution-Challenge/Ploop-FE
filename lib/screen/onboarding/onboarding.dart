@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ploop_fe/main.dart';
-import 'package:ploop_fe/screens/signup/set_region.dart';
-import 'package:ploop_fe/services/auth_service.dart';
+import 'package:ploop_fe/service/auth_service.dart';
+import '../signup/signup.dart';
 
 const List<String> scopes = <String>[
   'email',
@@ -85,9 +84,9 @@ class LoginButton extends StatelessWidget {
         final idToken = auth.idToken;
 
         if (idToken != null) {
-          print(auth.accessToken);
-          print('\n');
-          print(idToken);
+          debugPrint(auth.accessToken);
+          debugPrint('\n');
+          debugPrint(idToken);
           await AuthService.sendIdTokenToServer(idToken);
         }
 
@@ -96,7 +95,7 @@ class LoginButton extends StatelessWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SetUserRegion()),
+          MaterialPageRoute(builder: (context) => const SetRegionPage()),
         );
       }
     } catch (error) {
