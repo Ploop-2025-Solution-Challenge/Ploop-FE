@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class CameraButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -14,7 +15,7 @@ class CameraButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(22.w),
         boxShadow: [
           BoxShadow(
-            color: const Color(0x3F000000),
+            color: GrayScale.shadowColor,
             blurRadius: 4.w,
             offset: Offset(0, 4.h),
             spreadRadius: 0,

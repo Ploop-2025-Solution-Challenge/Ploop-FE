@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class DateRangePicker extends StatefulWidget {
   final List<String> ranges;
@@ -36,7 +37,7 @@ class _DateRangePickerState extends State<DateRangePicker> {
         borderRadius: BorderRadius.circular(30.w),
         border: Border.all(
           width: 1.w,
-          color: Color(0xFFC0C0C0),
+          color: GrayScale.gray_200,
         ),
       ),
       child: Row(
@@ -69,7 +70,7 @@ class DateRangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const selectedColor = Color(0xFF7EF18D);
+    Color selectedColor = theme().color_600;
 
     return GestureDetector(
       onTap: onTap,
@@ -87,7 +88,7 @@ class DateRangeButton extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.black : const Color(0xFF7E7D7D),
+                color: isSelected ? GrayScale.black : GrayScale.gray_500,
               ),
         ),
       ),

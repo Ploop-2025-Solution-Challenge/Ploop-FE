@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ploop_fe/theme.dart';
 
 class WorldPage extends StatelessWidget {
   const WorldPage({super.key});
@@ -69,7 +70,7 @@ class MapSampleState extends State<MapSample> {
               borderRadius: BorderRadius.circular(22.w),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0x3F000000),
+                  color: GrayScale.shadowColor,
                   blurRadius: 4.w,
                   offset: Offset(0, 4.h),
                   spreadRadius: 0,
@@ -83,7 +84,7 @@ class MapSampleState extends State<MapSample> {
               }),
               icon: const Icon(
                 Icons.my_location,
-                color: Colors.white,
+                color: GrayScale.white,
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class PickupCounter extends StatefulWidget {
   const PickupCounter({super.key});
@@ -66,7 +67,7 @@ class CounterButton extends StatelessWidget {
         width: 56.w,
         height: 56.h,
         decoration: ShapeDecoration(
-          color: Color(0x7FD9D9D9),
+          color: const Color(0x7FD9D9D9),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.w),
           ),
@@ -74,7 +75,7 @@ class CounterButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: const Color(0xFFA1A1A1),
+            color: GrayScale.gray_300,
             // backgroundColor: Colors.blue,
             fontFamily: 'Pretendard',
             fontSize: 64.sp,

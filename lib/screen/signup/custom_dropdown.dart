@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class CustomDropDownMenu extends StatefulWidget {
   const CustomDropDownMenu({super.key, required this.entryList});
@@ -94,7 +95,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge
-                                ?.copyWith(color: const Color(0xFFA1A1A1)),
+                                ?.copyWith(color: GrayScale.gray_300),
                           ),
                         ),
                       );

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class UserBirthDatePicker extends StatefulWidget {
   const UserBirthDatePicker({super.key});
@@ -57,13 +58,13 @@ class _UserBirthDatePickerState extends State<UserBirthDatePicker> {
             ? Text(
                 'DD / MM / YYYY',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: const Color(0xFFA1A1A1),
+                      color: GrayScale.gray_300,
                     ),
               )
             : Text(
                 '${date!.day} / ${date!.month} / ${date!.year}',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: const Color(0xFF000000),
+                      color: GrayScale.black,
                     ),
               ),
       ),

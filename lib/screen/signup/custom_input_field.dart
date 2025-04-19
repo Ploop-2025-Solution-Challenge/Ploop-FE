@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class NicknameInputField extends StatefulWidget {
   const NicknameInputField(
@@ -49,7 +50,7 @@ class _NicknameInputFieldState extends State<NicknameInputField> {
             child: CupertinoTextField(
               placeholder: 'Enter your nickname',
               placeholderStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: const Color(0xFFA1A1A1),
+                    color: GrayScale.gray_300,
                   ),
               decoration: null,
               inputFormatters: [
@@ -69,7 +70,7 @@ class _NicknameInputFieldState extends State<NicknameInputField> {
           Text(
             '$nicknameLength/${widget.maxNicknameLength}',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: const Color(0xFFA1A1A1),
+                  color: GrayScale.gray_300,
                 ),
           )
         ],

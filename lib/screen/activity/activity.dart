@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/screen/activity/dashboard_graph.dart';
 import 'package:ploop_fe/screen/activity/date_range_picker.dart';
+import 'package:ploop_fe/theme.dart';
 
 import '../home/ploop_appbar.dart';
 import 'dashboard_text.dart';
@@ -12,7 +13,7 @@ class ActivityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: GrayScale.white,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

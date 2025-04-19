@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class StopPloggingButton extends StatelessWidget {
   final Function()? onPressed;
@@ -19,7 +20,7 @@ class StopPloggingButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.5.w, vertical: 10.h),
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
-          color: Color(0xFFFF5F5F),
+          color: theme().state,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.w),
           ),

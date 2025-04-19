@@ -2,6 +2,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:ploop_fe/theme.dart';
 
 class GraphField extends StatelessWidget {
   final (DateTime, DateTime) dateRange;
@@ -47,7 +48,7 @@ class GraphLine extends StatelessWidget {
           lineLength: 348.w,
           dashLength: 2.0.w,
           dashGapLength: 2.0.w,
-          dashColor: const Color(0xFFC0C0C0),
+          dashColor: GrayScale.gray_200,
         ),
         Text(
           '800',

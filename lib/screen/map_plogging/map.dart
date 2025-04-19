@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
+import 'package:ploop_fe/theme.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
@@ -84,7 +85,7 @@ class _MapPageState extends State<MapPage> {
                                       .textTheme
                                       .labelLarge
                                       ?.copyWith(
-                                        color: Color(0xFFA1A1A1),
+                                        color: GrayScale.gray_300,
                                       ),
                                 ),
                               ],
@@ -102,7 +103,7 @@ class _MapPageState extends State<MapPage> {
                                       .textTheme
                                       .labelLarge
                                       ?.copyWith(
-                                        color: Color(0xFFA1A1A1),
+                                        color: GrayScale.gray_300,
                                       ),
                                 ),
                               ],
@@ -233,7 +234,7 @@ class MapSampleState extends State<MapSample> {
               borderRadius: BorderRadius.circular(22.w),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0x3F000000),
+                  color: GrayScale.shadowColor,
                   blurRadius: 4.w,
                   offset: Offset(0, 4.h),
                   spreadRadius: 0,

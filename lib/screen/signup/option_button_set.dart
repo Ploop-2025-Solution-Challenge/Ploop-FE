@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 import 'option_button.dart';
 
@@ -84,7 +85,7 @@ class _OptionButtonSetState extends State<OptionButtonSet> {
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium
-                      ?.copyWith(color: const Color(0xFFFF5F5F)),
+                      ?.copyWith(color: theme().state),
                 ),
         ],
       );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:ploop_fe/theme.dart';
 
 class DashboardTextWidget extends StatelessWidget {
   // now, now + range
@@ -20,7 +21,7 @@ class DashboardTextWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFFA1A1A1),
+                color: GrayScale.gray_300,
               ),
         ),
         // collected trash amount
@@ -35,7 +36,7 @@ class DashboardTextWidget extends StatelessWidget {
             Text(
               'Trash collected',
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Color(0xFFA1A1A1),
+                    color: GrayScale.gray_300,
                   ),
             ),
           ],
@@ -53,7 +54,7 @@ class DashboardTextWidget extends StatelessWidget {
                 Text(
                   'Miles',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Color(0xFFA1A1A1),
+                        color: GrayScale.gray_300,
                       ),
                 ),
               ],
@@ -66,7 +67,7 @@ class DashboardTextWidget extends StatelessWidget {
                 Text(
                   'Hours',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Color(0xFFA1A1A1),
+                        color: GrayScale.gray_300,
                       ),
                 ),
               ],
@@ -82,7 +83,7 @@ class DashboardTextWidget extends StatelessWidget {
                 Text(
                   'Challenges Completed',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Color(0xFFA1A1A1),
+                        color: GrayScale.gray_300,
                       ),
                 ),
               ],

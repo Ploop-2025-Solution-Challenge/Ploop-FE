@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/theme.dart';
 
 class OptionButton extends StatelessWidget {
   final String label;
@@ -15,7 +16,7 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const selectedColor = Color(0xFF000000);
+    const selectedColor = GrayScale.black;
 
     return GestureDetector(
       onTap: onTap,
@@ -25,7 +26,7 @@ class OptionButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             side: BorderSide(
               width: 2.w,
-              color: isSelected ? selectedColor : const Color(0xFFA1A1A1),
+              color: isSelected ? selectedColor : GrayScale.gray_300,
             ),
             borderRadius: BorderRadius.circular(20.w),
           ),
@@ -33,7 +34,7 @@ class OptionButton extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: isSelected ? selectedColor : const Color(0xFFA1A1A1),
+                color: isSelected ? selectedColor : GrayScale.gray_300,
               ),
         ),
       ),
