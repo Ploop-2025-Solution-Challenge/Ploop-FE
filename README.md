@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 # Ploop
 
@@ -12,7 +12,7 @@ APAC Solution Challenge 2025 Project
 Google Developer Group on Campus : SEOULTECH
 </br> **Team Monday**
 
-</center>
+</div>
 
 <hr />
 
