@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/theme.dart';
+import 'package:geolocator/geolocator.dart';
+import 'camera_button_on_map.dart';
+import 'map_filter_button.dart';
+import 'start_plogging_button.dart';
 
-class WorldPage extends StatelessWidget {
-  const WorldPage({super.key});
+class MapPage extends StatelessWidget {
+  const MapPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +19,34 @@ class WorldPage extends StatelessWidget {
         SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
+            child: Row(
+              spacing: 12.w,
+              children: const [
+                MapFilterButton(
+                  label: 'Litter Area',
+                ),
+                MapFilterButton(
+                  label: 'Bin',
+                ),
+                MapFilterButton(
+                  label: 'Route Recommendation',
+                ),
+              ],
+            ),
           ),
         ),
+        Positioned.fill(
+          bottom: 32.h,
+          child: const Align(
+            alignment: Alignment.bottomCenter,
+            child: StartPloggingButton(),
+          ),
+        ),
+        Positioned(
+          bottom: 32.h,
+          right: 16.h,
+          child: const CameraButton(),
+        )
       ],
     );
   }
@@ -40,7 +68,7 @@ class MapSampleState extends State<MapSample> {
 
   static const CameraPosition initialPos = CameraPosition(
     target: LatLng(37.422131, -122.084801),
-    zoom: 6,
+    zoom: 14.4746,
   );
 
   @override
@@ -54,14 +82,14 @@ class MapSampleState extends State<MapSample> {
             try {
               _goToCurrentLocation();
             } catch (e) {
-              debugPrint('$e');
+              print('$e');
             }
             _controller.complete(controller);
           },
           myLocationButtonEnabled: false,
         ),
         Positioned(
-          bottom: 32.h,
+          bottom: 92.h,
           right: 16.h,
           child: Container(
             width: 44.w,
@@ -70,7 +98,7 @@ class MapSampleState extends State<MapSample> {
               borderRadius: BorderRadius.circular(22.w),
               boxShadow: [
                 BoxShadow(
-                  color: GrayScale.shadowColor,
+                  color: const Color(0x3F000000),
                   blurRadius: 4.w,
                   offset: Offset(0, 4.h),
                   spreadRadius: 0,
@@ -84,7 +112,7 @@ class MapSampleState extends State<MapSample> {
               }),
               icon: const Icon(
                 Icons.my_location,
-                color: GrayScale.white,
+                color: Colors.white,
               ),
             ),
           ),
@@ -104,8 +132,8 @@ class MapSampleState extends State<MapSample> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    debugPrint(position.latitude.toString());
-    debugPrint(position.longitude.toString());
+    print(position.latitude);
+    print(position.longitude);
   }
 }
 

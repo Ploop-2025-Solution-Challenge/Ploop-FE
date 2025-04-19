@@ -1,10 +1,9 @@
 // GET record by Datetime to duration?
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/theme.dart';
 
 class TodayRecordCard extends StatelessWidget {
-  const TodayRecordCard({super.key});
+  TodayRecordCard({super.key});
 
   final int todayGarbageCount = 0;
   final double todayMilesCount = 0.28;
@@ -34,7 +33,8 @@ class TodayRecordCard extends StatelessWidget {
       height: 80.h,
       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.w), color: theme().color_600),
+          borderRadius: BorderRadius.circular(8.w),
+          color: const Color(0xFF7EF18D)),
       child: Row(
         children: [
           Expanded(

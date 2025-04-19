@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/theme.dart';
 
 class CameraButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  CameraButton({super.key, required this.onPressed});
+  const CameraButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +13,7 @@ class CameraButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(22.w),
         boxShadow: [
           BoxShadow(
-            color: GrayScale.shadowColor,
+            color: const Color(0x3F000000),
             blurRadius: 4.w,
             offset: Offset(0, 4.h),
             spreadRadius: 0,
@@ -24,7 +22,7 @@ class CameraButton extends StatelessWidget {
         color: Colors.black,
       ),
       child: IconButton(
-        onPressed: onPressed,
+        onPressed: (() {}),
         iconSize: 44.w,
         icon: Image.asset(
           'assets/images/camera-icon.png',
