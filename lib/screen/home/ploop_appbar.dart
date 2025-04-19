@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../model/user_model.dart';
+import '../../model/user_response.dart';
 import '../../service/user_service.dart';
 
 class PloopAppBar extends StatefulWidget {
@@ -17,8 +17,16 @@ class PloopAppBar extends StatefulWidget {
 class _PloopAppBarState extends State<PloopAppBar> {
   final Image defaultProfilePic =
       Image.asset('assets/images/default-user-icon.png');
-  late UserResponse userProfile =
-      UserResponse(id: -1, nickname: '', role: '', profileImageUrl: null);
+  late UserResponse userProfile = UserResponse(
+      id: -1,
+      nickname: null,
+      role: null,
+      picture: null,
+      email: '',
+      age: null,
+      gender: null,
+      country: null,
+      region: null);
 
   void _getUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,8 +76,8 @@ class _PloopAppBarState extends State<PloopAppBar> {
               CircleAvatar(
                 backgroundImage:
                     const AssetImage('assets/images/default-user-icon.png'),
-                foregroundImage: userProfile.profileImageUrl != null
-                    ? NetworkImage(userProfile.profileImageUrl!)
+                foregroundImage: userProfile.picture != null
+                    ? NetworkImage(userProfile.picture!)
                     : null,
                 radius: 20.w,
               ),

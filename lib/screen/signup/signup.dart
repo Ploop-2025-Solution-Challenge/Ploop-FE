@@ -8,8 +8,6 @@ import 'custom_datepicker.dart';
 import 'custom_dropdown.dart';
 import 'option_button_set.dart';
 
-import '../../model/user_model.dart';
-
 class SetRegionPage extends ConsumerWidget {
   const SetRegionPage({super.key});
 

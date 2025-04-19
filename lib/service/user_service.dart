@@ -1,21 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ploop_fe/model/user_model.dart';
+
+import '../model/user_request.dart';
+import '../model/user_response.dart';
 
 class UserService {
-  static Future<void> patchUserProfileToServer(PatchUserRequest user) async {
+  static Future<void> patchUserProfileToServer(UserRequest user) async {
     final url = Uri.parse('https://api.ploop.store/api/user/patch');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       'country': user.country,
       'region': user.region,
-      'date of birth': user.dateOfBirth, // or calculated age
+      'age': user.age, // or calculated age
       'gender': user.gender,
       'nickname': user.nickname,
       'difficulty': user.difficulty,
       'motivation': user.motivation,
-      'location preferences': user.locationPreferences,
+      'location preferences': user.preferredArea,
     });
 
     try {
