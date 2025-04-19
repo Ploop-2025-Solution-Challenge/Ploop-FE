@@ -180,7 +180,7 @@ class FinishSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     return const InfoSetupPage(
       lastPage: true,
-      nextRoute: const MainScaffold(),
+      nextRoute: MainScaffold(),
       question: "Well done!\nNow let's go plogging together!",
     );
   }

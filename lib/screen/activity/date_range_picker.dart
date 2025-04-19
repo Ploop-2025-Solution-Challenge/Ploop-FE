@@ -23,7 +23,7 @@ class _DateRangePickerState extends State<DateRangePicker> {
   }
 
   void handleTap(String label) {
-    print(label);
+    debugPrint(label);
     setState(() {
       selectedOption = label;
     });

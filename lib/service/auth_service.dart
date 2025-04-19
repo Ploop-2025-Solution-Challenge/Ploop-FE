@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,12 +19,12 @@ class AuthService {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt', jwt);
 
-        print('saved jwt: $jwt');
+        debugPrint('saved jwt: $jwt');
       } else {
-        print('login failed: ${response.statusCode} ${response.body}');
+        debugPrint('login failed: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
-      print('error: $e');
+      debugPrint('error: $e');
     }
   }
 }

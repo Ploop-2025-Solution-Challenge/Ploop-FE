@@ -6,7 +6,7 @@ import '../../model/user_model.dart';
 import '../../service/user_service.dart';
 
 class PloopAppBar extends StatefulWidget {
-  PloopAppBar({
+  const PloopAppBar({
     super.key,
   });
 
@@ -20,7 +20,7 @@ class _PloopAppBarState extends State<PloopAppBar> {
   late UserResponse userProfile =
       UserResponse(id: -1, nickname: '', role: '', profileImageUrl: null);
 
-  Future<UserResponse?> _getUserProfile() async {
+  void _getUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? jwt = prefs.getString('jwt');
     if (jwt != null) {
@@ -31,7 +31,7 @@ class _PloopAppBarState extends State<PloopAppBar> {
         });
       }
     } else {
-      print('error: jwt is null');
+      debugPrint('error: jwt is null');
     }
   }
 

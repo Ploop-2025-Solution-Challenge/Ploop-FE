@@ -42,7 +42,7 @@ class MainPage extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         spacing: 8.w,
-                        children: [
+                        children: const [
                           // TODO: get current mission from server
                           ChallengeCard(
                             title: 'Pick up 7 cigarette butts',
@@ -66,7 +66,7 @@ class MainPage extends StatelessWidget {
                       "Today's Record",
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                    TodayRecordCard(),
+                    const TodayRecordCard(),
                   ],
                 ),
               ),

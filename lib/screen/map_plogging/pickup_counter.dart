@@ -13,7 +13,7 @@ class _PickUpCounterState extends State<PickupCounter> {
 
   void _increment() {
     setState(() {
-      print('+');
+      debugPrint('+');
       _counter++;
     });
   }
@@ -21,7 +21,7 @@ class _PickUpCounterState extends State<PickupCounter> {
   void _decrement() {
     setState(() {
       if (_counter == 0) return;
-      print('-');
+      debugPrint('-');
       _counter--;
     });
   }

@@ -16,7 +16,7 @@ void main() async {
   await ScreenUtil.ensureScreenSize();
   await _passAllApiKeysToIOS();
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: MyApp(),
     ),
   );
@@ -33,7 +33,7 @@ Future<void> _passAllApiKeysToIOS() async {
       });
     }
   } catch (e) {
-    print('Error passing API keys to iOS: $e');
+    debugPrint('Error passing API keys to iOS: $e');
   }
 }
 
@@ -156,7 +156,7 @@ class MyApp extends StatelessWidget {
             // Challenge profile name
             /* copy this theme for activity details */
             bodySmall: TextStyle(
-              fontSize: 15.sp,
+              fontSize: 13.sp,
               fontFamily: 'SF-Pro',
               fontWeight: FontWeight.w400,
               height: 1.38,
@@ -181,7 +181,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final List<Widget> _pages = [
     const MainPage(),
-    MapPage(),
+    const MapPage(),
     const WorldPage(),
     const ActivityPage(),
   ];

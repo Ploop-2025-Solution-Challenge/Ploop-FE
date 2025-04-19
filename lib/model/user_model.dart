@@ -1,16 +1,3 @@
-class UserRequest {
-  final String jwt;
-
-  UserRequest({
-    required this.jwt,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'Authorization': jwt,
-      };
-}
-
-// for profile initialization request
 class PatchUserRequest {
   final String nickname;
   // final int age;

@@ -11,19 +11,24 @@ class GraphField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.yellow,
       padding: EdgeInsets.only(top: 8.h),
       width: 370.w,
-      height: 226.h,
+      height: 266.h,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 40.h,
         children: [
-          GraphLine(),
-          GraphLine(),
-          GraphLine(),
-          GraphLine(),
-          GraphLine(),
-          GraphLine(),
+          Column(
+            spacing: 40.h,
+            children: const [
+              GraphLine(),
+              GraphLine(),
+              GraphLine(),
+              GraphLine(),
+              GraphLine(),
+              GraphLine(),
+            ],
+          ),
           DateRangeUnit(dateRange: dateRange),
         ],
       ),
@@ -36,28 +41,35 @@ class GraphLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DottedLine(
-      lineLength: 348.w,
-      dashLength: 2.0.w,
-      dashGapLength: 2.0.w,
-      dashColor: Color(0xFFC0C0C0),
+    return Row(
+      children: [
+        DottedLine(
+          lineLength: 348.w,
+          dashLength: 2.0.w,
+          dashGapLength: 2.0.w,
+          dashColor: const Color(0xFFC0C0C0),
+        ),
+        Text(
+          '800',
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(height: 0.01),
+        ),
+      ],
     );
   }
 }
 
 // TODO; seperate days by given range
 class DateRangeUnit extends StatelessWidget {
-  const DateRangeUnit({super.key, required (DateTime, DateTime) dateRange});
+  final (DateTime, DateTime) dateRange;
+  const DateRangeUnit({super.key, required this.dateRange});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        spacing: 36.w,
-        children: [
-          Text('${DateFormat('E')}'),
-        ],
-      ),
+    return Row(
+      spacing: 36.w,
+      children: [
+        Text('${dateRange.$2.difference(dateRange.$1).inDays + 1}'),
+      ],
     );
   }
 }

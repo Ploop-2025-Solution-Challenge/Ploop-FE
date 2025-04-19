@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // maybe consumer widget?
 class ChallengeProgressCard extends StatelessWidget {
-  ChallengeProgressCard({super.key});
+  const ChallengeProgressCard({super.key});
 
   // multiply this factor to colored width of graph
   final int totalChallengeCount = 3;

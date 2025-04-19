@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ploop_fe/model/user_model.dart';
 
@@ -23,12 +24,12 @@ class UserService {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        print('OK: ${responseData.body}');
+        debugPrint('OK: ${responseData.body}');
       } else {
-        print('patch failed: ${response.statusCode} ${response.body}');
+        debugPrint('patch failed: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
-      print('error: $e');
+      debugPrint('error: $e');
     }
   }
 
@@ -47,14 +48,14 @@ class UserService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print('OK: $responseData.body');
+        debugPrint('OK: $responseData.body');
         return UserResponse.fromJson(responseData);
       } else {
-        print('get failed: ${response.statusCode} ${response.body}');
+        debugPrint('get failed: ${response.statusCode} ${response.body}');
         return null;
       }
     } catch (e) {
-      print('error: $e');
+      debugPrint('error: $e');
       return null;
     }
   }

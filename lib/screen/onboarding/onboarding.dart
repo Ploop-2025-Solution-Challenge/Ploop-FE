@@ -84,9 +84,9 @@ class LoginButton extends StatelessWidget {
         final idToken = auth.idToken;
 
         if (idToken != null) {
-          print(auth.accessToken);
-          print('\n');
-          print(idToken);
+          debugPrint(auth.accessToken);
+          debugPrint('\n');
+          debugPrint(idToken);
           await AuthService.sendIdTokenToServer(idToken);
         }
 

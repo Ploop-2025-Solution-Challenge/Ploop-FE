@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TodayRecordCard extends StatelessWidget {
-  TodayRecordCard({super.key});
+  const TodayRecordCard({super.key});
 
   final int todayGarbageCount = 0;
   final double todayMilesCount = 0.28;

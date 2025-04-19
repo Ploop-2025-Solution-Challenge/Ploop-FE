@@ -27,7 +27,7 @@ class _OptionButtonSetState extends State<OptionButtonSet> {
   String? maxExceedWarning;
 
   void handleTap(String label) {
-    print(label);
+    debugPrint(label);
     setState(() {
       maxExceedWarning = null;
       if (widget.isMultiSelect) {

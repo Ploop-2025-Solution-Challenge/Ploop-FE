@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/main.dart';
 
 class WorldPage extends StatelessWidget {
   const WorldPage({super.key});
@@ -54,7 +53,7 @@ class MapSampleState extends State<MapSample> {
             try {
               _goToCurrentLocation();
             } catch (e) {
-              print('$e');
+              debugPrint('$e');
             }
             _controller.complete(controller);
           },
@@ -104,8 +103,8 @@ class MapSampleState extends State<MapSample> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    print(position.latitude);
-    print(position.longitude);
+    debugPrint(position.latitude.toString());
+    debugPrint(position.longitude.toString());
   }
 }
 

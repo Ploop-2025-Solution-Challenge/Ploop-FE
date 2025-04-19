@@ -10,10 +10,9 @@ import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
-import 'package:flutter/animation.dart';
 
 class MapPage extends StatefulWidget {
-  MapPage({super.key});
+  const MapPage({super.key});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -171,7 +170,7 @@ class _MapPageState extends State<MapPage> {
                   right: 16.h,
                   child: CameraButton(
                     onPressed: () {
-                      print('camera pressed');
+                      debugPrint('camera pressed');
                       getImage(ImageSource.camera);
                       if (_image != null) {
                         // TODO: navigate to a screen to pick which kind of photo it is
@@ -218,7 +217,7 @@ class MapSampleState extends State<MapSample> {
             try {
               _goToCurrentLocation();
             } catch (e) {
-              print('$e');
+              debugPrint('$e');
             }
             _controller.complete(controller);
           },
@@ -268,8 +267,8 @@ class MapSampleState extends State<MapSample> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    print(position.latitude);
-    print(position.longitude);
+    debugPrint(position.latitude.toString());
+    debugPrint(position.longitude.toString());
   }
 }
 
