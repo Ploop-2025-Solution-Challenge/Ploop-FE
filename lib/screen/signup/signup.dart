@@ -13,7 +13,6 @@ class SetRegionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final AsyncValue<User> user = ref.watch(userProvider);
     return InfoSetupPage(
       firstPage: true,
       nextRoute: SetUserInfoPage(),
@@ -22,21 +21,20 @@ class SetRegionPage extends ConsumerWidget {
       // TODO: remove const when connecting database
       widget1: const CustomDropDownMenu(
         entryList: [
-          'KR',
-          'UK',
-          'test3',
-          'test4',
-          'test5',
-          'test6',
-          'test7',
-          'test8',
-          'test9',
-          'test10',
-          'test11',
+          'Korea',
+          'United Kingdom',
+          'Japan',
+          'United States',
+          'Germany',
+          'India',
+          'China',
+          'France',
+          'Italy',
+          'Russia',
+          'Switzerland',
+          'New Zealand',
+          'Austrailia',
         ],
-        // onChanged: (value) {
-        //   ref.read(preferenceProvider.notifier).setCountry(value);
-        // },
       ),
       title2: 'Region',
       widget2: const CustomDropDownMenu(

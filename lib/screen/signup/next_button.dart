@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NextPageButton extends StatelessWidget {
   final Widget route;
+  final VoidCallback onPressed;
 
   const NextPageButton({
     super.key,
     required this.route,
+    required this.onPressed,
   });
 
   @override
@@ -17,8 +19,8 @@ class NextPageButton extends StatelessWidget {
         padding: EdgeInsets.all(0.w),
         fixedSize: Size(160.w, 54.h),
       ),
-      // if label == 'Continue': send user profile to server
       onPressed: () {
+        onPressed;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => route),

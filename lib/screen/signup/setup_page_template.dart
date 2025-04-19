@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/provider/user_prefs_provider.dart';
 
 import '../home/ploop_appbar.dart';
 import 'next_button.dart';
 
-class InfoSetupPage extends StatelessWidget {
+class InfoSetupPage extends ConsumerStatefulWidget {
   const InfoSetupPage(
       {super.key,
       this.lastPage = false,
@@ -26,6 +28,35 @@ class InfoSetupPage extends StatelessWidget {
   final Widget nextRoute;
 
   @override
+  ConsumerState<InfoSetupPage> createState() => _InfoSetupPageState();
+}
+
+class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
+  String? country;
+  String? region;
+  int? age;
+  String? gender;
+  String? nickname;
+  String? difficulty;
+  String? motivation;
+  List<String>? preferredAreas;
+
+  String prefsKey = '';
+
+  void applyChange() {
+    if (prefsKey == 'country') {
+      ref.read(userPreferenceNotifierProvider.notifier).setCountry(country!);
+    } else if (prefsKey == 'region') {
+      ref.read(userPreferenceNotifierProvider.notifier).setRegion(region!);
+    } else if (prefsKey == 'age') {
+      ref.read(userPreferenceNotifierProvider.notifier).setRegion(region!);
+    } else if (prefsKey == 'gender') {
+      ref.read(userPreferenceNotifierProvider.notifier).setAge(age!);
+    }
+    // ...
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 874.h,
@@ -39,7 +70,8 @@ class InfoSetupPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: NextPageButton(
-                  route: nextRoute,
+                  route: widget.nextRoute,
+                  onPressed: applyChange,
                 ),
               ),
             ),
@@ -48,7 +80,7 @@ class InfoSetupPage extends StatelessWidget {
               children: [
                 // title
                 const PloopTitleBar(),
-                !firstPage
+                !widget.firstPage
                     ? IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -65,7 +97,7 @@ class InfoSetupPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('$question',
+                      Text('${widget.question}',
                           style: Theme.of(context).textTheme.headlineMedium),
 
                       SizedBox(height: 60.h),
@@ -74,29 +106,29 @@ class InfoSetupPage extends StatelessWidget {
                         spacing: 82.h,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget1 != null) ...[
+                          if (widget.widget1 != null) ...[
                             Column(
                               spacing: 8.h,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '$title1',
+                                  '${widget.title1}',
                                   style: Theme.of(context).textTheme.labelLarge,
                                 ),
-                                widget1!,
+                                widget.widget1!,
                               ],
                             ),
                           ],
-                          if (widget2 != null) ...[
+                          if (widget.widget2 != null) ...[
                             Column(
                               spacing: 8.h,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '$title2',
+                                  '${widget.title2}',
                                   style: Theme.of(context).textTheme.labelLarge,
                                 ),
-                                widget2!,
+                                widget.widget2!,
                               ],
                             ),
                           ],
