@@ -18,7 +18,7 @@ class _PloopAppBarState extends State<PloopAppBar> {
   final Image defaultProfilePic =
       Image.asset('assets/images/default-user-icon.png');
   late UserResponse userProfile =
-      UserResponse(id: -1, nickname: '', role: '', profileImageUrl: '');
+      UserResponse(id: -1, nickname: '', role: '', profileImageUrl: null);
 
   Future<UserResponse?> _getUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,9 +66,11 @@ class _PloopAppBarState extends State<PloopAppBar> {
             spacing: 9.w,
             children: [
               CircleAvatar(
-                foregroundImage: NetworkImage(userProfile.profileImageUrl!),
                 backgroundImage:
                     const AssetImage('assets/images/default-user-icon.png'),
+                foregroundImage: userProfile.profileImageUrl != null
+                    ? NetworkImage(userProfile.profileImageUrl!)
+                    : null,
                 radius: 20.w,
               ),
               Text(
