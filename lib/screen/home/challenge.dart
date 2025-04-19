@@ -132,19 +132,26 @@ class ChallengeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
+      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 8.h),
+      // alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5.w)),
           color: Colors.white),
       width: 166.w,
       height: 57.h,
       child: Row(
-        spacing: 29.w,
+        spacing: 24.w,
         children: [
           Row(
-            spacing: 7.w,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8.w,
             children: [
               CircleAvatar(
+                backgroundImage:
+                    const AssetImage('assets/images/default-user-icon.png'),
+                // foregroundImage: userProfile.profileImageUrl != null
+                //     ? NetworkImage(userProfile.profileImageUrl!)
+                //     : null,
                 radius: 20.w,
               ),
               Text(
@@ -155,7 +162,7 @@ class ChallengeUserCard extends StatelessWidget {
           ),
           Text(
             '$verifiedChallengeCount/$totalChallengeCount',
-            style: Theme.of(context).textTheme.labelMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),

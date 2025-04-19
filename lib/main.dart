@@ -147,7 +147,7 @@ class MyApp extends StatelessWidget {
 
             // Personal challenge status
             bodyMedium: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 18.sp,
               fontFamily: 'SF-Pro-Display',
               fontWeight: FontWeight.w600,
               height: 1.31,
@@ -156,7 +156,7 @@ class MyApp extends StatelessWidget {
             // Challenge profile name
             /* copy this theme for activity details */
             bodySmall: TextStyle(
-              fontSize: 13.sp,
+              fontSize: 15.sp,
               fontFamily: 'SF-Pro',
               fontWeight: FontWeight.w400,
               height: 1.38,

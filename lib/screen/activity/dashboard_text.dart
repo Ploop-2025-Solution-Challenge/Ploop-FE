@@ -18,6 +18,7 @@ class DashboardTextWidget extends StatelessWidget {
         Text(
           '${DateFormat('d. MM. y').format(dateRange.$1)} - ${DateFormat('d. MM. y').format(dateRange.$2)}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFFA1A1A1),
               ),
@@ -63,7 +64,7 @@ class DashboardTextWidget extends StatelessWidget {
               children: [
                 Text('0.0', style: Theme.of(context).textTheme.displaySmall),
                 Text(
-                  'Time',
+                  'Hours',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Color(0xFFA1A1A1),
                       ),
