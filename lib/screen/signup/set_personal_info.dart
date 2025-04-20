@@ -1,16 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ploop_fe/model/user_request.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
-import 'package:ploop_fe/theme.dart';
 
 import 'set_nickname.dart';
-import 'widgets/custom_dropdown.dart';
-import 'widgets/custom_input_field.dart';
 import 'widgets/custom_datepicker.dart';
-import 'widgets/custom_dropdown.dart';
 import 'widgets/option_button_set.dart';
 
 class SetPersonalInfoPage extends ConsumerStatefulWidget {
