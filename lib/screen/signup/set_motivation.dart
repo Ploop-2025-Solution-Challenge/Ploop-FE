@@ -29,8 +29,8 @@ class _SetMotivationPageState extends ConsumerState<SetMotivationPage> {
   @override
   Widget build(BuildContext context) {
     return PrefsPageLayout(
-        question: 'What is the motivation level of the plogging activity?',
-        title1: 'Plogging Experience Level',
+        question: 'Please select your preferred keywords',
+        title1: 'What motivates you to go plogging?',
         widget1: OptionButtonSet(
           alignColumn: true,
           options: [...labelList],
