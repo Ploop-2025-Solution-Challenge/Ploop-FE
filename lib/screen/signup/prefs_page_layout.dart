@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/provider/user_prefs_provider.dart';
 
 import '../home/ploop_appbar.dart';
-import 'next_button.dart';
+import 'widgets/next_button.dart';
 
-class InfoSetupPage extends ConsumerStatefulWidget {
-  const InfoSetupPage(
-      {super.key,
-      this.lastPage = false,
-      this.firstPage = false,
-      this.question,
-      this.widget1,
-      this.title1,
-      this.widget2,
-      this.title2,
-      required this.nextRoute});
+class PrefsPageLayout extends StatelessWidget {
+  const PrefsPageLayout({
+    super.key,
+    this.firstPage = false,
+    this.lastPage = false,
+    required this.question,
+    this.widget1,
+    this.title1,
+    this.widget2,
+    this.title2,
+    required this.onButtonPressed,
+  });
   final bool firstPage;
   final bool lastPage;
   final String? question;
@@ -24,37 +23,7 @@ class InfoSetupPage extends ConsumerStatefulWidget {
   final Widget? widget1;
   final String? title2;
   final Widget? widget2;
-
-  final Widget nextRoute;
-
-  @override
-  ConsumerState<InfoSetupPage> createState() => _InfoSetupPageState();
-}
-
-class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
-  String? country;
-  String? region;
-  int? age;
-  String? gender;
-  String? nickname;
-  String? difficulty;
-  String? motivation;
-  List<String>? preferredAreas;
-
-  String prefsKey = '';
-
-  void applyChange() {
-    if (prefsKey == 'country') {
-      ref.read(userPreferenceNotifierProvider.notifier).setCountry(country!);
-    } else if (prefsKey == 'region') {
-      ref.read(userPreferenceNotifierProvider.notifier).setRegion(region!);
-    } else if (prefsKey == 'age') {
-      ref.read(userPreferenceNotifierProvider.notifier).setRegion(region!);
-    } else if (prefsKey == 'gender') {
-      ref.read(userPreferenceNotifierProvider.notifier).setAge(age!);
-    }
-    // ...
-  }
+  final VoidCallback onButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +38,11 @@ class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
               bottom: 60.h,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: NextPageButton(
-                  route: widget.nextRoute,
-                  onPressed: applyChange,
-                ),
+                child: !lastPage
+                    ? NextPageButton(
+                        onPressed: onButtonPressed,
+                      )
+                    : ContinueButton(onPressed: onButtonPressed),
               ),
             ),
             Column(
@@ -80,7 +50,9 @@ class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
               children: [
                 // title
                 const PloopTitleBar(),
-                !widget.firstPage
+
+                // show back button or blank
+                !firstPage
                     ? IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -97,7 +69,7 @@ class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${widget.question}',
+                      Text('$question',
                           style: Theme.of(context).textTheme.headlineMedium),
 
                       SizedBox(height: 60.h),
@@ -106,29 +78,29 @@ class _InfoSetupPageState extends ConsumerState<InfoSetupPage> {
                         spacing: 82.h,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget.widget1 != null) ...[
+                          if (widget1 != null) ...[
                             Column(
                               spacing: 8.h,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.title1}',
+                                  '$title1',
                                   style: Theme.of(context).textTheme.labelLarge,
                                 ),
-                                widget.widget1!,
+                                widget1!,
                               ],
                             ),
                           ],
-                          if (widget.widget2 != null) ...[
+                          if (widget2 != null) ...[
                             Column(
                               spacing: 8.h,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.title2}',
+                                  '$title2',
                                   style: Theme.of(context).textTheme.labelLarge,
                                 ),
-                                widget.widget2!,
+                                widget2!,
                               ],
                             ),
                           ],

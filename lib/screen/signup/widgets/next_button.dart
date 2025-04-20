@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NextPageButton extends StatelessWidget {
-  final Widget route;
   final VoidCallback onPressed;
 
   const NextPageButton({
     super.key,
-    required this.route,
     required this.onPressed,
   });
 
@@ -19,13 +17,7 @@ class NextPageButton extends StatelessWidget {
         padding: EdgeInsets.all(0.w),
         fixedSize: Size(160.w, 54.h),
       ),
-      onPressed: () {
-        onPressed;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => route),
-        );
-      },
+      onPressed: onPressed,
       clipBehavior: Clip.antiAlias,
       child: Text(
         'Next',
@@ -40,11 +32,11 @@ class NextPageButton extends StatelessWidget {
 }
 
 class ContinueButton extends StatelessWidget {
-  final Widget route;
+  final VoidCallback onPressed;
 
   const ContinueButton({
     super.key,
-    required this.route,
+    required this.onPressed,
   });
 
   @override
@@ -56,13 +48,7 @@ class ContinueButton extends StatelessWidget {
         fixedSize: Size(160.w, 54.h),
       ),
       // if label == 'Continue': send user profile to server
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => route),
-        );
-        // TODO: send saved user info to server
-      },
+      onPressed: onPressed,
       clipBehavior: Clip.antiAlias,
       child: Text(
         'Continue',

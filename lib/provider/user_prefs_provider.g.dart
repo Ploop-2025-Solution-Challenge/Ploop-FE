@@ -7,12 +7,12 @@ part of 'user_prefs_provider.dart';
 // **************************************************************************
 
 String _$userPreferenceNotifierHash() =>
-    r'd1287926b05d696566f31320e4d7a4f910b4a48a';
+    r'919b9d21a9127578224db21963839f7d59906f26';
 
 /// See also [UserPreferenceNotifier].
 @ProviderFor(UserPreferenceNotifier)
 final userPreferenceNotifierProvider =
-    AutoDisposeNotifierProvider<UserPreferenceNotifier, UserRequest?>.internal(
+    NotifierProvider<UserPreferenceNotifier, UserRequest>.internal(
   UserPreferenceNotifier.new,
   name: r'userPreferenceNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final userPreferenceNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$UserPreferenceNotifier = AutoDisposeNotifier<UserRequest?>;
+typedef _$UserPreferenceNotifier = Notifier<UserRequest>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

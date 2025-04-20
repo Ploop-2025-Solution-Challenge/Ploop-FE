@@ -4,31 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/theme.dart';
 
-class NicknameInputField extends StatefulWidget {
-  const NicknameInputField(
-      {super.key, this.userNickname, this.maxNicknameLength = 20});
-  final String? userNickname;
+class NicknameInputField extends StatelessWidget {
+  const NicknameInputField({
+    super.key,
+    required this.nickname,
+    required this.onChanged,
+    this.maxNicknameLength = 20,
+  });
+
+  final String nickname;
+  final ValueChanged<String> onChanged;
   final int maxNicknameLength;
-
-  @override
-  State<NicknameInputField> createState() => _NicknameInputFieldState();
-}
-
-class _NicknameInputFieldState extends State<NicknameInputField> {
-  late TextEditingController _textController;
-  int nicknameLength = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _textController = TextEditingController(text: '');
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +34,24 @@ class _NicknameInputFieldState extends State<NicknameInputField> {
         children: [
           Expanded(
             child: CupertinoTextField(
+              controller: TextEditingController(text: nickname)
+                ..selection = TextSelection.collapsed(offset: nickname.length),
               placeholder: 'Enter your nickname',
               placeholderStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: GrayScale.gray_300,
                   ),
               decoration: null,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(widget.maxNicknameLength),
+                LengthLimitingTextInputFormatter(maxNicknameLength),
               ],
               onTapOutside: ((event) {
                 FocusScope.of(context).unfocus();
               }),
-              onChanged: (value) {
-                setState(() {
-                  nicknameLength = value.length;
-                  // TODO: send request with this nickname after finish_setup
-                });
-              },
+              onChanged: onChanged,
             ),
           ),
           Text(
-            '$nicknameLength/${widget.maxNicknameLength}',
+            '${nickname.length}/$maxNicknameLength',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: GrayScale.gray_300,
                 ),

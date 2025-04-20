@@ -9,16 +9,7 @@ class UserService {
   static Future<void> patchUserProfileToServer(UserRequest user) async {
     final url = Uri.parse('https://api.ploop.store/api/user/patch');
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'country': user.country,
-      'region': user.region,
-      'age': user.age, // or calculated age
-      'gender': user.gender,
-      'nickname': user.nickname,
-      'difficulty': user.difficulty,
-      'motivation': user.motivation,
-      'location preferences': user.preferredArea,
-    });
+    final body = jsonEncode(user.toJson());
 
     try {
       final response = await http.patch(url, headers: headers, body: body);

@@ -3,43 +3,55 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_prefs_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UserPreferenceNotifier extends _$UserPreferenceNotifier {
   UserPreferenceNotifier() : super();
 
-  UserRequest? build() {}
+  @override
+  UserRequest build() {
+    return const UserRequest(
+      nickname: '',
+      age: 0,
+      gender: '',
+      country: '',
+      region: '',
+      difficulty: '',
+      motivation: '',
+      preferredArea: [],
+    );
+  }
 
   void setCountry(String country) {
-    state = state?.copyWith(country: country);
+    state = state.copyWith(country: country);
   }
 
   void setRegion(String region) {
-    state = state?.copyWith(region: region);
+    state = state.copyWith(region: region);
   }
 
   void setAge(int age) {
-    state = state?.copyWith(age: age);
+    state = state.copyWith(age: age);
   }
 
   void setGender(String gender) {
-    state = state?.copyWith(gender: gender);
+    state = state.copyWith(gender: gender);
   }
 
   void setNickname(String nickname) {
-    state = state?.copyWith(nickname: nickname);
+    state = state.copyWith(nickname: nickname);
   }
 
   void setDifficulty(String level) {
-    state = state?.copyWith(difficulty: level);
+    state = state.copyWith(difficulty: level);
   }
 
   void setMotivation(String motivation) {
-    state = state?.copyWith(motivation: motivation);
+    state = state.copyWith(motivation: motivation);
   }
 
   void setPreferredAreas(List<String> areas) {
     if (areas.length <= 3) {
-      state = state?.copyWith(preferredArea: areas);
+      state = state.copyWith(preferredArea: areas);
     }
   }
 
