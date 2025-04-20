@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../home/ploop_appbar.dart';
-import 'next_button.dart';
+import 'widgets/next_button.dart';
 
-class InfoSetupPage extends StatelessWidget {
-  const InfoSetupPage(
-      {super.key,
-      this.lastPage = false,
-      this.firstPage = false,
-      this.question,
-      this.widget1,
-      this.title1,
-      this.widget2,
-      this.title2,
-      required this.nextRoute});
+class PrefsPageLayout extends StatelessWidget {
+  const PrefsPageLayout({
+    super.key,
+    this.firstPage = false,
+    this.lastPage = false,
+    required this.question,
+    this.widget1,
+    this.title1,
+    this.widget2,
+    this.title2,
+    required this.onButtonPressed,
+  });
   final bool firstPage;
   final bool lastPage;
   final String? question;
@@ -22,8 +23,7 @@ class InfoSetupPage extends StatelessWidget {
   final Widget? widget1;
   final String? title2;
   final Widget? widget2;
-
-  final Widget nextRoute;
+  final VoidCallback onButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,11 @@ class InfoSetupPage extends StatelessWidget {
               bottom: 60.h,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: NextPageButton(
-                  route: nextRoute,
-                ),
+                child: !lastPage
+                    ? NextPageButton(
+                        onPressed: onButtonPressed,
+                      )
+                    : ContinueButton(onPressed: onButtonPressed),
               ),
             ),
             Column(
@@ -48,6 +50,8 @@ class InfoSetupPage extends StatelessWidget {
               children: [
                 // title
                 const PloopTitleBar(),
+
+                // show back button or blank
                 !firstPage
                     ? IconButton(
                         onPressed: () {

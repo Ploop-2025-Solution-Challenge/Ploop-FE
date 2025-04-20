@@ -133,7 +133,7 @@ class ChallengeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 8.h),
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
       // alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5.w)),
@@ -141,7 +141,8 @@ class ChallengeUserCard extends StatelessWidget {
       width: 166.w,
       height: 57.h,
       child: Row(
-        spacing: 24.w,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // spacing: 24.w,
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,

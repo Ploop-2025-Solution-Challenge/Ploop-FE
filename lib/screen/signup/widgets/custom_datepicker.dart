@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/theme.dart';
 
-class UserBirthDatePicker extends StatefulWidget {
-  const UserBirthDatePicker({super.key});
+class UserBirthDatePicker extends StatelessWidget {
+  const UserBirthDatePicker({
+    super.key,
+    required this.date,
+    required this.onDateChanged,
+  });
 
-  @override
-  State<UserBirthDatePicker> createState() => _UserBirthDatePickerState();
-}
+  final DateTime? date;
+  final ValueChanged<DateTime> onDateChanged;
 
-class _UserBirthDatePickerState extends State<UserBirthDatePicker> {
-  DateTime? date;
-
-  void _showDialog(Widget child) {
+  void _showDialog(BuildContext context, Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => Container(
@@ -31,15 +31,15 @@ class _UserBirthDatePickerState extends State<UserBirthDatePicker> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _showDialog(
+        context,
         CupertinoDatePicker(
-            maximumDate: DateTime.now(),
-            dateOrder: DatePickerDateOrder.dmy,
-            mode: CupertinoDatePickerMode.date,
-            initialDateTime:
-                date ?? DateTime.now().subtract(const Duration(seconds: 1)),
-            onDateTimeChanged: (DateTime newDate) {
-              setState(() => date = newDate);
-            }),
+          maximumDate: DateTime.now(),
+          dateOrder: DatePickerDateOrder.dmy,
+          mode: CupertinoDatePickerMode.date,
+          initialDateTime:
+              date ?? DateTime.now().subtract(const Duration(seconds: 1)),
+          onDateTimeChanged: onDateChanged,
+        ),
       ),
       child: Container(
         alignment: Alignment.centerLeft,
