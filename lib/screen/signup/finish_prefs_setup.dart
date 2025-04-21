@@ -4,6 +4,7 @@ import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
 import 'package:ploop_fe/service/user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FinishSetup extends ConsumerWidget {
   const FinishSetup({super.key});
@@ -22,8 +23,11 @@ class FinishSetup extends ConsumerWidget {
           );
 
           Future(() async {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            final String? jwt = prefs.getString('jwt');
             debugPrint(preference.toString());
-            await UserService.patchUserProfileToServer(preference);
+            await UserService.patchUserProfileToServer(preference, jwt!);
             ref.invalidate(userPreferenceNotifierProvider);
           });
         });
