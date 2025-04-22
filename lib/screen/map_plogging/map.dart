@@ -484,6 +484,7 @@ class MapSampleState extends State<MapSample> {
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
           },
+          myLocationEnabled: true,
           myLocationButtonEnabled: false,
         ),
         Positioned(
