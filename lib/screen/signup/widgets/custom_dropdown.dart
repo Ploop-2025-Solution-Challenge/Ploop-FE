@@ -127,7 +127,7 @@ class CustomDropDownMenu extends StatelessWidget {
                 showOverlay(context);
               },
               icon: Image.asset(
-                'assets/images/dropdown-down.png',
+                'assets/icons/dropdown-down.png',
               ),
             ),
           ],

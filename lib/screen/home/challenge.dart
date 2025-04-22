@@ -150,7 +150,7 @@ class ChallengeUserCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 backgroundImage:
-                    const AssetImage('assets/images/default-user-icon.png'),
+                    const AssetImage('assets/icons/default-user-icon.png'),
                 // foregroundImage: userProfile.profileImageUrl != null
                 //     ? NetworkImage(userProfile.profileImageUrl!)
                 //     : null,

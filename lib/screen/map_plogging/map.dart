@@ -90,11 +90,11 @@ class _MapPageState extends State<MapPage> {
         children: [
           result == 'success'
               ? Image.asset(
-                  'assets/images/Update-success-3x.png',
+                  'assets/icons/Update-success-3x.png',
                   width: 21.w,
                 )
               : Image.asset(
-                  'assets/images/Update-failed-3x.png',
+                  'assets/icons/Update-failed-3x.png',
                   width: 21.w,
                 ),
           result == 'success'

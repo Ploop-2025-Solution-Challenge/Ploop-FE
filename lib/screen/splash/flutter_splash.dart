@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.black,
       body: Center(
         child: Image.asset(
-          'assets/images/ploop-logo-3x.png',
+          'assets/logo/ploop-logo-3x.png',
           width: 140.w,
         ),
       ),

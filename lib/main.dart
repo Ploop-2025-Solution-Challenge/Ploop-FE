@@ -80,10 +80,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   ];
 
   final List<String> _iconPaths = [
-    'assets/images/Bar_Home.png',
-    'assets/images/Bar_Plogging.png',
-    'assets/images/Bar_World.png',
-    'assets/images/Bar_Activity.png',
+    'assets/icons/Bar_Home.png',
+    'assets/icons/Bar_Plogging.png',
+    'assets/icons/Bar_World.png',
+    'assets/icons/Bar_Activity.png',
   ];
 
   final List<double> _iconHeights = [24, 26, 31, 24];

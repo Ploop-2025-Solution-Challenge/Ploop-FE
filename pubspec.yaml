@@ -68,25 +68,34 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/ploop-logo.png
-    - assets/images/ploop-logo-3x.png
-    - assets/images/ios_neutral_rd_na@4x.png
+    # logos
+    - assets/logo/ploop-logo.png
+    - assets/logo/ploop-logo-3x.png
+
+    # images
     - assets/images/onboarding-bg.jpg
-    - assets/images/signin-logo.png
     - assets/images/onboarding-deco.png
-    - assets/images/Bar_Activity.png
-    - assets/images/Bar_Home.png
-    - assets/images/Bar_Plogging.png
-    - assets/images/Bar_World.png
-    - assets/images/camera-icon.png
-    - assets/images/dropdown-down.png
-    - assets/images/dropdown-up.png
-    - assets/images/navigate-back-icon.png
-    - assets/images/default-user-icon.png
-    - assets/images/Update-success-3x.png
-    - assets/images/Update-failed-3x.png
+
+    # icon assets
+    - assets/icons/ios_neutral_rd_na@4x.png
+    - assets/icons/signin-logo.png
+    - assets/icons/Bar_Activity.png
+    - assets/icons/Bar_Home.png
+    - assets/icons/Bar_Plogging.png
+    - assets/icons/Bar_World.png
+    - assets/icons/camera-icon.png
+    - assets/icons/dropdown-down.png
+    - assets/icons/dropdown-up.png
+    - assets/icons/navigate-back-icon.png
+    - assets/icons/default-user-icon.png
+    - assets/icons/Update-success-3x.png
+    - assets/icons/Update-failed-3x.png
+
+    # map marker icond
+    - assets/markers/icon_Bin.png
+    - assets/markers/icon_Litter.png
+    - assets/markers/icon_recommendation.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     - .env
