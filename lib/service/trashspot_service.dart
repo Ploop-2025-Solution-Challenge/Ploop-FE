@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/trashspot_request.dart';
@@ -47,8 +48,10 @@ class TrashspotService {
     return false;
   }
 
-  static Future<List<TrashspotResponse>?> getSpotPosition(String jwt) async {
-    final url = Uri.parse('https://api.ploop.store/api/map/trashspot/');
+  static Future<List<TrashspotResponse>?> getSpotPosition(
+      String jwt, LatLngBounds bounds) async {
+    final url = Uri.parse(
+        'https://api.ploop.store/api/map/trashspot/bounds?minLat=${bounds.northeast.latitude}&maxLat=${bounds.southwest.latitude}&minLng=${bounds.northeast.longitude}&maxLng=${bounds.southwest.latitude}');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $jwt',
@@ -61,7 +64,7 @@ class TrashspotService {
       );
 
       if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
+        final List<dynamic> responseData = jsonDecode(response.body);
         debugPrint('OK: $responseData');
         return responseData
             .map((data) => TrashspotResponse.fromJson(data))

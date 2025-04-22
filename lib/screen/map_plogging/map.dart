@@ -12,6 +12,7 @@ import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/service/bin_service.dart';
+import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera_button_on_map.dart';
@@ -134,6 +135,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  // plogging
   void _startPlogging() {
     setState(() {
       _isMapShrunk = true;
@@ -296,12 +298,58 @@ class MapSampleState extends State<MapSample> {
       Completer<GoogleMapController>();
   LatLng? currentPos;
 
-  // temporary: GooglePlex position
+  List<LatLng>? binPosition;
+  List<LatLng>? trashspotPosition;
 
   static const CameraPosition initialPos = CameraPosition(
     target: LatLng(37.422131, -122.084801),
     zoom: 14.4746,
   );
+
+  void _fetchAreaPosition(bounds) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwt = prefs.getString('jwt');
+
+    if (jwt != null) {
+      final trashspotPosList =
+          await TrashspotService.getSpotPosition(jwt, bounds);
+
+      // should be neither empty or null
+      if (trashspotPosList != null) {
+        if (trashspotPosList.isEmpty) {
+          debugPrint('no trash area in range');
+          return;
+        }
+        setState(() {
+          trashspotPosList.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        });
+      } else {
+        debugPrint('trashspotPosList is null');
+      }
+    }
+  }
+
+  void _fetchBinPosition(bounds) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwt = prefs.getString('jwt');
+
+    if (jwt != null) {
+      final binPosList = await BinService.getBinPosition(jwt, bounds);
+
+      // should be neither empty or null
+      if (binPosList != null) {
+        if (binPosList.isEmpty) {
+          debugPrint('no bin in range');
+          return;
+        }
+        setState(() {
+          binPosList.map((e) => LatLng(e.latitude, e.longitude)).toList();
+        });
+      } else {
+        debugPrint('binPosList is empty');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -317,6 +365,21 @@ class MapSampleState extends State<MapSample> {
               debugPrint('$e');
             }
             _controller.complete(controller);
+          },
+          onCameraMove: (CameraPosition pos) async {
+            final _lastPosition = pos;
+          },
+          onCameraIdle: () async {
+            GoogleMapController googleMapController = await _controller.future;
+            LatLngBounds bounds = await googleMapController.getVisibleRegion();
+
+            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
+            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
+            debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
+            debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
+
+            _fetchAreaPosition(bounds);
+            _fetchBinPosition(bounds);
           },
           myLocationButtonEnabled: false,
         ),
@@ -364,8 +427,8 @@ class MapSampleState extends State<MapSample> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    debugPrint(position.latitude.toString());
-    debugPrint(position.longitude.toString());
+    debugPrint("current latitude: ${position.latitude.toString()}");
+    debugPrint("current longitude: ${position.longitude.toString()}");
   }
 }
 
