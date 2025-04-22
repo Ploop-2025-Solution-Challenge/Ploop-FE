@@ -6,9 +6,13 @@ import '../model/user_request.dart';
 import '../model/user_response.dart';
 
 class UserService {
-  static Future<void> patchUserProfileToServer(UserRequest user) async {
-    final url = Uri.parse('https://api.ploop.store/api/user/patch');
-    final headers = {'Content-Type': 'application/json'};
+  static Future<void> patchUserProfileToServer(
+      UserRequest user, String jwt) async {
+    final url = Uri.parse('https://api.ploop.store/api/user/profile');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $jwt'
+    };
     final body = jsonEncode(user.toJson());
 
     try {
@@ -17,7 +21,7 @@ class UserService {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        debugPrint('OK: ${responseData.body}');
+        debugPrint('OK: $responseData');
       } else {
         debugPrint('patch failed: ${response.statusCode} ${response.body}');
       }
@@ -41,7 +45,7 @@ class UserService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        debugPrint('OK: $responseData.body');
+        debugPrint('OK: $responseData');
         return UserResponse.fromJson(responseData);
       } else {
         debugPrint('get failed: ${response.statusCode} ${response.body}');

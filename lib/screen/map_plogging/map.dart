@@ -1,13 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ploop_fe/model/bin_request.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
+import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
+import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
@@ -26,14 +32,106 @@ class _MapPageState extends State<MapPage> {
   bool _isPloggingEnabled = false;
 
   final ImagePicker picker = ImagePicker();
+  double? _latitude;
+  double? _longitude;
+
+  late FToast fToast;
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
     if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path);
-      });
+      _image = XFile(pickedFile.path);
+      debugPrint('image is saved at: ${pickedFile.path}');
+
+      if (_image != null) {
+        await getCurrentLocation();
+
+        if (_latitude == null || _longitude == null) {
+          debugPrint('something in position is null');
+          return;
+        }
+
+        if (mounted) {
+          final postResult = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (builder) => SpecifyPhoto(
+                  imagePath: pickedFile.path,
+                  latitude: _latitude!,
+                  longitude: _longitude!),
+            ),
+          );
+
+          _showToast(postResult);
+        }
+      }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
+  void _showToast(String result) {
+    Widget toast = Container(
+      width: 370.w,
+      height: 50.h,
+      padding: EdgeInsets.symmetric(horizontal: 28.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.w),
+        color: GrayScale.black,
+      ),
+      child: Row(
+        spacing: 16.w,
+        children: [
+          result == 'success'
+              ? Image.asset(
+                  'assets/images/Update-success-3x.png',
+                  width: 21.w,
+                )
+              : Image.asset(
+                  'assets/images/Update-failed-3x.png',
+                  width: 21.w,
+                ),
+          result == 'success'
+              ? Text(
+                  'Update Successfully',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: GrayScale.gray_200),
+                )
+              : Text(
+                  'Update Failed. Please try again.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: GrayScale.gray_200),
+                ),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.TOP,
+      toastDuration: const Duration(seconds: 2),
+      positionedToastBuilder: (context, child, gravity) =>
+          Positioned(top: 154.h, left: 16.w, child: child),
+    );
+  }
+
+  Future<void> getCurrentLocation() async {
+    final pos = await Geolocator.getCurrentPosition();
+    setState(() {
+      _latitude = pos.latitude;
+      _longitude = pos.longitude;
+      debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
+    });
   }
 
   void _startPlogging() {
@@ -118,7 +216,7 @@ class _MapPageState extends State<MapPage> {
                               'Picked Up',
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
-                            PickupCounter(),
+                            const PickupCounter(),
                           ],
                         ),
                         StopPloggingButton(onPressed: () {}),
@@ -173,9 +271,7 @@ class _MapPageState extends State<MapPage> {
                     onPressed: () {
                       debugPrint('camera pressed');
                       getImage(ImageSource.camera);
-                      if (_image != null) {
-                        // TODO: navigate to a screen to pick which kind of photo it is
-                      }
+                      if (_image != null) {}
                     },
                   ),
                 ),
