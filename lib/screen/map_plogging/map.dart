@@ -439,6 +439,14 @@ class MapSampleState extends State<MapSample> {
 
     if (widget.showBin) {
       visibleMarkers.addAll(_binMarkers);
+      visibleMarkers.add(
+        Marker(
+          markerId: const MarkerId('test'),
+          position: const LatLng(37.609215142664446, 127.06060163676739),
+          icon: AssetMapBitmap('assets/markers/icon_Bin.png',
+              width: 36.w, height: 41.h),
+        ),
+      );
     }
 
     if (widget.showRoute) {
@@ -447,22 +455,10 @@ class MapSampleState extends State<MapSample> {
 
     Set<Marker> _markers = {};
 
-    AssetMapBitmap assetMapBitmap =
-        AssetMapBitmap('assets/markers/icon_Bin.png');
-
     return Stack(
       children: [
         GoogleMap(
-          // markers: visibleMarkers,
-          // marker test (no marker from GET)
-          markers: <Marker>{
-            Marker(
-              markerId: const MarkerId('test'),
-              position: const LatLng(37.609215142664446, 127.06060163676739),
-              icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-                  width: 36.w, height: 41.h),
-            ),
-          },
+          markers: visibleMarkers,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
           onMapCreated: (GoogleMapController controller) {
