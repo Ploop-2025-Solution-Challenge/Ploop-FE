@@ -48,7 +48,7 @@ class _SetMotivationPageState extends ConsumerState<SetMotivationPage> {
               builder: (context) => CupertinoAlertDialog(
                 title: const Text('Oops!'),
                 content:
-                    const Text('Please select your plogging experience level.'),
+                    const Text('Please select your motivation of plogging.'),
                 actions: [
                   CupertinoDialogAction(
                     isDefaultAction: true,
