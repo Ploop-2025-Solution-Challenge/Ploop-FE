@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:ploop_fe/model/bin_request.dart';
+import 'package:ploop_fe/model/trashspot_request.dart';
 
-class BinService {
-  static Future<bool> postBinPositionToServer(
-      BinRequest bin, String jwt, XFile imageFile) async {
-    final url = Uri.parse('https://api.ploop.store/api/map/bin');
+class TrashspotService {
+  static Future<bool> postTrashspotPositionToServer(
+      TrashspotRequest spot, String jwt, XFile imageFile) async {
+    final url = Uri.parse('https://api.ploop.store/api/map/trashspot');
     final headers = {
       'Authorization': 'Bearer $jwt',
     };
@@ -27,8 +27,8 @@ class BinService {
       request.files.add(multipartFile);
 
       // 필드 추가
-      request.fields['longitude'] = bin.longitude.toString();
-      request.fields['latitude'] = bin.latitude.toString();
+      request.fields['longitude'] = spot.longitude.toString();
+      request.fields['latitude'] = spot.latitude.toString();
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
@@ -46,5 +46,5 @@ class BinService {
     return false;
   }
 
-  // static Future<BinResponse?> getBinPosition()
+  // static Future<TrashspotResponse?> getspotPosition()
 }

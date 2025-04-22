@@ -45,6 +45,7 @@ dependencies:
   graphic: ^2.5.1
   exif: ^3.3.0
   native_exif: ^0.6.0
+  fluttertoast: ^8.2.12
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,9 @@ flutter:
     - assets/images/dropdown-up.png
     - assets/images/navigate-back-icon.png
     - assets/images/default-user-icon.png
+    - assets/images/Update-success-3x.png
+    - assets/images/Update-failed-3x.png
+
     # An image asset can refer to one or more resolution-specific "variants", see
     - .env
   # https://flutter.dev/to/resolution-aware-images
