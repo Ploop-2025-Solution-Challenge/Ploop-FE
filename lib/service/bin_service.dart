@@ -51,7 +51,7 @@ class BinService {
   static Future<List<BinResponse>?> getBinPosition(
       String jwt, LatLngBounds bounds) async {
     final url = Uri.parse(
-        'https://api.ploop.store/api/map/bin/bounds?minLat=${bounds.northeast.latitude}&maxLat=${bounds.southwest.latitude}&minLng=${bounds.northeast.longitude}&maxLng=${bounds.southwest.latitude}');
+        'https://api.ploop.store/api/map/bin/bounds?minLat=${bounds.southwest.latitude}&maxLat=${bounds.northeast.latitude}&minLng=${bounds.southwest.longitude}&maxLng=${bounds.northeast.latitude}');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $jwt',

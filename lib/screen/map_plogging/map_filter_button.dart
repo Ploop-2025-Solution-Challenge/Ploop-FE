@@ -2,26 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/theme.dart';
 
-class MapFilterButton extends StatefulWidget {
-  const MapFilterButton({super.key, required this.label});
+class MapFilterButton extends StatelessWidget {
+  const MapFilterButton(
+      {super.key,
+      required this.label,
+      required this.isActive,
+      required this.onPressed});
 
   final String label;
-
-  @override
-  State<StatefulWidget> createState() => MapFilterState();
-}
-
-class MapFilterState extends State<MapFilterButton> {
-  bool isActive = false;
+  final VoidCallback onPressed;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => {
-        setState(() {
-          isActive = !isActive;
-        }),
-      },
+      onPressed: onPressed,
       style:
           TextButton.styleFrom(padding: EdgeInsets.symmetric(horizontal: 0.w)),
       child: ConstrainedBox(
@@ -49,7 +44,7 @@ class MapFilterState extends State<MapFilterButton> {
           ),
           padding: EdgeInsets.symmetric(vertical: 12.5.h, horizontal: 16.w),
           child: Text(
-            widget.label,
+            label,
             style: Theme.of(context)
                 .textTheme
                 .labelSmall
