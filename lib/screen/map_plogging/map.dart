@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ploop_fe/model/bin_request.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
+import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
@@ -26,14 +30,43 @@ class _MapPageState extends State<MapPage> {
   bool _isPloggingEnabled = false;
 
   final ImagePicker picker = ImagePicker();
+  double? _latitude;
+  double? _longitude;
 
   Future getImage(ImageSource imageSource) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwt = prefs.getString('jwt');
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
     if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path);
-      });
+      _image = XFile(pickedFile.path);
+      debugPrint('image is saved at: ${pickedFile.path}');
+
+      if (_image != null) {
+        await getCurrentLocation();
+
+        if (jwt == null || _latitude == null || _longitude == null) {
+          debugPrint('something is null');
+          return;
+        }
+
+        final bin = BinRequest(
+          latitude: _latitude!,
+          longitude: _longitude!,
+        );
+
+        await BinService.postBinPositionToServer(bin, jwt, _image!);
+      }
     }
+  }
+
+  Future<void> getCurrentLocation() async {
+    final pos = await Geolocator.getCurrentPosition();
+    setState(() {
+      _latitude = pos.latitude;
+      _longitude = pos.longitude;
+      debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
+    });
   }
 
   void _startPlogging() {
