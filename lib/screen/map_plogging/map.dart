@@ -12,6 +12,7 @@ import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/service/bin_service.dart';
+import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera_button_on_map.dart';
@@ -35,7 +36,13 @@ class _MapPageState extends State<MapPage> {
   double? _latitude;
   double? _longitude;
 
+  // toast
   late FToast fToast;
+
+  // filter state
+  bool _showLitterArea = false;
+  bool _showBin = false;
+  bool _showRoute = false;
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -90,11 +97,11 @@ class _MapPageState extends State<MapPage> {
         children: [
           result == 'success'
               ? Image.asset(
-                  'assets/images/Update-success-3x.png',
+                  'assets/icons/Update-success-3x.png',
                   width: 21.w,
                 )
               : Image.asset(
-                  'assets/images/Update-failed-3x.png',
+                  'assets/icons/Update-failed-3x.png',
                   width: 21.w,
                 ),
           result == 'success'
@@ -134,6 +141,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  // plogging
   void _startPlogging() {
     setState(() {
       _isMapShrunk = true;
@@ -145,6 +153,24 @@ class _MapPageState extends State<MapPage> {
   void _pausePlogging() {
     setState(() {
       _isPloggingEnabled = false;
+    });
+  }
+
+  void _toggleBinMarker() {
+    setState(() {
+      _showBin = !_showBin;
+    });
+  }
+
+  void _toggleAreaMarker() {
+    setState(() {
+      _showLitterArea = !_showLitterArea;
+    });
+  }
+
+  void _toggleRouteMarker() {
+    setState(() {
+      _showRoute = !_showRoute;
     });
   }
 
@@ -231,7 +257,11 @@ class _MapPageState extends State<MapPage> {
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn,
                   height: _isMapShrunk ? 502.h : double.maxFinite,
-                  child: const MapSample(),
+                  child: MapSample(
+                    showLitterArea: _showLitterArea,
+                    showBin: _showBin,
+                    showRoute: _showRoute,
+                  ),
                 ),
                 SafeArea(
                   child: Container(
@@ -239,15 +269,21 @@ class _MapPageState extends State<MapPage> {
                         EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
                     child: Row(
                       spacing: 12.w,
-                      children: const [
+                      children: [
                         MapFilterButton(
                           label: 'Litter Area',
+                          isActive: _showLitterArea,
+                          onPressed: _toggleAreaMarker,
                         ),
                         MapFilterButton(
                           label: 'Bin',
+                          isActive: _showBin,
+                          onPressed: _toggleBinMarker,
                         ),
                         MapFilterButton(
                           label: 'Route Recommendation',
+                          isActive: _showRoute,
+                          onPressed: _toggleRouteMarker,
                         ),
                       ],
                     ),
@@ -285,7 +321,15 @@ class _MapPageState extends State<MapPage> {
 }
 
 class MapSample extends StatefulWidget {
-  const MapSample({super.key});
+  final bool showLitterArea;
+  final bool showBin;
+  final bool showRoute;
+
+  const MapSample(
+      {super.key,
+      this.showLitterArea = false,
+      this.showBin = false,
+      this.showRoute = false});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -296,18 +340,125 @@ class MapSampleState extends State<MapSample> {
       Completer<GoogleMapController>();
   LatLng? currentPos;
 
-  // temporary: GooglePlex position
+  List<LatLng>? binPosition;
+  List<LatLng>? trashspotPosition;
+
+  final Set<Marker> _litterMarkers = {};
+  final Set<Marker> _binMarkers = {};
+  final Set<Marker> _routeMarkers = {};
 
   static const CameraPosition initialPos = CameraPosition(
-    target: LatLng(37.422131, -122.084801),
+    // target: LatLng(37.422131, -122.084801),
+    target: LatLng(
+      37.625664164,
+      127.073833038,
+    ),
     zoom: 14.4746,
   );
 
+  void initState() {}
+
+  void _fetchAreaPosition(bounds) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwt = prefs.getString('jwt');
+
+    if (jwt != null) {
+      final trashspotPosList =
+          await TrashspotService.getSpotPosition(jwt, bounds);
+
+      // should be neither empty or null
+      if (trashspotPosList != null) {
+        if (trashspotPosList.isEmpty) {
+          debugPrint('no trash area in range');
+          return;
+        }
+        setState(
+          () {
+            _litterMarkers.clear();
+            trashspotPosList
+                .map(
+                  (e) => Marker(
+                    icon: AssetMapBitmap('assets/markers/icon_Litter.png',
+                        width: 26.w, height: 30.h),
+                    markerId: MarkerId('${e.id}'),
+                    position: (LatLng(e.latitude, e.longitude)),
+                    visible: true,
+                  ),
+                )
+                .toList();
+          },
+        );
+      } else {
+        debugPrint('trashspotPosList is null');
+      }
+    }
+  }
+
+  void _fetchBinPosition(bounds) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwt = prefs.getString('jwt');
+
+    if (jwt != null) {
+      final binPosList = await BinService.getBinPosition(jwt, bounds);
+
+      // should be neither empty or null
+      if (binPosList != null) {
+        if (binPosList.isEmpty) {
+          debugPrint('no bin in range');
+          return;
+        }
+        setState(
+          () {
+            _binMarkers.clear();
+            binPosList
+                .map(
+                  (e) => Marker(
+                    icon: AssetMapBitmap('assets/markers/icon_Bin.png',
+                        width: 26.w, height: 30.h),
+                    markerId: MarkerId('${e.id}'),
+                    position: (LatLng(e.latitude, e.longitude)),
+                    visible: true,
+                  ),
+                )
+                .toList();
+          },
+        );
+      } else {
+        debugPrint('binPosList is empty');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Set<Marker> visibleMarkers = {};
+
+    if (widget.showLitterArea) {
+      visibleMarkers.addAll(_litterMarkers);
+    }
+
+    if (widget.showBin) {
+      visibleMarkers.addAll(_binMarkers);
+      visibleMarkers.add(
+        Marker(
+          markerId: const MarkerId('test'),
+          position: const LatLng(37.609215142664446, 127.06060163676739),
+          icon: AssetMapBitmap('assets/markers/icon_Bin.png',
+              width: 36.w, height: 41.h),
+        ),
+      );
+    }
+
+    if (widget.showRoute) {
+      visibleMarkers.addAll(_routeMarkers);
+    }
+
+    Set<Marker> _markers = {};
+
     return Stack(
       children: [
         GoogleMap(
+          markers: visibleMarkers,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
           onMapCreated: (GoogleMapController controller) {
@@ -318,6 +469,22 @@ class MapSampleState extends State<MapSample> {
             }
             _controller.complete(controller);
           },
+          onCameraMove: (CameraPosition pos) async {
+            final _lastPosition = pos;
+          },
+          onCameraIdle: () async {
+            GoogleMapController googleMapController = await _controller.future;
+            LatLngBounds bounds = await googleMapController.getVisibleRegion();
+
+            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
+            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
+            debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
+            debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
+
+            _fetchAreaPosition(bounds);
+            _fetchBinPosition(bounds);
+          },
+          myLocationEnabled: true,
           myLocationButtonEnabled: false,
         ),
         Positioned(
@@ -364,8 +531,8 @@ class MapSampleState extends State<MapSample> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    debugPrint(position.latitude.toString());
-    debugPrint(position.longitude.toString());
+    debugPrint("current latitude: ${position.latitude.toString()}");
+    debugPrint("current longitude: ${position.longitude.toString()}");
   }
 }
 

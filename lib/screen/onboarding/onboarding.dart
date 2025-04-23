@@ -131,7 +131,7 @@ class LoginButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 10.w,
           children: [
-            Image.asset('assets/images/signin-logo.png'),
+            Image.asset('assets/icons/signin-logo.png'),
             Text(
               'Start with Google',
               style: Theme.of(context).textTheme.bodyLarge,

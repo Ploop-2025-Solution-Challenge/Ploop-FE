@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:http/http.dart';
 
 part 'bin_response.freezed.dart';
 part 'bin_response.g.dart';
