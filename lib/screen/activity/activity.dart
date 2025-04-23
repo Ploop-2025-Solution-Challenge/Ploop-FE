@@ -7,8 +7,15 @@ import 'package:ploop_fe/theme.dart';
 import '../home/ploop_appbar.dart';
 import 'dashboard_text.dart';
 
-class ActivityPage extends StatelessWidget {
+class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
+
+  @override
+  State<ActivityPage> createState() => _ActivityPageState();
+}
+
+class _ActivityPageState extends State<ActivityPage> {
+  String selectedRange = 'W';
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +23,12 @@ class ActivityPage extends StatelessWidget {
       color: GrayScale.white,
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 8.h,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const PloopAppBar(),
-            Container(
-              padding: EdgeInsets.all(16.w),
+            Padding(
+              padding: EdgeInsets.all(14.w),
               child: Column(
                 spacing: 16.h,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,25 +37,21 @@ class ActivityPage extends StatelessWidget {
                     'Activity',
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  const DateRangePicker(
+                  DateRangePicker(
                     ranges: ['W', 'M', '3M', 'Y'],
+                    selected: selectedRange,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRange = value;
+                      });
+                    },
                   ),
-                  // text info
                   DashboardTextWidget(
-                    dateRange: (
-                      DateTime.now(),
-                      DateTime.now().add(
-                        const Duration(days: 6),
-                      ),
-                    ),
+                    dateRange: _calculateRange(selectedRange),
                   ),
                   GraphField(
-                    dateRange: (
-                      DateTime.now(),
-                      DateTime.now().add(
-                        const Duration(days: 6),
-                      ),
-                    ),
+                    viewMode: selectedRange,
+                    dateRange: _calculateRange(selectedRange),
                   ),
                 ],
               ),
@@ -57,5 +60,21 @@ class ActivityPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  (DateTime, DateTime) _calculateRange(String range) {
+    final now = DateTime.now();
+
+    switch (range) {
+      case 'M':
+        return (now.subtract(Duration(days: 29)), now);
+      case '3M':
+        return (now.subtract(Duration(days: 89)), now);
+      case 'Y':
+        return (now.subtract(Duration(days: 364)), now);
+      case 'W':
+      default:
+        return (now.subtract(Duration(days: 6)), now);
+    }
   }
 }

@@ -2,33 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/theme.dart';
 
-class DateRangePicker extends StatefulWidget {
+class DateRangePicker extends StatelessWidget {
   final List<String> ranges;
+  final String selected;
+  final ValueChanged<String> onChanged;
 
   const DateRangePicker({
     super.key,
     required this.ranges,
+    required this.selected,
+    required this.onChanged,
   });
-
-  @override
-  State<DateRangePicker> createState() => _DateRangePickerState();
-}
-
-class _DateRangePickerState extends State<DateRangePicker> {
-  String? selectedOption; // for single select
-
-  @override
-  void initState() {
-    super.initState();
-    selectedOption = 'W';
-  }
-
-  void handleTap(String label) {
-    debugPrint(label);
-    setState(() {
-      selectedOption = label;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +26,13 @@ class _DateRangePickerState extends State<DateRangePicker> {
       ),
       child: Row(
         spacing: 8.w,
-        children: widget.ranges.map((label) {
-          final isSelected = selectedOption == label;
+        children: ranges.map((label) {
+          final isSelected = selected == label;
 
           return DateRangeButton(
             label: label,
             isSelected: isSelected,
-            onTap: () => handleTap(label),
+            onTap: () => onChanged(label),
           );
         }).toList(),
       ),
