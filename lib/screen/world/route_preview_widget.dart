@@ -7,10 +7,12 @@ import 'package:ploop_fe/theme.dart';
 class RoutePreviewWidget extends StatelessWidget {
   final RouteModel selectedRouteModel;
   final VoidCallback onClosePressed;
+  final VoidCallback onRoutePressed;
   const RoutePreviewWidget({
     super.key,
     required this.selectedRouteModel,
     required this.onClosePressed,
+    required this.onRoutePressed,
   });
 
   @override
@@ -79,7 +81,7 @@ class RoutePreviewWidget extends StatelessWidget {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed:
-                  () {}, // TODO: connect to drawpolyline, zoom in by zoomByBound attribute
+                  onRoutePressed, // TODO: connect to drawpolyline, zoom in by zoomByBound attribute
               child: Text(
                 "Route",
                 style: Theme.of(context)

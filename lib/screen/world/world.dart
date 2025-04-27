@@ -42,6 +42,10 @@ class _WorldPageState extends State<WorldPage> {
   RouteModel? selectedRoute;
   String? selectedMarkerId;
   bool isRouteDrawing = false;
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+
+  Set<Polyline> polylines = {};
 
   // temp
   RouteModel findRouteInfo(String routeId) {
@@ -50,32 +54,87 @@ class _WorldPageState extends State<WorldPage> {
   }
 
   void _handleMarkerTap(String routeId) {
-    // tap active marker; reset to default
-    if (selectedMarkerId == routeId) {
+    isRouteDrawing = false;
+    // tapping for the first time
+    if (selectedMarkerId != routeId) {
       setState(() {
-        debugPrint('tapped inactive marker $routeId');
-        selectedMarkerId = routeId;
-        enablePreview = false;
-        selectedRoute = null;
-        isRouteDrawing = false;
-      });
-    }
-    // tap inactive marker;
-    else {
-      setState(() {
-        debugPrint(
-            'selectedMarkerId: $selectedMarkerId, tapped inactive marker $routeId');
+        polylines.clear();
+        // debugPrint('tapped inactive marker $routeId');
         selectedMarkerId = routeId;
         enablePreview = true;
         selectedRoute = findRouteInfo(routeId);
+        // isRouteDrawing = false;
+      });
+    }
+    // re-tap active marker
+    else {
+      setState(() {
+        // debugPrint(
+        //     'selectedMarkerId: $selectedMarkerId, tapped inactive marker $routeId');
+        selectedMarkerId = null;
+        enablePreview = false;
+        selectedRoute = null;
+        isRouteDrawing = false;
+        polylines.clear();
       });
     }
   }
 
+  // when close button on preview window is pressed
   void _togglePreview() {
     setState(() {
       enablePreview = !enablePreview;
+
+      if (!enablePreview) {
+        // closing
+        selectedMarkerId = null;
+        selectedRoute = null;
+      }
     });
+    // debugPrint(
+    //     "selected Marker id: $selectedMarkerId\nseleted route: $selectedRoute, enable Preview: $enablePreview");
+  }
+
+  void _buildPolyline() {
+    setState(() {
+      isRouteDrawing = true;
+      if (selectedRoute != null) {
+        polylines.add(Polyline(
+            polylineId: PolylineId(selectedMarkerId.toString()),
+            points: selectedRoute!.route,
+            color: theme().state,
+            visible: isRouteDrawing,
+            width: 6));
+
+        _zoomToRoute();
+      } else {
+        isRouteDrawing = false;
+        polylines.clear();
+      }
+    });
+  }
+
+  // when Route button on preview window is pressed
+  // called only while routeModel is selected
+  void _drawRouteOnMap() {
+    if (enablePreview) {
+      setState(() {
+        enablePreview = false;
+        isRouteDrawing = true;
+      });
+    }
+  }
+
+  Future<void> _zoomToRoute() async {
+    debugPrint('called zoomToRoute');
+    if (selectedRoute != null) {
+      debugPrint('route is not null');
+      final GoogleMapController controller = await _mapController.future;
+      controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+            selectedRoute!.getCenter(), selectedRoute!.getBoundsZoom()),
+      );
+    }
   }
 
   @override
@@ -83,12 +142,16 @@ class _WorldPageState extends State<WorldPage> {
     return Stack(
       children: [
         WorldMap(
-          data: routeData,
-          selectedMarkerId: '',
-          onMarkerTap: _handleMarkerTap,
-          isRouteDrawing: false,
-          enablePreview: false,
-        ),
+            data: routeData,
+            selectedMarkerId: selectedMarkerId,
+            onMarkerTap: _handleMarkerTap,
+            isRouteDrawing: isRouteDrawing,
+            enablePreview: enablePreview,
+            selectedRoute: selectedRoute,
+            polylines: polylines,
+            onMapCreated: (controller) {
+              _mapController.complete(controller);
+            }),
         SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
@@ -99,9 +162,13 @@ class _WorldPageState extends State<WorldPage> {
             top: 400.h,
             left: 28.w,
             child: RoutePreviewWidget(
-              selectedRouteModel: selectedRoute!,
-              onClosePressed: _togglePreview,
-            ),
+                selectedRouteModel: selectedRoute!,
+                onClosePressed: _togglePreview,
+                onRoutePressed: () {
+                  debugPrint('route pressed');
+                  _buildPolyline();
+                  _drawRouteOnMap();
+                }),
           ),
       ],
     );

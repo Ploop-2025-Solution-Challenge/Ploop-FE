@@ -13,13 +13,21 @@ class WorldMap extends StatefulWidget {
   final bool isRouteDrawing;
   final bool enablePreview;
   final Function(String) onMarkerTap;
+  final Set<Polyline> polylines;
+
+  final RouteModel? selectedRoute;
+  final Function(GoogleMapController)? onMapCreated;
+
   const WorldMap(
       {super.key,
       required this.selectedMarkerId,
       required this.onMarkerTap,
       required this.data,
       required this.isRouteDrawing,
-      required this.enablePreview});
+      required this.enablePreview,
+      required this.selectedRoute,
+      required this.polylines,
+      this.onMapCreated});
 
   @override
   State<WorldMap> createState() => WorldMapState();
@@ -45,6 +53,7 @@ class WorldMapState extends State<WorldMap> {
     data = widget.data;
   }
 
+  // set marker icon by status
   Set<Marker> _buildMarker() {
     if (data.isEmpty) {
       debugPrint("route data is empty");
@@ -57,11 +66,11 @@ class WorldMapState extends State<WorldMap> {
         markerId: MarkerId(routeModel.routeId.toString()),
         icon: isMarkerSelected
             ? AssetMapBitmap('assets/markers/icon_user_route_selected.png',
-                width: 36.w)
+                width: 45.w)
             : AssetMapBitmap('assets/markers/icon_user_route_default.png',
                 width: 36.w),
         onTap: () => {
-          debugPrint("pressed ${routeModel.routeId}"),
+          // debugPrint("pressed ${routeModel.routeId}"),
           widget.onMarkerTap(routeModel.routeId)
         },
       );
@@ -74,18 +83,23 @@ class WorldMapState extends State<WorldMap> {
       children: [
         GoogleMap(
           markers: _buildMarker(),
+          polylines: widget.polylines,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
-          onMapCreated: (GoogleMapController controller) {
+          onMapCreated: (controller) {
             try {
               _goToCurrentLocation();
             } catch (e) {
               debugPrint('$e');
             }
             _controller.complete(controller);
+            if (widget.onMapCreated != null) {
+              widget.onMapCreated!(controller);
+            }
           },
           myLocationButtonEnabled: false,
         ),
+        // current location button
         Positioned(
           bottom: 32.h,
           right: 16.h,
