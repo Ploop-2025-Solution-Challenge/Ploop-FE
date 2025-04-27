@@ -89,11 +89,16 @@ flutter:
     - assets/icons/default-user-icon.png
     - assets/icons/Update-success-3x.png
     - assets/icons/Update-failed-3x.png
+    - assets/icons/verify-success-3x.png
+    - assets/icons/verify-failed-3x.png
+    - assets/icons/close-route-icon.png
 
     # map marker icond
     - assets/markers/icon_Bin.png
     - assets/markers/icon_Litter.png
     - assets/markers/icon_recommendation.png
+    - assets/markers/icon_user_route_default.png
+    - assets/markers/icon_user_route_selected.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     - .env

@@ -4,134 +4,106 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/screen/world/route_preview_widget.dart';
+import 'package:ploop_fe/screen/world/world_map.dart';
 import 'package:ploop_fe/theme.dart';
 
-class WorldPage extends StatelessWidget {
+/* TEST */
+RouteModel test1 = RouteModel(route: const [
+  LatLng(37.422131, -122.084801),
+  LatLng(37.422400, -122.084600),
+  LatLng(37.422650, -122.084300),
+  LatLng(37.422800, -122.084000),
+  LatLng(37.422900, -122.083700),
+  LatLng(37.423000, -122.083400),
+], userId: "1", updatedDateTime: DateTime(2025, 4, 7, 8, 16), routeId: "1");
+RouteModel test2 = RouteModel(route: const [
+  LatLng(37.424500, -122.081500),
+  LatLng(37.424700, -122.081200),
+  LatLng(37.424900, -122.080900),
+  LatLng(37.425100, -122.080600),
+  LatLng(37.425300, -122.080300),
+  LatLng(37.425500, -122.080000),
+], userId: "2", updatedDateTime: DateTime(2025, 4, 25, 22, 10), routeId: "2");
+/* */
+
+class WorldPage extends StatefulWidget {
   const WorldPage({super.key});
+
+  @override
+  State<WorldPage> createState() => _WorldPageState();
+}
+
+class _WorldPageState extends State<WorldPage> {
+  List<RouteModel> routeData = [test1, test2];
+
+  bool enablePreview = false;
+  RouteModel? selectedRoute;
+  String? selectedMarkerId;
+  bool isRouteDrawing = false;
+
+  // temp
+  RouteModel findRouteInfo(String routeId) {
+    debugPrint('input routeId is $routeId');
+    return routeData.firstWhere((routeModel) => routeModel.routeId == routeId);
+  }
+
+  void _handleMarkerTap(String routeId) {
+    // tap active marker; reset to default
+    if (selectedMarkerId == routeId) {
+      setState(() {
+        debugPrint('tapped inactive marker $routeId');
+        selectedMarkerId = routeId;
+        enablePreview = false;
+        selectedRoute = null;
+        isRouteDrawing = false;
+      });
+    }
+    // tap inactive marker;
+    else {
+      setState(() {
+        debugPrint(
+            'selectedMarkerId: $selectedMarkerId, tapped inactive marker $routeId');
+        selectedMarkerId = routeId;
+        enablePreview = true;
+        selectedRoute = findRouteInfo(routeId);
+      });
+    }
+  }
+
+  void _togglePreview() {
+    setState(() {
+      enablePreview = !enablePreview;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const MapSample(),
+        WorldMap(
+          data: routeData,
+          selectedMarkerId: '',
+          onMarkerTap: _handleMarkerTap,
+          isRouteDrawing: false,
+          enablePreview: false,
+        ),
         SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class MapSample extends StatefulWidget {
-  const MapSample({super.key});
-
-  @override
-  State<MapSample> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapSample> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-  LatLng? currentPos;
-
-  // temporary: GooglePlex position
-
-  static const CameraPosition initialPos = CameraPosition(
-    target: LatLng(37.422131, -122.084801),
-    zoom: 6,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: initialPos,
-          onMapCreated: (GoogleMapController controller) {
-            try {
-              _goToCurrentLocation();
-            } catch (e) {
-              debugPrint('$e');
-            }
-            _controller.complete(controller);
-          },
-          myLocationButtonEnabled: false,
-        ),
-        Positioned(
-          bottom: 32.h,
-          right: 16.h,
-          child: Container(
-            width: 44.w,
-            height: 44.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(22.w),
-              boxShadow: [
-                BoxShadow(
-                  color: GrayScale.shadowColor,
-                  blurRadius: 4.w,
-                  offset: Offset(0, 4.h),
-                  spreadRadius: 0,
-                )
-              ],
-              color: Colors.black,
-            ),
-            child: IconButton(
-              onPressed: (() {
-                _goToCurrentLocation();
-              }),
-              icon: const Icon(
-                Icons.my_location,
-                color: GrayScale.white,
-              ),
+        if (enablePreview && selectedRoute != null)
+          Positioned(
+            top: 400.h,
+            left: 28.w,
+            child: RoutePreviewWidget(
+              selectedRouteModel: selectedRoute!,
+              onClosePressed: _togglePreview,
             ),
           ),
-        )
       ],
     );
   }
-
-  // move map camera by _determinePosition()
-  Future<void> _goToCurrentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-
-    Position position = await _determinePosition();
-
-    controller.animateCamera(
-      CameraUpdate.newLatLng(
-        LatLng(position.latitude, position.longitude),
-      ),
-    );
-    debugPrint(position.latitude.toString());
-    debugPrint(position.longitude.toString());
-  }
-}
-
-Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  // Test if location services are enabled.
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
-  }
-
-  return await Geolocator.getCurrentPosition();
 }
