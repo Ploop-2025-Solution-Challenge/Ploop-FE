@@ -162,6 +162,7 @@ class _WorldPageState extends State<WorldPage> {
             top: 400.h,
             left: 28.w,
             child: RoutePreviewWidget(
+                key: ValueKey(selectedRoute!.routeId), // refresh preview map
                 selectedRouteModel: selectedRoute!,
                 onClosePressed: _togglePreview,
                 onRoutePressed: () {
