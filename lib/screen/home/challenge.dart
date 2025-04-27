@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:ploop_fe/theme.dart';
+
+import 'verify_result.dart';
 
 // maybe consumer widget?
 class ChallengeProgressCard extends StatelessWidget {
@@ -186,17 +189,29 @@ class ChallengeCard extends StatefulWidget {
 
 class ChallengeCardState extends State<ChallengeCard> {
   late bool _isVerified;
+  XFile? _image;
+  Future getImage(ImageSource imageSource) async {
+    final picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
+    if (pickedFile != null) {
+      _image = XFile(pickedFile.path);
+      debugPrint('image is saved at: ${pickedFile.path}');
+
+      if (_image != null) {
+        // Navigator.push(context,
+        // MaterialPageRoute(builder: (builder) => const VerifyFailed()));
+        verifyMission();
+      }
+    }
+  }
+
+  void verifyMission() {}
 
   @override
   void initState() {
     super.initState();
     _isVerified = widget.isVerified;
-  }
-
-  void _toggleVerify() {
-    setState(() {
-      _isVerified = !_isVerified;
-    });
   }
 
   @override
@@ -228,7 +243,12 @@ class ChallengeCardState extends State<ChallengeCard> {
               width: 53.w,
               height: 25.h,
               child: TextButton(
-                onPressed: _toggleVerify,
+                onPressed: () {
+                  getImage(ImageSource.camera);
+                  // test
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (builder) => VerifyFailed()));
+                },
                 child: Text(
                   'Verify',
                   style: Theme.of(context)

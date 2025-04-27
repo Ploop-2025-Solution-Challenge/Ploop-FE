@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ploop_fe/model/bin_request.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
@@ -476,10 +474,10 @@ class MapSampleState extends State<MapSample> {
             GoogleMapController googleMapController = await _controller.future;
             LatLngBounds bounds = await googleMapController.getVisibleRegion();
 
-            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
-            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
             debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
             debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
+            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
+            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
 
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
