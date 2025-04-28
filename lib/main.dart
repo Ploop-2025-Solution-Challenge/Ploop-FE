@@ -96,51 +96,63 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: WidgetStateTextStyle.resolveWith(
-            (states) {
-              final baseStyle = Theme.of(context).textTheme.labelSmall!;
-              final isSelected = states.contains(WidgetState.selected);
-              return baseStyle.copyWith(
-                  color:
-                      isSelected ? GrayScale.black : const Color(0x58000000));
-            },
-          ),
-          height: 65,
-          backgroundColor: GrayScale.white,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          elevation: 0,
-          indicatorColor: Colors.transparent,
-        ),
-        child: NavigationBar(
-          shadowColor: null,
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onTap,
-          destinations: [
-            ...List.generate(
-              4,
-              (index) {
-                final isSelected = _selectedIndex == index;
-                final double opacity = isSelected ? 1.0 : 0.4;
-
-                return NavigationDestination(
-                  icon: Opacity(
-                    opacity: opacity,
-                    child: Image.asset(
-                      _iconPaths[index],
-                      height: _iconHeights[index],
-                    ),
-                  ),
-                  label: _labels[index],
-                );
-              },
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(height: 1.h, color: GrayScale.gray_100),
+          NavigationBarTheme(
+            data: NavigationBarThemeData(
+              labelTextStyle: WidgetStateTextStyle.resolveWith(
+                (states) {
+                  final baseStyle = Theme.of(context).textTheme.labelSmall!;
+                  final isSelected = states.contains(WidgetState.selected);
+                  return baseStyle.copyWith(
+                      color: isSelected
+                          ? GrayScale.black
+                          : const Color(0x58000000));
+                },
+              ),
+              height: 65,
+              backgroundColor: GrayScale.white,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              elevation: 0,
+              indicatorColor: Colors.transparent,
             ),
-          ],
-        ),
+            child: NavigationBar(
+              shadowColor: null,
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: _onTap,
+              destinations: [
+                ...List.generate(
+                  4,
+                  (index) {
+                    final isSelected = _selectedIndex == index;
+                    final double opacity = isSelected ? 1.0 : 0.4;
+
+                    return NavigationDestination(
+                      icon: Opacity(
+                        opacity: opacity,
+                        child: Image.asset(
+                          _iconPaths[index],
+                          height: _iconHeights[index],
+                        ),
+                      ),
+                      label: _labels[index],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

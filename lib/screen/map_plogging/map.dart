@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
+import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/service/bin_service.dart';
@@ -41,6 +43,15 @@ class _MapPageState extends State<MapPage> {
   bool _showLitterArea = false;
   bool _showBin = false;
   bool _showRoute = false;
+
+  // elapsed plogging time duration
+  final Stopwatch _stopwatch = Stopwatch();
+  late Timer timer;
+  late Duration _elapsedTime;
+  late String _elapsedTimeString;
+
+  int _pickedAmount = 0;
+  double _movedDistance = 0;
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -79,6 +90,22 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
+    _elapsedTime = Duration.zero;
+    _elapsedTimeString = "";
+
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (_stopwatch.isRunning) {
+          _updateElapsedTime();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   void _showToast(String result) {
@@ -135,7 +162,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
-      debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
+      // debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
     });
   }
 
@@ -145,12 +172,69 @@ class _MapPageState extends State<MapPage> {
       _isMapShrunk = true;
       _isButtonEnabled = false;
       _isPloggingEnabled = true;
+      _stopwatch.start();
+
+      if (_stopwatch.isRunning) {
+        _updateElapsedTime();
+      }
     });
+  }
+
+  void _updateElapsedTime() {
+    setState(() {
+      _elapsedTime = _stopwatch.elapsed;
+      _elapsedTimeString = _formatTime(_elapsedTime);
+    });
+  }
+
+  String _formatTime(Duration time) {
+    double hours = time.inSeconds / 3600;
+    return hours.toStringAsFixed(2);
   }
 
   void _pausePlogging() {
     setState(() {
       _isPloggingEnabled = false;
+      _stopwatch.stop();
+      timer.cancel(); // not working?
+    });
+  }
+
+  void _endPlogging() {
+    setState(() {
+      _isPloggingEnabled = false;
+      debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
+      _stopwatch.reset();
+      timer.cancel();
+    });
+  }
+
+  void _showPauseModal(BuildContext context) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return PauseModal(
+          onFinish: _endPlogging,
+          onClose: _resumePlogging,
+          amount: _pickedAmount,
+          miles: _movedDistance,
+          formattedTime: _elapsedTimeString,
+        );
+      },
+    );
+    debugPrint(result);
+    if (result == null) {
+      _resumePlogging();
+    }
+  }
+
+  void _resumePlogging() {
+    _stopwatch.start();
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedTime = _stopwatch.elapsed;
+      });
     });
   }
 
@@ -172,6 +256,18 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _increment() {
+    setState(() {
+      _pickedAmount++;
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      if (_pickedAmount > 0) _pickedAmount--;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -179,76 +275,86 @@ class _MapPageState extends State<MapPage> {
       child: SizedBox.expand(
         child: Stack(
           children: [
-            if (_isPloggingEnabled)
-              Positioned(
-                bottom: 19.h,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      spacing: 24.h,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 41.w,
-                          children: [
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text('0.0',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Miles',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text('0.0',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Time',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 12.h,
-                          children: [
-                            Text(
-                              'Picked Up',
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                            const PickupCounter(),
-                          ],
-                        ),
-                        StopPloggingButton(onPressed: () {}),
-                      ],
-                    ),
+            // if (_isPloggingEnabled)
+            Positioned(
+              bottom: 19.h,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    spacing: 24.h,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 41.w,
+                        children: [
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text('$_movedDistance',
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Miles',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          // stopwatch
+
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text(_elapsedTimeString,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Hours',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 12.h,
+                        children: [
+                          Text(
+                            'Picked Up',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          PickupCounter(
+                            amount: _pickedAmount,
+                            onIncrement: _increment,
+                            onDecrement: _decrement,
+                          ),
+                        ],
+                      ),
+                      StopPloggingButton(
+                        onPressed: () {
+                          _pausePlogging();
+                          _showPauseModal(context);
+                        },
+                        mode: 'stop',
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
             Stack(
               children: [
                 AnimatedContainer(
@@ -259,6 +365,7 @@ class _MapPageState extends State<MapPage> {
                     showLitterArea: _showLitterArea,
                     showBin: _showBin,
                     showRoute: _showRoute,
+                    isPloggingEnabled: _isPloggingEnabled,
                   ),
                 ),
                 SafeArea(
@@ -301,13 +408,14 @@ class _MapPageState extends State<MapPage> {
                 Positioned(
                   bottom: 32.h,
                   right: 16.h,
-                  child: CameraButton(
-                    onPressed: () {
-                      debugPrint('camera pressed');
-                      getImage(ImageSource.camera);
-                      if (_image != null) {}
-                    },
-                  ),
+                  child: !_isPloggingEnabled
+                      ? CameraButton(
+                          onPressed: () async {
+                            debugPrint('camera pressed');
+                            await getImage(ImageSource.camera);
+                          },
+                        )
+                      : const SizedBox(),
                 ),
               ],
             ),
@@ -322,12 +430,15 @@ class MapSample extends StatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
+  final bool isPloggingEnabled;
 
-  const MapSample(
-      {super.key,
-      this.showLitterArea = false,
-      this.showBin = false,
-      this.showRoute = false});
+  const MapSample({
+    super.key,
+    this.showLitterArea = false,
+    this.showBin = false,
+    this.showRoute = false,
+    this.isPloggingEnabled = false,
+  });
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -354,7 +465,12 @@ class MapSampleState extends State<MapSample> {
     zoom: 14.4746,
   );
 
-  void initState() {}
+  // void initState() {}
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _fetchAreaPosition(bounds) async {
     final prefs = await SharedPreferences.getInstance();
@@ -372,18 +488,19 @@ class MapSampleState extends State<MapSample> {
         }
         setState(
           () {
-            _litterMarkers.clear();
-            trashspotPosList
-                .map(
-                  (e) => Marker(
-                    icon: AssetMapBitmap('assets/markers/icon_Litter.png',
-                        width: 26.w, height: 30.h),
-                    markerId: MarkerId('${e.id}'),
-                    position: (LatLng(e.latitude, e.longitude)),
-                    visible: true,
-                  ),
-                )
-                .toList();
+            _litterMarkers
+              ..clear()
+              ..addAll(trashspotPosList
+                  .map(
+                    (e) => Marker(
+                      icon: AssetMapBitmap('assets/markers/icon_Litter.png',
+                          width: 36.w, height: 41.h),
+                      markerId: MarkerId('${e.id}'),
+                      position: (LatLng(e.latitude, e.longitude)),
+                      visible: true,
+                    ),
+                  )
+                  .toList());
           },
         );
       } else {
@@ -407,18 +524,19 @@ class MapSampleState extends State<MapSample> {
         }
         setState(
           () {
-            _binMarkers.clear();
-            binPosList
-                .map(
-                  (e) => Marker(
-                    icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-                        width: 26.w, height: 30.h),
-                    markerId: MarkerId('${e.id}'),
-                    position: (LatLng(e.latitude, e.longitude)),
-                    visible: true,
-                  ),
-                )
-                .toList();
+            _binMarkers
+              ..clear()
+              ..addAll(binPosList
+                  .map(
+                    (e) => Marker(
+                      icon: AssetMapBitmap('assets/markers/icon_Bin.png',
+                          width: 36.w, height: 41.h),
+                      markerId: MarkerId('${e.id}'),
+                      position: (LatLng(e.latitude, e.longitude)),
+                      visible: true,
+                    ),
+                  )
+                  .toList());
           },
         );
       } else {
@@ -437,14 +555,6 @@ class MapSampleState extends State<MapSample> {
 
     if (widget.showBin) {
       visibleMarkers.addAll(_binMarkers);
-      visibleMarkers.add(
-        Marker(
-          markerId: const MarkerId('test'),
-          position: const LatLng(37.609215142664446, 127.06060163676739),
-          icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-              width: 36.w, height: 41.h),
-        ),
-      );
     }
 
     if (widget.showRoute) {
@@ -486,7 +596,7 @@ class MapSampleState extends State<MapSample> {
           myLocationButtonEnabled: false,
         ),
         Positioned(
-          bottom: 92.h,
+          bottom: !widget.isPloggingEnabled ? 92.h : 32.h,
           right: 16.h,
           child: Container(
             width: 44.w,

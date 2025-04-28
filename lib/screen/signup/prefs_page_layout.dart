@@ -58,7 +58,7 @@ class PrefsPageLayout extends StatelessWidget {
                           Navigator.pop(context);
                         },
                         icon:
-                            Image.asset('assets/images/navigate-back-icon.png'),
+                            Image.asset('assets/icons/navigate-back-icon.png'),
                       )
                     : SizedBox(
                         height: 70.h,

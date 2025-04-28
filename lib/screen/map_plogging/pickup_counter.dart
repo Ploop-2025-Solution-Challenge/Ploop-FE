@@ -2,49 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/theme.dart';
 
-class PickupCounter extends StatefulWidget {
-  const PickupCounter({super.key});
+class PickupCounter extends StatelessWidget {
+  final int amount;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
 
-  @override
-  State<StatefulWidget> createState() => _PickUpCounterState();
-}
-
-class _PickUpCounterState extends State<PickupCounter> {
-  int _counter = 0;
-
-  void _increment() {
-    setState(() {
-      debugPrint('+');
-      _counter++;
-    });
-  }
-
-  void _decrement() {
-    setState(() {
-      if (_counter == 0) return;
-      debugPrint('-');
-      _counter--;
-    });
-  }
+  const PickupCounter({
+    super.key,
+    required this.amount,
+    required this.onIncrement,
+    required this.onDecrement,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       spacing: 36.w,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        // button
         CounterButton(
           label: '-',
-          onPressed: _decrement,
+          onPressed: onDecrement,
         ),
         Text(
-          '$_counter',
+          '$amount',
           style: Theme.of(context).textTheme.displayMedium,
         ),
         CounterButton(
           label: '+',
-          onPressed: _increment,
+          onPressed: onIncrement,
         ),
       ],
     );

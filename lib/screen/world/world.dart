@@ -141,6 +141,13 @@ class _WorldPageState extends State<WorldPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Positioned(
+          bottom: 0,
+          child: Container(
+            color: GrayScale.gray_100,
+            height: 150.h,
+          ),
+        ),
         WorldMap(
             data: routeData,
             selectedMarkerId: selectedMarkerId,
