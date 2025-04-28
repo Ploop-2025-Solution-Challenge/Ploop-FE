@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graphic/graphic.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/plogging_result.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
@@ -10,15 +11,16 @@ class PauseModal extends StatelessWidget {
   final VoidCallback onClose;
   final int amount;
   final double miles;
-  final Duration time;
+  final String formattedTime;
 
-  const PauseModal(
-      {super.key,
-      required this.onFinish,
-      required this.onClose,
-      required this.amount,
-      required this.miles,
-      required this.time});
+  const PauseModal({
+    super.key,
+    required this.onFinish,
+    required this.onClose,
+    required this.amount,
+    required this.miles,
+    required this.formattedTime,
+  });
 
   String format(Duration time) {
     double hours = time.inSeconds / 3600;
@@ -28,6 +30,15 @@ class PauseModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: ShapeDecoration(
+        color: GrayScale.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.w),
+            topRight: Radius.circular(10.w),
+          ),
+        ),
+      ),
       height: 436.h,
       width: 417.w,
       child: Column(
@@ -95,10 +106,10 @@ class PauseModal extends StatelessWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text(format(time),
+                      Text(formattedTime,
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
-                        'Time',
+                        'Hours',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: GrayScale.gray_300,
                             ),
@@ -113,7 +124,11 @@ class PauseModal extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (builder) => PloggingResult()));
+                          builder: (builder) => PloggingResult(
+                                amount: amount,
+                                miles: miles,
+                                time: formattedTime,
+                              )));
                 },
                 mode: 'end',
               ),

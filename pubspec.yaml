@@ -44,6 +44,7 @@ dependencies:
   json_annotation: ^4.9.0
   graphic: ^2.5.1
   fluttertoast: ^8.2.12
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

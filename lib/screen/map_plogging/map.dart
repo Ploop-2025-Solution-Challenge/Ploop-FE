@@ -93,7 +93,7 @@ class _MapPageState extends State<MapPage> {
     _elapsedTime = Duration.zero;
     _elapsedTimeString = "";
 
-    timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         if (_stopwatch.isRunning) {
           _updateElapsedTime();
@@ -162,7 +162,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
-      debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
+      // debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
     });
   }
 
@@ -206,7 +206,35 @@ class _MapPageState extends State<MapPage> {
       debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
       _stopwatch.reset();
       timer.cancel();
-      dispose();
+    });
+  }
+
+  void _showPauseModal(BuildContext context) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return PauseModal(
+          onFinish: _endPlogging,
+          onClose: _resumePlogging,
+          amount: _pickedAmount,
+          miles: _movedDistance,
+          formattedTime: _elapsedTimeString,
+        );
+      },
+    );
+    debugPrint(result);
+    if (result == null) {
+      _resumePlogging();
+    }
+  }
+
+  void _resumePlogging() {
+    _stopwatch.start();
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedTime = _stopwatch.elapsed;
+      });
     });
   }
 
@@ -265,7 +293,7 @@ class _MapPageState extends State<MapPage> {
                           Column(
                             spacing: 2.h,
                             children: [
-                              Text('0.0',
+                              Text('$_movedDistance',
                                   style:
                                       Theme.of(context).textTheme.displaySmall),
                               Text(
@@ -318,23 +346,7 @@ class _MapPageState extends State<MapPage> {
                       StopPloggingButton(
                         onPressed: () {
                           _pausePlogging();
-                          showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return PauseModal(
-                                      onClose: _startPlogging,
-                                      onFinish: () {
-                                        _endPlogging();
-                                      },
-                                      amount: _pickedAmount,
-                                      miles: _movedDistance,
-                                      time: _elapsedTime,
-                                    );
-                                  })
-                              // TODO: when closed resume timer and locate following
-                              // .whenComplete(
-                              //     _isPloggingEnabled ? _startPlogging : () {})
-                              ;
+                          _showPauseModal(context);
                         },
                         mode: 'stop',
                       ),
@@ -398,10 +410,9 @@ class _MapPageState extends State<MapPage> {
                   right: 16.h,
                   child: !_isPloggingEnabled
                       ? CameraButton(
-                          onPressed: () {
+                          onPressed: () async {
                             debugPrint('camera pressed');
-                            getImage(ImageSource.camera);
-                            if (_image != null) {}
+                            await getImage(ImageSource.camera);
                           },
                         )
                       : const SizedBox(),
