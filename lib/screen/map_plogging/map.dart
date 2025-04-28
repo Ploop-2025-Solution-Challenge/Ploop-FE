@@ -431,18 +431,19 @@ class MapSampleState extends State<MapSample> {
         }
         setState(
           () {
-            _litterMarkers.clear();
-            trashspotPosList
-                .map(
-                  (e) => Marker(
-                    icon: AssetMapBitmap('assets/markers/icon_Litter.png',
-                        width: 26.w, height: 30.h),
-                    markerId: MarkerId('${e.id}'),
-                    position: (LatLng(e.latitude, e.longitude)),
-                    visible: true,
-                  ),
-                )
-                .toList();
+            _litterMarkers
+              ..clear()
+              ..addAll(trashspotPosList
+                  .map(
+                    (e) => Marker(
+                      icon: AssetMapBitmap('assets/markers/icon_Litter.png',
+                          width: 36.w, height: 41.h),
+                      markerId: MarkerId('${e.id}'),
+                      position: (LatLng(e.latitude, e.longitude)),
+                      visible: true,
+                    ),
+                  )
+                  .toList());
           },
         );
       } else {
@@ -466,18 +467,19 @@ class MapSampleState extends State<MapSample> {
         }
         setState(
           () {
-            _binMarkers.clear();
-            binPosList
-                .map(
-                  (e) => Marker(
-                    icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-                        width: 26.w, height: 30.h),
-                    markerId: MarkerId('${e.id}'),
-                    position: (LatLng(e.latitude, e.longitude)),
-                    visible: true,
-                  ),
-                )
-                .toList();
+            _binMarkers
+              ..clear()
+              ..addAll(binPosList
+                  .map(
+                    (e) => Marker(
+                      icon: AssetMapBitmap('assets/markers/icon_Bin.png',
+                          width: 36.w, height: 41.h),
+                      markerId: MarkerId('${e.id}'),
+                      position: (LatLng(e.latitude, e.longitude)),
+                      visible: true,
+                    ),
+                  )
+                  .toList());
           },
         );
       } else {
@@ -496,14 +498,6 @@ class MapSampleState extends State<MapSample> {
 
     if (widget.showBin) {
       visibleMarkers.addAll(_binMarkers);
-      visibleMarkers.add(
-        Marker(
-          markerId: const MarkerId('test'),
-          position: const LatLng(37.609215142664446, 127.06060163676739),
-          icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-              width: 36.w, height: 41.h),
-        ),
-      );
     }
 
     if (widget.showRoute) {

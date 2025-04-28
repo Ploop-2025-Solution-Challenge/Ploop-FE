@@ -19,7 +19,6 @@ class BinService {
       final request = http.MultipartRequest('POST', url);
       request.headers.addAll(headers);
 
-      // 이미지 파일 추가
       final bytes = await imageFile.readAsBytes();
       final multipartFile = http.MultipartFile.fromBytes(
         'image',
@@ -28,7 +27,6 @@ class BinService {
       );
       request.files.add(multipartFile);
 
-      // 필드 추가
       request.fields['longitude'] = bin.longitude.toString();
       request.fields['latitude'] = bin.latitude.toString();
 
@@ -51,7 +49,7 @@ class BinService {
   static Future<List<BinResponse>?> getBinPosition(
       String jwt, LatLngBounds bounds) async {
     final url = Uri.parse(
-        'https://api.ploop.store/api/map/bin/bounds?minLat=${bounds.southwest.latitude}&maxLat=${bounds.northeast.latitude}&minLng=${bounds.southwest.longitude}&maxLng=${bounds.northeast.latitude}');
+        'https://api.ploop.store/api/map/bin/bounds?minLat=${bounds.southwest.latitude}&maxLat=${bounds.northeast.latitude}&minLng=${bounds.southwest.longitude}&maxLng=${bounds.northeast.longitude}');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $jwt',

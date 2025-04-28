@@ -19,7 +19,6 @@ class TrashspotService {
       final request = http.MultipartRequest('POST', url);
       request.headers.addAll(headers);
 
-      // 이미지 파일 추가
       final bytes = await imageFile.readAsBytes();
       final multipartFile = http.MultipartFile.fromBytes(
         'image',
@@ -28,7 +27,6 @@ class TrashspotService {
       );
       request.files.add(multipartFile);
 
-      // 필드 추가
       request.fields['longitude'] = spot.longitude.toString();
       request.fields['latitude'] = spot.latitude.toString();
 
@@ -51,7 +49,7 @@ class TrashspotService {
   static Future<List<TrashspotResponse>?> getSpotPosition(
       String jwt, LatLngBounds bounds) async {
     final url = Uri.parse(
-        'https://api.ploop.store/api/map/trashspot/bounds?minLat=${bounds.southwest.latitude}&maxLat=${bounds.northeast.latitude}&minLng=${bounds.southwest.longitude}&maxLng=${bounds.northeast.latitude}');
+        'https://api.ploop.store/api/map/trashspot/bounds?minLat=${bounds.southwest.latitude}&maxLat=${bounds.northeast.latitude}&minLng=${bounds.southwest.longitude}&maxLng=${bounds.northeast.longitude}');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $jwt',
@@ -62,6 +60,8 @@ class TrashspotService {
         url,
         headers: headers,
       );
+
+      // debugPrint("DEBUG: ${response.body}");
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
