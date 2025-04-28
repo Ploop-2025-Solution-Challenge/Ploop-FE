@@ -4,8 +4,10 @@ import 'package:ploop_fe/theme.dart';
 
 class StopPloggingButton extends StatelessWidget {
   final Function()? onPressed;
+  final String mode;
 
-  const StopPloggingButton({super.key, required this.onPressed});
+  const StopPloggingButton(
+      {super.key, required this.onPressed, required this.mode});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class StopPloggingButton extends StatelessWidget {
           spacing: 10,
           children: [
             Text(
-              'Stop Plogging',
+              (mode == 'stop') ? 'Stop Plogging' : 'End Plogging',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Colors.black,
