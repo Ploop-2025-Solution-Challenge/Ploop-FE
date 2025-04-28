@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
+import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/service/bin_service.dart';
@@ -41,6 +43,12 @@ class _MapPageState extends State<MapPage> {
   bool _showLitterArea = false;
   bool _showBin = false;
   bool _showRoute = false;
+
+  // elapsed plogging time duration
+  final Stopwatch _stopwatch = Stopwatch();
+  late Timer timer;
+  late Duration _elapsedTime;
+  late String _elapsedTimeString;
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -79,6 +87,16 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
+    _elapsedTime = Duration.zero;
+    _elapsedTimeString = "";
+
+    timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+      setState(() {
+        if (_stopwatch.isRunning) {
+          _updateElapsedTime();
+        }
+      });
+    });
   }
 
   void _showToast(String result) {
@@ -145,12 +163,30 @@ class _MapPageState extends State<MapPage> {
       _isMapShrunk = true;
       _isButtonEnabled = false;
       _isPloggingEnabled = true;
+      _stopwatch.start();
+
+      if (_stopwatch.isRunning) {
+        _updateElapsedTime();
+      }
     });
+  }
+
+  void _updateElapsedTime() {
+    setState(() {
+      _elapsedTime = _stopwatch.elapsed;
+      _elapsedTimeString = _formatTime(_elapsedTime);
+    });
+  }
+
+  String _formatTime(Duration time) {
+    return '${time.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(time.inSeconds.remainder(60)).toString().padLeft(2, '0')}';
   }
 
   void _pausePlogging() {
     setState(() {
       _isPloggingEnabled = false;
+      _stopwatch.stop();
+      timer.cancel(); // not working?
     });
   }
 
@@ -179,76 +215,93 @@ class _MapPageState extends State<MapPage> {
       child: SizedBox.expand(
         child: Stack(
           children: [
-            if (_isPloggingEnabled)
-              Positioned(
-                bottom: 19.h,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      spacing: 24.h,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 41.w,
-                          children: [
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text('0.0',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Miles',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text('0.0',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Time',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 12.h,
-                          children: [
-                            Text(
-                              'Picked Up',
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                            const PickupCounter(),
-                          ],
-                        ),
-                        StopPloggingButton(onPressed: () {}),
-                      ],
-                    ),
+            // if (_isPloggingEnabled)
+            Positioned(
+              bottom: 19.h,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    spacing: 24.h,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 41.w,
+                        children: [
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text('0.0',
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Miles',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          // stopwatch
+
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text(_elapsedTimeString,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Time',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 12.h,
+                        children: [
+                          Text(
+                            'Picked Up',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          const PickupCounter(),
+                        ],
+                      ),
+                      StopPloggingButton(
+                        onPressed: () {
+                          _pausePlogging();
+                          showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return PauseModal(
+                                      onClose: _startPlogging,
+                                      onFinish: () {},
+                                    );
+                                  })
+                              // TODO: when closed resume timer and locate following
+                              // .whenComplete(
+                              //     _isPloggingEnabled ? _startPlogging : () {})
+                              ;
+                        },
+                        mode: 'stop',
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
             Stack(
               children: [
                 AnimatedContainer(
@@ -259,6 +312,7 @@ class _MapPageState extends State<MapPage> {
                     showLitterArea: _showLitterArea,
                     showBin: _showBin,
                     showRoute: _showRoute,
+                    isPloggingEnabled: _isPloggingEnabled,
                   ),
                 ),
                 SafeArea(
@@ -301,13 +355,15 @@ class _MapPageState extends State<MapPage> {
                 Positioned(
                   bottom: 32.h,
                   right: 16.h,
-                  child: CameraButton(
-                    onPressed: () {
-                      debugPrint('camera pressed');
-                      getImage(ImageSource.camera);
-                      if (_image != null) {}
-                    },
-                  ),
+                  child: !_isPloggingEnabled
+                      ? CameraButton(
+                          onPressed: () {
+                            debugPrint('camera pressed');
+                            getImage(ImageSource.camera);
+                            if (_image != null) {}
+                          },
+                        )
+                      : const SizedBox(),
                 ),
               ],
             ),
@@ -322,12 +378,15 @@ class MapSample extends StatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
+  final bool isPloggingEnabled;
 
-  const MapSample(
-      {super.key,
-      this.showLitterArea = false,
-      this.showBin = false,
-      this.showRoute = false});
+  const MapSample({
+    super.key,
+    this.showLitterArea = false,
+    this.showBin = false,
+    this.showRoute = false,
+    this.isPloggingEnabled = false,
+  });
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -486,7 +545,7 @@ class MapSampleState extends State<MapSample> {
           myLocationButtonEnabled: false,
         ),
         Positioned(
-          bottom: 92.h,
+          bottom: !widget.isPloggingEnabled ? 92.h : 32.h,
           right: 16.h,
           child: Container(
             width: 44.w,
