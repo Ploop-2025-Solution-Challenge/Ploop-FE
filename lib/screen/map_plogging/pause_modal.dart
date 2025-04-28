@@ -8,8 +8,22 @@ import 'package:ploop_fe/theme.dart';
 class PauseModal extends StatelessWidget {
   final VoidCallback onFinish;
   final VoidCallback onClose;
+  final int amount;
+  final double miles;
+  final Duration time;
 
-  const PauseModal({super.key, required this.onFinish, required this.onClose});
+  const PauseModal(
+      {super.key,
+      required this.onFinish,
+      required this.onClose,
+      required this.amount,
+      required this.miles,
+      required this.time});
+
+  String format(Duration time) {
+    double hours = time.inSeconds / 3600;
+    return hours.toStringAsFixed(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +64,7 @@ class PauseModal extends StatelessWidget {
                 spacing: 8.h,
                 children: [
                   Text(
-                    "0*",
+                    '$amount',
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                   Text(
@@ -66,7 +80,7 @@ class PauseModal extends StatelessWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text('0.0',
+                      Text('$miles',
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Miles',
@@ -81,7 +95,7 @@ class PauseModal extends StatelessWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text('0:00',
+                      Text(format(time),
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Time',

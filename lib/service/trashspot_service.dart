@@ -65,7 +65,7 @@ class TrashspotService {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
-        debugPrint('OK: $responseData');
+        // debugPrint('OK: $responseData');
         return responseData
             .map((data) => TrashspotResponse.fromJson(data))
             .toList();

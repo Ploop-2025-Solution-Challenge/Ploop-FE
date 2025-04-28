@@ -50,6 +50,9 @@ class _MapPageState extends State<MapPage> {
   late Duration _elapsedTime;
   late String _elapsedTimeString;
 
+  int _pickedAmount = 0;
+  double _movedDistance = 0;
+
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
 
@@ -97,6 +100,12 @@ class _MapPageState extends State<MapPage> {
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   void _showToast(String result) {
@@ -179,7 +188,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   String _formatTime(Duration time) {
-    return '${time.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(time.inSeconds.remainder(60)).toString().padLeft(2, '0')}';
+    double hours = time.inSeconds / 3600;
+    return hours.toStringAsFixed(2);
   }
 
   void _pausePlogging() {
@@ -187,6 +197,16 @@ class _MapPageState extends State<MapPage> {
       _isPloggingEnabled = false;
       _stopwatch.stop();
       timer.cancel(); // not working?
+    });
+  }
+
+  void _endPlogging() {
+    setState(() {
+      _isPloggingEnabled = false;
+      debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
+      _stopwatch.reset();
+      timer.cancel();
+      dispose();
     });
   }
 
@@ -205,6 +225,18 @@ class _MapPageState extends State<MapPage> {
   void _toggleRouteMarker() {
     setState(() {
       _showRoute = !_showRoute;
+    });
+  }
+
+  void _increment() {
+    setState(() {
+      _pickedAmount++;
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      if (_pickedAmount > 0) _pickedAmount--;
     });
   }
 
@@ -256,7 +288,7 @@ class _MapPageState extends State<MapPage> {
                                   style:
                                       Theme.of(context).textTheme.displaySmall),
                               Text(
-                                'Time',
+                                'Hours',
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
@@ -276,7 +308,11 @@ class _MapPageState extends State<MapPage> {
                             'Picked Up',
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                          const PickupCounter(),
+                          PickupCounter(
+                            amount: _pickedAmount,
+                            onIncrement: _increment,
+                            onDecrement: _decrement,
+                          ),
                         ],
                       ),
                       StopPloggingButton(
@@ -287,7 +323,12 @@ class _MapPageState extends State<MapPage> {
                                   builder: (context) {
                                     return PauseModal(
                                       onClose: _startPlogging,
-                                      onFinish: () {},
+                                      onFinish: () {
+                                        _endPlogging();
+                                      },
+                                      amount: _pickedAmount,
+                                      miles: _movedDistance,
+                                      time: _elapsedTime,
                                     );
                                   })
                               // TODO: when closed resume timer and locate following
@@ -413,7 +454,12 @@ class MapSampleState extends State<MapSample> {
     zoom: 14.4746,
   );
 
-  void initState() {}
+  // void initState() {}
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _fetchAreaPosition(bounds) async {
     final prefs = await SharedPreferences.getInstance();

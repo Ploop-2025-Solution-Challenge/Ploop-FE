@@ -63,7 +63,7 @@ class BinService {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
-        debugPrint('OK: $responseData');
+        // debugPrint('OK: $responseData');
         return responseData.map((data) => BinResponse.fromJson(data)).toList();
       } else {
         debugPrint('get failed: ${response.statusCode} ${response.body}');
