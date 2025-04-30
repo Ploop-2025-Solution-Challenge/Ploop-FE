@@ -56,9 +56,11 @@ class _MapPageState extends State<MapPage> {
 
   int _pickedAmount = 0;
   double _movedDistance = 0;
+
+  // TEST DATA
   RouteModel recommendedRoute = RouteModel(
-      routeId: 'recommende',
-      route: <LatLng>[
+      routeId: 'recommend',
+      route: const <LatLng>[
         LatLng(37.62813, 127.073059),
         LatLng(37.62785, 127.07295),
         LatLng(37.62760, 127.07280),
@@ -82,9 +84,10 @@ class _MapPageState extends State<MapPage> {
       ],
       userId: '',
       updatedDateTime: DateTime.now());
+  Set<Polyline> polylines = {};
+
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
-  Set<Polyline> polylines = {};
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -139,6 +142,37 @@ class _MapPageState extends State<MapPage> {
   void dispose() {
     timer.cancel();
     super.dispose();
+  }
+
+  /// Draw Polyline of recommended route
+  void _buildPolyline() {
+    setState(() {
+      // _showRoute = true;
+
+      polylines.add(Polyline(
+          polylineId: PolylineId('recommend'),
+          points: recommendedRoute.route,
+          color: theme().recommend,
+          visible: _showRoute,
+          width: 6));
+
+      _zoomToRoute();
+
+      if (!_showRoute) {
+        polylines.clear();
+      }
+    });
+  }
+
+  Future<void> _zoomToRoute() async {
+    debugPrint('called zoomToRoute');
+
+    debugPrint('route is not null');
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLngZoom(
+          recommendedRoute.getCenter(), recommendedRoute.getBoundsZoom()),
+    );
   }
 
   void _showToast(String result) {
@@ -304,37 +338,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void _buildPolyline() {
-    setState(() {
-      _showRoute = true;
-      if (recommendedRoute != null) {
-        polylines.add(Polyline(
-            polylineId: const PolylineId('recommend'),
-            points: recommendedRoute.route,
-            color: theme().state,
-            visible: _showRoute,
-            width: 6));
-
-        _zoomToRoute();
-      } else {
-        _showRoute = false;
-        polylines.clear();
-      }
-    });
-  }
-
-  Future<void> _zoomToRoute() async {
-    debugPrint('called zoomToRoute');
-    if (recommendedRoute != null) {
-      debugPrint('route is not null');
-      final GoogleMapController controller = await _mapController.future;
-      controller.animateCamera(
-        CameraUpdate.newLatLngZoom(
-            recommendedRoute!.getCenter(), recommendedRoute!.getBoundsZoom()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -433,6 +436,8 @@ class _MapPageState extends State<MapPage> {
                     showBin: _showBin,
                     showRoute: _showRoute,
                     isPloggingEnabled: _isPloggingEnabled,
+                    polylines: polylines,
+                    recommend: recommendedRoute,
                   ),
                 ),
                 SafeArea(
@@ -455,7 +460,10 @@ class _MapPageState extends State<MapPage> {
                         MapFilterButton(
                           label: 'Route Recommendation',
                           isActive: _showRoute,
-                          onPressed: _toggleRouteMarker,
+                          onPressed: () {
+                            _toggleRouteMarker();
+                            _buildPolyline();
+                          },
                         ),
                       ],
                     ),
@@ -510,6 +518,10 @@ class MapSample extends StatefulWidget {
   final bool showBin;
   final bool showRoute;
   final bool isPloggingEnabled;
+  final RouteModel recommend;
+  final Function(GoogleMapController)? onMapCreated;
+
+  final Set<Polyline> polylines;
 
   const MapSample({
     super.key,
@@ -517,6 +529,9 @@ class MapSample extends StatefulWidget {
     this.showBin = false,
     this.showRoute = false,
     this.isPloggingEnabled = false,
+    required this.polylines,
+    this.onMapCreated,
+    required this.recommend,
   });
 
   @override
@@ -533,7 +548,7 @@ class MapSampleState extends State<MapSample> {
 
   final Set<Marker> _litterMarkers = {};
   final Set<Marker> _binMarkers = {};
-  final Set<Marker> _routeMarkers = {};
+  late Marker _routeMarkers = Marker(markerId: MarkerId('recommend'));
 
   static const CameraPosition initialPos = CameraPosition(
     // target: LatLng(37.422131, -122.084801),
@@ -624,6 +639,38 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
+  void _fetchRecommend(bounds) async {
+    // TODO
+    // final prefs = await SharedPreferences.getInstance();
+    // final jwt = prefs.getString('jwt');
+
+    // if (jwt != null) {
+    //   // final routePosList = await route;
+
+    //   // should be neither empty or null
+    //   if (binPosList != null) {
+    //     if (binPosList.isEmpty) {
+    //       debugPrint('no bin in range');
+    //       return;
+    //     }
+    setState(
+      () {
+        _routeMarkers = Marker(
+          icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+              width: 36.w, height: 41.h),
+          markerId: MarkerId('recommend'),
+          position: (LatLng(widget.recommend.route[0].latitude,
+              widget.recommend.route[0].longitude)),
+          visible: true,
+        );
+      },
+    );
+    // } else {
+    //   debugPrint('binPosList is empty');
+    //   }
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     Set<Marker> visibleMarkers = {};
@@ -637,7 +684,7 @@ class MapSampleState extends State<MapSample> {
     }
 
     if (widget.showRoute) {
-      visibleMarkers.addAll(_routeMarkers);
+      visibleMarkers.addAll({_routeMarkers});
     }
 
     Set<Marker> _markers = {};
@@ -646,15 +693,19 @@ class MapSampleState extends State<MapSample> {
       children: [
         GoogleMap(
           markers: visibleMarkers,
+          polylines: widget.polylines,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
-          onMapCreated: (GoogleMapController controller) {
+          onMapCreated: (controller) {
             try {
               _goToCurrentLocation();
             } catch (e) {
               debugPrint('$e');
             }
             _controller.complete(controller);
+            if (widget.onMapCreated != null) {
+              widget.onMapCreated!(controller);
+            }
           },
           onCameraMove: (CameraPosition pos) async {
             final _lastPosition = pos;
