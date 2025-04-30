@@ -122,7 +122,8 @@ class GrayScale {
   static const Color gray_200 = Color(0xFFC0C0C0);
   static const Color gray_100 = Color(0xFFD2D2D2);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color shadowColor = Color(0x3F000000);
+  static const Color shadowColor = Color.fromARGB(62, 0, 0, 0);
+  static const Color transparentBlack = Color(0xCC2F2F2F);
 }
 
 abstract class ColorTheme {

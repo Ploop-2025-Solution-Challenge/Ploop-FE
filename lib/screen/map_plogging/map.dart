@@ -9,8 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
+import 'package:ploop_fe/screen/map_plogging/route_recommend_reason_widget.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
+import 'package:ploop_fe/screen/world/world.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
@@ -43,6 +45,9 @@ class _MapPageState extends State<MapPage> {
   bool _showLitterArea = false;
   bool _showBin = false;
   bool _showRoute = false;
+  bool _showRouteReason = false;
+
+  List<LatLng> recommendedRoute = [];
 
   // elapsed plogging time duration
   final Stopwatch _stopwatch = Stopwatch();
@@ -253,6 +258,9 @@ class _MapPageState extends State<MapPage> {
   void _toggleRouteMarker() {
     setState(() {
       _showRoute = !_showRoute;
+      if (_showRoute) {
+        _showRouteReason = !_showRouteReason;
+      }
     });
   }
 
@@ -417,6 +425,18 @@ class _MapPageState extends State<MapPage> {
                         )
                       : const SizedBox(),
                 ),
+                if (_showRouteReason)
+                  Positioned(
+                    top: 175.h,
+                    right: 23.w,
+                    child: RouteRecommendReasonWidget(
+                        onClosePressed: () {
+                          setState(() {
+                            _showRouteReason = false;
+                          });
+                        },
+                        recommendedRoute: test1),
+                  ),
               ],
             ),
           ],
@@ -623,7 +643,7 @@ class MapSampleState extends State<MapSample> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
