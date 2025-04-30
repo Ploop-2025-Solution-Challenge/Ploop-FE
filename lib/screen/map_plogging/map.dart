@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:ploop_fe/model/route_model_test.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
 import 'package:ploop_fe/screen/map_plogging/route_recommend_reason_widget.dart';
@@ -47,8 +48,6 @@ class _MapPageState extends State<MapPage> {
   bool _showRoute = false;
   bool _showRouteReason = false;
 
-  List<LatLng> recommendedRoute = [];
-
   // elapsed plogging time duration
   final Stopwatch _stopwatch = Stopwatch();
   late Timer timer;
@@ -57,6 +56,35 @@ class _MapPageState extends State<MapPage> {
 
   int _pickedAmount = 0;
   double _movedDistance = 0;
+  RouteModel recommendedRoute = RouteModel(
+      routeId: 'recommende',
+      route: <LatLng>[
+        LatLng(37.62813, 127.073059),
+        LatLng(37.62785, 127.07295),
+        LatLng(37.62760, 127.07280),
+        LatLng(37.62735, 127.07265),
+        LatLng(37.62710, 127.07250),
+        LatLng(37.62685, 127.07235),
+        LatLng(37.62660, 127.07220),
+        LatLng(37.62635, 127.07205),
+        LatLng(37.62610, 127.07190),
+        LatLng(37.62585, 127.07175),
+        LatLng(37.62560, 127.07160),
+        LatLng(37.62535, 127.07145),
+        LatLng(37.62510, 127.07130),
+        LatLng(37.62485, 127.07115),
+        LatLng(37.62460, 127.07100),
+        LatLng(37.62435, 127.07085),
+        LatLng(37.62410, 127.07070),
+        LatLng(37.62385, 127.07055),
+        LatLng(37.62360, 127.07040),
+        LatLng(37.62335, 127.07025)
+      ],
+      userId: '',
+      updatedDateTime: DateTime.now());
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+  Set<Polyline> polylines = {};
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -259,7 +287,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       _showRoute = !_showRoute;
       if (_showRoute) {
-        _showRouteReason = !_showRouteReason;
+        _showRouteReason = true;
       }
     });
   }
@@ -274,6 +302,37 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       if (_pickedAmount > 0) _pickedAmount--;
     });
+  }
+
+  void _buildPolyline() {
+    setState(() {
+      _showRoute = true;
+      if (recommendedRoute != null) {
+        polylines.add(Polyline(
+            polylineId: const PolylineId('recommend'),
+            points: recommendedRoute.route,
+            color: theme().state,
+            visible: _showRoute,
+            width: 6));
+
+        _zoomToRoute();
+      } else {
+        _showRoute = false;
+        polylines.clear();
+      }
+    });
+  }
+
+  Future<void> _zoomToRoute() async {
+    debugPrint('called zoomToRoute');
+    if (recommendedRoute != null) {
+      debugPrint('route is not null');
+      final GoogleMapController controller = await _mapController.future;
+      controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+            recommendedRoute!.getCenter(), recommendedRoute!.getBoundsZoom()),
+      );
+    }
   }
 
   @override
@@ -425,7 +484,7 @@ class _MapPageState extends State<MapPage> {
                         )
                       : const SizedBox(),
                 ),
-                if (_showRouteReason)
+                if (_showRouteReason && _showRoute)
                   Positioned(
                     top: 175.h,
                     right: 23.w,
