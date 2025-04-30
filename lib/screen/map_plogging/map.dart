@@ -84,7 +84,7 @@ class _MapPageState extends State<MapPage> {
       ],
       userId: '',
       updatedDateTime: DateTime.now());
-  Set<Polyline> polylines = {};
+  Set<Polyline> recommend_polylines = {};
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -149,7 +149,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       // _showRoute = true;
 
-      polylines.add(Polyline(
+      recommend_polylines.add(Polyline(
           polylineId: PolylineId('recommend'),
           points: recommendedRoute.route,
           color: theme().recommend,
@@ -159,19 +159,19 @@ class _MapPageState extends State<MapPage> {
       _zoomToRoute();
 
       if (!_showRoute) {
-        polylines.clear();
+        recommend_polylines.clear();
       }
     });
   }
 
   Future<void> _zoomToRoute() async {
-    debugPrint('called zoomToRoute');
-
-    debugPrint('route is not null');
     final GoogleMapController controller = await _mapController.future;
+
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          recommendedRoute.getCenter(), recommendedRoute.getBoundsZoom()),
+          LatLng(recommendedRoute.getCenter().latitude + 0.0015,
+              recommendedRoute.getCenter().longitude),
+          recommendedRoute.getBoundsZoom() - 1),
     );
   }
 
@@ -436,8 +436,11 @@ class _MapPageState extends State<MapPage> {
                     showBin: _showBin,
                     showRoute: _showRoute,
                     isPloggingEnabled: _isPloggingEnabled,
-                    polylines: polylines,
+                    recommendPolylines: recommend_polylines,
                     recommend: recommendedRoute,
+                    onMapCreated: (GoogleMapController controller) {
+                      _mapController.complete(controller);
+                    },
                   ),
                 ),
                 SafeArea(
@@ -521,7 +524,7 @@ class MapSample extends StatefulWidget {
   final RouteModel recommend;
   final Function(GoogleMapController)? onMapCreated;
 
-  final Set<Polyline> polylines;
+  final Set<Polyline> recommendPolylines;
 
   const MapSample({
     super.key,
@@ -529,7 +532,7 @@ class MapSample extends StatefulWidget {
     this.showBin = false,
     this.showRoute = false,
     this.isPloggingEnabled = false,
-    required this.polylines,
+    required this.recommendPolylines,
     this.onMapCreated,
     required this.recommend,
   });
@@ -653,12 +656,14 @@ class MapSampleState extends State<MapSample> {
     //       debugPrint('no bin in range');
     //       return;
     //     }
+    debugPrint(
+        '${LatLng(widget.recommend.route[0].latitude, widget.recommend.route[0].longitude)}');
     setState(
       () {
         _routeMarkers = Marker(
           icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
               width: 36.w, height: 41.h),
-          markerId: MarkerId('recommend'),
+          markerId: const MarkerId('recommend'),
           position: (LatLng(widget.recommend.route[0].latitude,
               widget.recommend.route[0].longitude)),
           visible: true,
@@ -687,13 +692,11 @@ class MapSampleState extends State<MapSample> {
       visibleMarkers.addAll({_routeMarkers});
     }
 
-    Set<Marker> _markers = {};
-
     return Stack(
       children: [
         GoogleMap(
           markers: visibleMarkers,
-          polylines: widget.polylines,
+          polylines: widget.recommendPolylines,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
           onMapCreated: (controller) {
@@ -721,6 +724,7 @@ class MapSampleState extends State<MapSample> {
 
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
+            _fetchRecommend(bounds);
           },
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
