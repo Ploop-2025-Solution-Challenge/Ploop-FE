@@ -131,6 +131,7 @@ abstract class ColorTheme {
   Color get color_500;
   Color get color_400;
   Color get state;
+  Color get recommend;
 }
 
 class GreenTheme implements ColorTheme {
@@ -145,6 +146,8 @@ class GreenTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 // test color theme
@@ -160,6 +163,9 @@ class BlueTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 // test color theme
@@ -175,6 +181,9 @@ class YellowTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 ColorTheme theme() {
