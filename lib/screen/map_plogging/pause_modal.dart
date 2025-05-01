@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graphic/graphic.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/plogging_result.dart';
@@ -12,6 +13,8 @@ class PauseModal extends StatelessWidget {
   final int amount;
   final double miles;
   final String formattedTime;
+  final List<LatLng> route;
+  final Set<Polyline> polylines;
 
   const PauseModal({
     super.key,
@@ -20,6 +23,8 @@ class PauseModal extends StatelessWidget {
     required this.amount,
     required this.miles,
     required this.formattedTime,
+    required this.route,
+    required this.polylines,
   });
 
   String format(Duration time) {
@@ -128,6 +133,8 @@ class PauseModal extends StatelessWidget {
                                 amount: amount,
                                 miles: miles,
                                 time: formattedTime,
+                                route: route, // TODO: read provider
+                                polylines: polylines,
                               )));
                 },
                 mode: 'end',

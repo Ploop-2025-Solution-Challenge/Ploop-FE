@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/screen/home/ploop_appbar.dart';
 import 'package:ploop_fe/theme.dart';
 
@@ -14,11 +15,16 @@ class PloggingResult extends StatelessWidget {
   final int amount;
   final double miles;
   final String time;
+  final List<LatLng> route;
+  final Set<Polyline> polylines;
+
   const PloggingResult(
       {super.key,
       required this.amount,
       required this.miles,
-      required this.time});
+      required this.time,
+      required this.route,
+      required this.polylines});
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +124,13 @@ class PloggingResult extends StatelessWidget {
                         ],
                       ),
                       // image
-                      Container(
+                      SizedBox(
                         width: 305.w,
                         height: 381.h,
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.w),
-                            child: PloggingResultMap()),
+                          borderRadius: BorderRadius.circular(8.w),
+                          child: PloggingResultMap(route, polylines),
+                        ),
                       ),
                     ],
                   ),
@@ -149,14 +156,20 @@ RouteModel resultTest = RouteModel(route: const [
 ], userId: "2", updatedDateTime: DateTime(2025, 4, 29, 1, 7), routeId: "2");
 
 class PloggingResultMap extends ConsumerWidget {
-  PloggingResultMap({super.key});
-
-  final RouteModel result = resultTest;
-  final route = resultTest.route;
+  final List<LatLng> activityRoute;
+  final Set<Polyline> activityPolylines;
+  const PloggingResultMap(this.activityRoute, this.activityPolylines,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    LatLng? center = result.getCenter();
+    final resultProvider = ref.watch(ploggingActivityNotifierProvider.notifier);
+    RouteModel model = RouteModel(
+        routeId: '',
+        route: activityRoute,
+        userId: '',
+        updatedDateTime: DateTime.now());
+    LatLng? center = model.getCenter();
 
     late double zoomByRoute;
     Future<List<Placemark>> getAddress() async {
@@ -165,7 +178,7 @@ class PloggingResultMap extends ConsumerWidget {
       return placemarks;
     }
 
-    if (route.isEmpty) {
+    if (activityRoute.isEmpty) {
       return const Center(child: Text('Error: Empty route'));
     } else {
       zoomByRoute = resultTest.getBoundsZoom();
@@ -181,9 +194,9 @@ class PloggingResultMap extends ConsumerWidget {
           polylines: {
             Polyline(
               polylineId: const PolylineId('route'),
-              points: route,
+              points: activityRoute,
               color: theme().route,
-              width: 5,
+              width: 6,
             ),
           },
           zoomControlsEnabled: false,

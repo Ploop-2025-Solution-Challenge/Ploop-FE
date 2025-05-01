@@ -8,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/user_response.dart';
+import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
@@ -320,6 +322,20 @@ class _MapPageState extends ConsumerState<MapPage> {
     setState(() {
       _isPloggingEnabled = false;
       debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
+
+      final ploggingNotifier =
+          ref.read(ploggingActivityNotifierProvider.notifier);
+      // final userInfoNotifier = ref.read(userInfoNotifierProvider.notifier);
+
+      // Set all required data
+      ploggingNotifier.setRoute(_ploggingRoute);
+      ploggingNotifier.setTimeDuration(_elapsedTimeString);
+      ploggingNotifier.setUpdatedTime();
+      ploggingNotifier.setCollectedCount(_pickedAmount);
+      ploggingNotifier.setDistance(_movedDistance);
+      // UserResponse userInfo = ref.watch(userInfoNotifier);
+      // ploggingNotifier.setUserId(userInfo.id);
+
       _stopwatch.reset();
       timer.cancel();
       stopLocationUpdate();
@@ -337,6 +353,8 @@ class _MapPageState extends ConsumerState<MapPage> {
           amount: _pickedAmount,
           miles: _movedDistance,
           formattedTime: _elapsedTimeString,
+          route: _ploggingRoute,
+          polylines: _ploggingPolylines,
         );
       },
     );
