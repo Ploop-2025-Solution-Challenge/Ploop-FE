@@ -131,6 +131,7 @@ abstract class ColorTheme {
   Color get color_500;
   Color get color_400;
   Color get state;
+  Color get route;
   Color get recommend;
 }
 
@@ -148,6 +149,9 @@ class GreenTheme implements ColorTheme {
   final Color state = const Color(0xFFFF5F5F);
   @override
   final Color recommend = const Color(0xFF6B9FFF);
+
+  @override
+  final Color route = const Color(0xFF10AB37);
 }
 
 // test color theme
@@ -163,6 +167,9 @@ class BlueTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
 
   @override
   final Color recommend = const Color(0xFF6B9FFF);
@@ -181,6 +188,9 @@ class YellowTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
 
   @override
   final Color recommend = const Color(0xFF6B9FFF);

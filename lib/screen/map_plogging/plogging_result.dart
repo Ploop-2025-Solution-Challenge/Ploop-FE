@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -147,14 +148,14 @@ RouteModel resultTest = RouteModel(route: const [
   LatLng(37.632800, 127.076200),
 ], userId: "2", updatedDateTime: DateTime(2025, 4, 29, 1, 7), routeId: "2");
 
-class PloggingResultMap extends StatelessWidget {
+class PloggingResultMap extends ConsumerWidget {
   PloggingResultMap({super.key});
 
   final RouteModel result = resultTest;
   final route = resultTest.route;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     LatLng? center = result.getCenter();
 
     late double zoomByRoute;
@@ -181,7 +182,7 @@ class PloggingResultMap extends StatelessWidget {
             Polyline(
               polylineId: const PolylineId('route'),
               points: route,
-              color: theme().state,
+              color: theme().route,
               width: 5,
             ),
           },

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,14 +20,14 @@ import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
 import 'start_plogging_button.dart';
 
-class MapPage extends StatefulWidget {
+class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  ConsumerState<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends ConsumerState<MapPage> {
   XFile? _image;
   bool _isMapShrunk = false;
   bool _isButtonEnabled = true;
@@ -203,7 +204,7 @@ class _MapPageState extends State<MapPage> {
         Polyline(
           polylineId: const PolylineId("route"),
           points: _ploggingRoute,
-          color: theme().state,
+          color: theme().route,
           width: 6,
         )
       };
