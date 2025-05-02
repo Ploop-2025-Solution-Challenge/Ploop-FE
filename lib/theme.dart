@@ -122,7 +122,8 @@ class GrayScale {
   static const Color gray_200 = Color(0xFFC0C0C0);
   static const Color gray_100 = Color(0xFFD2D2D2);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color shadowColor = Color(0x3F000000);
+  static const Color shadowColor = Color.fromARGB(62, 0, 0, 0);
+  static const Color transparentBlack = Color(0xCC2F2F2F);
 }
 
 abstract class ColorTheme {
@@ -130,6 +131,8 @@ abstract class ColorTheme {
   Color get color_500;
   Color get color_400;
   Color get state;
+  Color get route;
+  Color get recommend;
 }
 
 class GreenTheme implements ColorTheme {
@@ -144,6 +147,11 @@ class GreenTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
+
+  @override
+  final Color route = const Color(0xFF10AB37);
 }
 
 // test color theme
@@ -159,6 +167,12 @@ class BlueTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 // test color theme
@@ -174,6 +188,12 @@ class YellowTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 ColorTheme theme() {

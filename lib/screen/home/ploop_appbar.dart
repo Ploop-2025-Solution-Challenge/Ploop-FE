@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/user_response.dart';
 import '../../service/user_service.dart';
 
-class PloopAppBar extends StatefulWidget {
+class PloopAppBar extends ConsumerStatefulWidget {
   const PloopAppBar({
     super.key,
   });
 
   @override
-  State<PloopAppBar> createState() => _PloopAppBarState();
+  ConsumerState<PloopAppBar> createState() => _PloopAppBarState();
 }
 
-class _PloopAppBarState extends State<PloopAppBar> {
+class _PloopAppBarState extends ConsumerState<PloopAppBar> {
   final Image defaultProfilePic =
       Image.asset('assets/icons/default-user-icon.png');
   late UserResponse userProfile = UserResponse(
@@ -36,6 +38,15 @@ class _PloopAppBarState extends State<PloopAppBar> {
       if (profile != null) {
         setState(() {
           userProfile = profile;
+          // set profile to provider state
+          final profileProvider = ref.watch(userInfoNotifierProvider.notifier);
+          profileProvider.setId(userProfile.id);
+          if (userProfile.nickname != null) {
+            profileProvider.setNickname(userProfile.nickname!);
+          }
+          if (userProfile.picture != null) {
+            profileProvider.setPictureUrl(userProfile.picture!);
+          }
         });
       }
     } else {
@@ -82,8 +93,7 @@ class _PloopAppBarState extends State<PloopAppBar> {
                 radius: 20.w,
               ),
               Text(
-                // TODO: get saved nickname from server
-                userProfile.nickname ?? 'User',
+                userProfile.nickname ?? 'Loading...',
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ],

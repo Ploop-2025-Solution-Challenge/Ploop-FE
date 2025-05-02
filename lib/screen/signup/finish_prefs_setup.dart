@@ -25,6 +25,7 @@ class FinishSetup extends ConsumerWidget {
           Future(() async {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
+
             final String? jwt = prefs.getString('jwt');
             debugPrint(preference.toString());
             await UserService.patchUserProfileToServer(preference, jwt!);

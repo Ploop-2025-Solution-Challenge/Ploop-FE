@@ -29,11 +29,11 @@ class RouteModel {
     double west = route.first.longitude;
     double east = route.first.longitude;
 
-    for (var point in route) {
-      if (point.latitude < south) south = point.latitude;
-      if (point.latitude > north) north = point.latitude;
-      if (point.longitude < west) west = point.longitude;
-      if (point.longitude > east) east = point.longitude;
+    for (final point in route) {
+      south = point.latitude < south ? point.latitude : south;
+      north = point.latitude > north ? point.latitude : north;
+      west = point.longitude < west ? point.longitude : west;
+      east = point.longitude > east ? point.longitude : east;
     }
 
     routeBound = LatLngBounds(
@@ -57,13 +57,18 @@ class RouteModel {
 
       final maxDiff = latDiff > lngDiff ? latDiff : lngDiff;
 
-      if (maxDiff < 0.01) return 17;
-      if (maxDiff < 0.05) return 15;
-      if (maxDiff < 0.1) return 14;
-      if (maxDiff < 0.5) return 12;
+      debugPrint('lat: $latDiff, lng: $lngDiff');
+
+      if (maxDiff < 0.005) return 16;
+      if (maxDiff < 0.01) return 15;
+      if (maxDiff < 0.05) return 13;
+      if (maxDiff < 0.1) return 12;
+      if (maxDiff < 0.5) return 10;
+      if (maxDiff < 1) return 8;
+      if (maxDiff < 2) return 7;
       return 10;
     } else {
-      debugPrint("routeBound is null at getBoundsZoom()");
+      debugPrint("routeBound is null at RouteModel.getBoundsZoom()");
       throw Error();
     }
   }
@@ -76,7 +81,7 @@ class RouteModel {
         (routeBound!.northeast.longitude + routeBound!.southwest.longitude) / 2,
       );
     } else {
-      debugPrint("routeBound is null at getCenter()");
+      debugPrint("routeBound is null at RouteModel.getCenter()");
       throw Error(); // error
     }
   }

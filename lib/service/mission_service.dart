@@ -1,10 +1,9 @@
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
-// import 'package:ploop_fe/model/user_model.dart';
 
-// class UserService {
-//   static Future<void> getMissionList(UserRequest user) async {
+// class MissionService {
+//   static Future<void> getMissionList( user) async {
 //     final url = Uri.parse('https://api.ploop.store/api/mission/current');
 //     final headers = {'Content-Type': 'application/json'};
 //     // TODO: add key-value
