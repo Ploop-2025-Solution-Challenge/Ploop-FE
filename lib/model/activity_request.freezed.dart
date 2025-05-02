@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ActivityRequest {
   String get userId;
-  List<(double, double)> get activityRoute;
+  List<List<double>> get activityRoute;
   String get timeDuration;
   String get updatedDateTime;
   double get distanceMiles;
@@ -76,7 +76,7 @@ abstract mixin class $ActivityRequestCopyWith<$Res> {
   @useResult
   $Res call(
       {String userId,
-      List<(double, double)> activityRoute,
+      List<List<double>> activityRoute,
       String timeDuration,
       String updatedDateTime,
       double distanceMiles,
@@ -111,7 +111,7 @@ class _$ActivityRequestCopyWithImpl<$Res>
       activityRoute: null == activityRoute
           ? _self.activityRoute
           : activityRoute // ignore: cast_nullable_to_non_nullable
-              as List<(double, double)>,
+              as List<List<double>>,
       timeDuration: null == timeDuration
           ? _self.timeDuration
           : timeDuration // ignore: cast_nullable_to_non_nullable
@@ -137,7 +137,7 @@ class _$ActivityRequestCopyWithImpl<$Res>
 class _ActivityRequest implements ActivityRequest {
   const _ActivityRequest(
       {required this.userId,
-      required final List<(double, double)> activityRoute,
+      required final List<List<double>> activityRoute,
       required this.timeDuration,
       required this.updatedDateTime,
       required this.distanceMiles,
@@ -148,9 +148,9 @@ class _ActivityRequest implements ActivityRequest {
 
   @override
   final String userId;
-  final List<(double, double)> _activityRoute;
+  final List<List<double>> _activityRoute;
   @override
-  List<(double, double)> get activityRoute {
+  List<List<double>> get activityRoute {
     if (_activityRoute is EqualUnmodifiableListView) return _activityRoute;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_activityRoute);
@@ -225,7 +225,7 @@ abstract mixin class _$ActivityRequestCopyWith<$Res>
   @useResult
   $Res call(
       {String userId,
-      List<(double, double)> activityRoute,
+      List<List<double>> activityRoute,
       String timeDuration,
       String updatedDateTime,
       double distanceMiles,
@@ -260,7 +260,7 @@ class __$ActivityRequestCopyWithImpl<$Res>
       activityRoute: null == activityRoute
           ? _self._activityRoute
           : activityRoute // ignore: cast_nullable_to_non_nullable
-              as List<(double, double)>,
+              as List<List<double>>,
       timeDuration: null == timeDuration
           ? _self.timeDuration
           : timeDuration // ignore: cast_nullable_to_non_nullable

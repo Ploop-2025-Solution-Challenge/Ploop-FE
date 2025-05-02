@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ploop_fe/screen/signup/set_region.dart';
@@ -73,10 +74,10 @@ class OnboardingPage extends StatelessWidget {
   }
 }
 
-class LoginButton extends StatelessWidget {
+class LoginButton extends ConsumerWidget {
   const LoginButton({super.key});
 
-  Future<void> _handleSignIn(BuildContext context) async {
+  Future<void> _handleSignIn(BuildContext context, WidgetRef ref) async {
     try {
       final result = await _googleSignIn.signIn();
       if (result != null) {
@@ -87,7 +88,7 @@ class LoginButton extends StatelessWidget {
           debugPrint(auth.accessToken);
           debugPrint('\n');
           debugPrint(idToken);
-          await AuthService.sendIdTokenToServer(idToken);
+          await AuthService.sendIdTokenToServer(idToken, ref);
         }
 
         // check if context is valid
@@ -109,7 +110,7 @@ class LoginButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // custom sign-in button
     return SizedBox(
       // alignment: Alignment.center,
@@ -125,7 +126,7 @@ class LoginButton extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(15))),
           backgroundColor: Colors.white,
         ),
-        onPressed: () => {_handleSignIn(context)},
+        onPressed: () => {_handleSignIn(context, ref)},
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

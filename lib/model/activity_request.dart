@@ -8,7 +8,7 @@ part 'activity_request.g.dart';
 abstract class ActivityRequest with _$ActivityRequest {
   const factory ActivityRequest({
     required String userId,
-    required List<(double, double)> activityRoute,
+    required List<List<double>> activityRoute,
     required String timeDuration,
     required String updatedDateTime,
     required double distanceMiles,

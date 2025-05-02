@@ -33,7 +33,8 @@ class _MapPageState extends ConsumerState<MapPage> {
   XFile? _image;
   bool _isMapShrunk = false;
   bool _isButtonEnabled = true;
-  bool _isPloggingEnabled = false;
+  bool _isPloggingStarted = false;
+  bool _isPloggingActive = false;
 
   final ImagePicker picker = ImagePicker();
   double? _latitude;
@@ -169,7 +170,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(recommendedRoute.getCenter().latitude + 0.0015,
+          LatLng(recommendedRoute.getCenter().latitude + 0.015,
               recommendedRoute.getCenter().longitude),
           recommendedRoute.getBoundsZoom() - 1),
     );
@@ -178,9 +179,11 @@ class _MapPageState extends ConsumerState<MapPage> {
   late StreamSubscription<Position> positionSubscription;
   Stream<Position>? positionStream;
   Position? currentPos;
+  Position? previousPos;
   bool _tracking = false;
   List<LatLng> _ploggingRoute = [];
   Set<Polyline> _ploggingPolylines = {};
+  int distanceFilterValue = 2;
 
   Future<void> startLocationUpdate() async {
     final GoogleMapController controller = await _mapController.future;
@@ -189,15 +192,26 @@ class _MapPageState extends ConsumerState<MapPage> {
     _tracking = true;
 
     positionStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
+      locationSettings: LocationSettings(
         accuracy: LocationAccuracy.best,
-        distanceFilter: 5,
+        distanceFilter: distanceFilterValue,
       ),
     );
     positionSubscription = positionStream!.listen((Position position) {
       currentPos = position;
       LatLng latLng = LatLng(position.latitude, position.longitude);
       _ploggingRoute.add(latLng);
+
+      if (previousPos != null && currentPos != null) {
+        double distanceInMeters = Geolocator.distanceBetween(
+          previousPos!.latitude,
+          previousPos!.longitude,
+          currentPos!.latitude,
+          currentPos!.longitude,
+        );
+        _movedDistance += distanceInMeters / 1609.344;
+      }
+      previousPos = currentPos;
 
       debugPrint("latitude: ${position.latitude}");
       debugPrint("longitude: ${position.longitude}");
@@ -215,7 +229,30 @@ class _MapPageState extends ConsumerState<MapPage> {
     });
   }
 
-  void stopLocationUpdate() {
+  Future<void> stopLocationUpdate() async {
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        locationSettings:
+            const LocationSettings(accuracy: LocationAccuracy.best),
+      );
+      LatLng latLng = LatLng(position.latitude, position.longitude);
+      _ploggingRoute.add(latLng);
+
+      if (previousPos != null) {
+        double distance = Geolocator.distanceBetween(
+          previousPos!.latitude,
+          previousPos!.longitude,
+          position.latitude,
+          position.longitude,
+        );
+        _movedDistance += distance / 1609.344;
+      }
+
+      currentPos = position;
+    } catch (e) {
+      debugPrint("Error getting final position: $e");
+    }
+
     _tracking = false;
     positionSubscription.cancel();
   }
@@ -287,7 +324,8 @@ class _MapPageState extends ConsumerState<MapPage> {
     setState(() {
       _isMapShrunk = true;
       _isButtonEnabled = false;
-      _isPloggingEnabled = true;
+      _isPloggingStarted = true;
+      _isPloggingActive = true;
       _stopwatch.start();
       getCurrentLocation();
       startLocationUpdate();
@@ -295,6 +333,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       if (_stopwatch.isRunning) {
         _updateElapsedTime();
       }
+      debugPrint('is Plogging?$_isPloggingStarted');
     });
   }
 
@@ -312,15 +351,17 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   void _pausePlogging() {
     setState(() {
-      _isPloggingEnabled = false;
+      _isPloggingActive = false;
       _stopwatch.stop();
-      timer.cancel(); // not working?
+      timer.cancel();
     });
   }
 
   void _endPlogging() {
+    debugPrint('route: $_ploggingRoute');
+
     setState(() {
-      _isPloggingEnabled = false;
+      _isPloggingActive = false;
       debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
 
       final ploggingNotifier =
@@ -360,11 +401,14 @@ class _MapPageState extends ConsumerState<MapPage> {
     );
     debugPrint(result);
     if (result == null) {
+      _isPloggingActive = true;
       _resumePlogging();
     }
   }
 
   void _resumePlogging() {
+    debugPrint('is plogging? $_isPloggingStarted');
+    // _isPloggingActive = true;
     _stopwatch.start();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -413,86 +457,88 @@ class _MapPageState extends ConsumerState<MapPage> {
       child: SizedBox.expand(
         child: Stack(
           children: [
-            // if (_isPloggingEnabled)
-            Positioned(
-              bottom: 19.h,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    spacing: 24.h,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 41.w,
-                        children: [
-                          Column(
-                            spacing: 2.h,
-                            children: [
-                              Text('$_movedDistance',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall),
-                              Text(
-                                'Miles',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
-                                      color: GrayScale.gray_300,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          // stopwatch
+            if (_isPloggingStarted)
+              Positioned(
+                bottom: 19.h,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      spacing: 24.h,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 41.w,
+                          children: [
+                            Column(
+                              spacing: 2.h,
+                              children: [
+                                Text(_movedDistance.toStringAsFixed(2),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall),
+                                Text(
+                                  'Miles',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                        color: GrayScale.gray_300,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            // stopwatch
 
-                          Column(
-                            spacing: 2.h,
-                            children: [
-                              Text(_elapsedTimeString,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall),
-                              Text(
-                                'Hours',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
-                                      color: GrayScale.gray_300,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        spacing: 12.h,
-                        children: [
-                          Text(
-                            'Picked Up',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          PickupCounter(
-                            amount: _pickedAmount,
-                            onIncrement: _increment,
-                            onDecrement: _decrement,
-                          ),
-                        ],
-                      ),
-                      StopPloggingButton(
-                        onPressed: () {
-                          _pausePlogging();
-                          _showPauseModal(context);
-                        },
-                        mode: 'stop',
-                      ),
-                    ],
+                            Column(
+                              spacing: 2.h,
+                              children: [
+                                Text(_elapsedTimeString,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall),
+                                Text(
+                                  'Hours',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                        color: GrayScale.gray_300,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          spacing: 12.h,
+                          children: [
+                            Text(
+                              'Picked Up',
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                            PickupCounter(
+                              amount: _pickedAmount,
+                              onIncrement: _increment,
+                              onDecrement: _decrement,
+                            ),
+                          ],
+                        ),
+                        StopPloggingButton(
+                          onPressed: () {
+                            _pausePlogging();
+                            _showPauseModal(context);
+                          },
+                          mode: 'stop',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             Stack(
               children: [
                 AnimatedContainer(
@@ -503,7 +549,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     showLitterArea: _showLitterArea,
                     showBin: _showBin,
                     showRoute: _showRoute,
-                    isPloggingEnabled: _isPloggingEnabled,
+                    isPloggingStarted: _isPloggingStarted,
                     ploggingPolylines: _ploggingPolylines,
                     recommendPolylines: recommend_polylines,
                     recommend: recommendedRoute,
@@ -556,7 +602,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                 Positioned(
                   bottom: 32.h,
                   right: 16.h,
-                  child: !_isPloggingEnabled
+                  child: !_isPloggingStarted
                       ? CameraButton(
                           onPressed: () async {
                             debugPrint('camera pressed');

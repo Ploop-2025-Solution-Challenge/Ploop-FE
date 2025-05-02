@@ -14,7 +14,7 @@ class MapSample extends StatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
-  final bool isPloggingEnabled;
+  final bool isPloggingStarted;
   final RouteModel recommend;
   final Function(GoogleMapController)? onMapCreated;
   final Position? currentPosition;
@@ -27,7 +27,7 @@ class MapSample extends StatefulWidget {
     this.showLitterArea = false,
     this.showBin = false,
     this.showRoute = false,
-    this.isPloggingEnabled = false,
+    this.isPloggingStarted = false,
     required this.recommendPolylines,
     this.onMapCreated,
     required this.recommend,
@@ -243,7 +243,7 @@ class MapSampleState extends State<MapSample> {
           myLocationButtonEnabled: false,
         ),
         Positioned(
-          bottom: !widget.isPloggingEnabled ? 92.h : 32.h,
+          bottom: !widget.isPloggingStarted ? 92.h : 32.h,
           right: 16.h,
           child: Container(
             width: 44.w,

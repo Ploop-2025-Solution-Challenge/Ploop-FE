@@ -20,9 +20,10 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
   }
 
   void setRoute(List<LatLng> route) {
-    List<(double, double)> convertedRoute = [];
-    route.map((e) => convertedRoute.add((e.latitude, e.longitude)));
-    if (convertedRoute != []) {
+    List<List<double>> convertedRoute =
+        route.map((e) => [e.latitude, e.longitude]).toList();
+
+    if (convertedRoute.isNotEmpty) {
       state = state.copyWith(activityRoute: convertedRoute);
     }
   }
@@ -36,8 +37,12 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
     state = state.copyWith(updatedDateTime: DateTime.now().toString());
   }
 
-  void setUserId(String id) {
-    state = state.copyWith(userId: id);
+  void setUserId(int id) {
+    if (id != -1) {
+      state = state.copyWith(userId: id.toString());
+    } else {
+      state = state.copyWith(userId: 'test');
+    }
   }
 
   void setCollectedCount(int count) {
