@@ -31,6 +31,20 @@ dependencies:
   riverpod: ^2.6.1
   shared_preferences: ^2.5.3
   flutter_dotenv: ^5.2.1
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  freezed: ^3.0.6
+  image_picker: ^1.1.2
+  intl: ^0.19.0
+  dotted_line: ^3.2.3
+  cached_network_image: ^3.4.1
+  build_runner: ^2.4.15
+  freezed_annotation: ^3.0.0
+  json_serializable: ^6.9.5
+  json_annotation: ^4.9.0
+  graphic: ^2.5.1
+  fluttertoast: ^8.2.12
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +56,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  riverpod_generator: ^2.6.5
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.6.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -50,20 +67,40 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/ios_neutral_rd_na@4x.png
+    # logos
+    - assets/logo/ploop-logo.png
+    - assets/logo/ploop-logo-3x.png
+
+    # images
     - assets/images/onboarding-bg.jpg
-    - assets/images/signin-logo.png
     - assets/images/onboarding-deco.png
-    - assets/images/Bar_Activity.png
-    - assets/images/Bar_Home.png
-    - assets/images/Bar_Plogging.png
-    - assets/images/Bar_World.png
-    - assets/images/camera-icon.png
-    - assets/images/dropdown-down.png
-    - assets/images/dropdown-up.png
-    - assets/images/navigate-back-icon.png
+
+    # icon assets
+    - assets/icons/ios_neutral_rd_na@4x.png
+    - assets/icons/signin-logo.png
+    - assets/icons/Bar_Activity.png
+    - assets/icons/Bar_Home.png
+    - assets/icons/Bar_Plogging.png
+    - assets/icons/Bar_World.png
+    - assets/icons/camera-icon.png
+    - assets/icons/dropdown-down.png
+    - assets/icons/dropdown-up.png
+    - assets/icons/navigate-back-icon.png
+    - assets/icons/default-user-icon.png
+    - assets/icons/Update-success-3x.png
+    - assets/icons/Update-failed-3x.png
+    - assets/icons/verify-success-3x.png
+    - assets/icons/verify-failed-3x.png
+    - assets/icons/close-route-icon.png
+
+    # map marker icond
+    - assets/markers/icon_Bin.png
+    - assets/markers/icon_Litter.png
+    - assets/markers/icon_recommendation.png
+    - assets/markers/icon_user_route_default.png
+    - assets/markers/icon_user_route_selected.png
+
     # An image asset can refer to one or more resolution-specific "variants", see
     - .env
   # https://flutter.dev/to/resolution-aware-images

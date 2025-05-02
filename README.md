@@ -1,10 +1,20 @@
-# ploop_fe
+<div align="center">
 
-Ploop: Pick, Plog, and Keep the Loop Going!
+# Ploop
 
-Google Developer Group on Campus : SEOULTECH
-Team Monday
+<img src='assets/ploop-applogo.png' width=150px/>
+</br>
+
+### Pick, Plog, and Keep the Loop Going!
+
 APAC Solution Challenge 2025 Project
+</br> </br>
+Google Developer Group on Campus : SEOULTECH
+</br> **Team Monday**
+
+</div>
+
+<hr />
 
 ## Getting Started
 
