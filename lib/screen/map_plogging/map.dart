@@ -171,9 +171,9 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(recommendedRoute.getCenter().latitude + 0.015,
+          LatLng(recommendedRoute.getCenter().latitude + 0.0015,
               recommendedRoute.getCenter().longitude),
-          recommendedRoute.getBoundsZoom() - 0.0015),
+          recommendedRoute.getBoundsZoom()),
     );
   }
 
