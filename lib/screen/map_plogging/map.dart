@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
 import 'package:ploop_fe/model/user_response.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
+import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
 import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
@@ -172,7 +173,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       CameraUpdate.newLatLngZoom(
           LatLng(recommendedRoute.getCenter().latitude + 0.015,
               recommendedRoute.getCenter().longitude),
-          recommendedRoute.getBoundsZoom() - 1),
+          recommendedRoute.getBoundsZoom() - 0.0015),
     );
   }
 
@@ -284,7 +285,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                 ),
           result == 'success'
               ? Text(
-                  'Update Successfully',
+                  'Updated Successfully',
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
@@ -353,7 +354,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     setState(() {
       _isPloggingActive = false;
       _stopwatch.stop();
-      timer.cancel();
+      // timer.cancel();
     });
   }
 
@@ -366,7 +367,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
       final ploggingNotifier =
           ref.read(ploggingActivityNotifierProvider.notifier);
-      // final userInfoNotifier = ref.read(userInfoNotifierProvider.notifier);
+      final userInfo = ref.read(userInfoNotifierProvider);
 
       // Set all required data
       ploggingNotifier.setRoute(_ploggingRoute);
@@ -375,7 +376,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ploggingNotifier.setCollectedCount(_pickedAmount);
       ploggingNotifier.setDistance(_movedDistance);
       // UserResponse userInfo = ref.watch(userInfoNotifier);
-      // ploggingNotifier.setUserId(userInfo.id);
+      ploggingNotifier.setUserId(userInfo.id);
 
       _stopwatch.reset();
       timer.cancel();

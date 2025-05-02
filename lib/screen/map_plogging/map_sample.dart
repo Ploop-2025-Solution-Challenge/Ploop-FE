@@ -241,6 +241,7 @@ class MapSampleState extends State<MapSample> {
           },
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
+          compassEnabled: false,
         ),
         Positioned(
           bottom: !widget.isPloggingStarted ? 92.h : 32.h,

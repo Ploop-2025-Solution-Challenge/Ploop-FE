@@ -140,8 +140,8 @@ class PauseModal extends ConsumerWidget {
                   resultProvider.setRoute(route);
                   resultProvider.setTimeDuration(formattedTime);
                   resultProvider.setUpdatedTime();
-                  // resultProvider.setUserId(profile.id);
-                  resultProvider.setUserId(-1);
+                  resultProvider.setUserId(profile.id);
+                  // resultProvider.setUserId(-1); // TEST
 
                   Navigator.push(
                     context,

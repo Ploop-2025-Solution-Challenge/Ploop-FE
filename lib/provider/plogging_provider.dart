@@ -34,7 +34,9 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
 
   void setUpdatedTime() {
     // need formatting
-    state = state.copyWith(updatedDateTime: DateTime.now().toString());
+    final formattedNow = DateTime.now().toIso8601String();
+    // "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}T${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}";
+    state = state.copyWith(updatedDateTime: formattedNow);
   }
 
   void setUserId(int id) {
