@@ -1,34 +1,38 @@
 // GET record by Datetime to duration?
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/model/activity_filter.dart';
+import 'package:ploop_fe/provider/activity_data_provider.dart';
 import 'package:ploop_fe/theme.dart';
 
-class TodayRecordCard extends StatelessWidget {
+class TodayRecordCard extends ConsumerWidget {
   const TodayRecordCard({super.key});
 
-  final int todayGarbageCount = 0;
-  final double todayMilesCount = 0.00;
-  final String todayRecordTime = '0.00';
+  // final int todayGarbageCount = 0;
+  // final double todayMilesCount = 0.00;
+  // final String todayRecordTime = '0.00';
   // const Duration(hours: 0, minutes: 21, seconds: 32);
 
-  String _printDuration(Duration duration) {
-    if (duration == Duration.zero) {
-      return '0:00';
-    }
+  // String _printDuration(Duration duration) {
+  //   if (duration == Duration.zero) {
+  //     return '0:00';
+  //   }
 
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+  //   String twoDigits(int n) => n.toString().padLeft(2, "0");
+  //   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+  //   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
 
-    if (duration.inHours < 1) {
-      return "$twoDigitMinutes:$twoDigitSeconds";
-    } else {
-      return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
-    }
-  }
+  //   if (duration.inHours < 1) {
+  //     return "$twoDigitMinutes:$twoDigitSeconds";
+  //   } else {
+  //     return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
+  //   }
+  // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final today = DateTime.now();
     return Container(
       width: 370.w,
       height: 80.h,
@@ -48,7 +52,11 @@ class TodayRecordCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 Text(
-                  '$todayGarbageCount',
+                  ref.read(activityDataProvider(Range.W, today, today)).when(
+                      data: (activity) => '${activity.totalTrash}',
+                      error: (err, stack) => '0',
+                      loading: () => '0'),
+                  // '$todayGarbageCount',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
@@ -66,7 +74,10 @@ class TodayRecordCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 Text(
-                  '$todayMilesCount',
+                  ref.read(activityDataProvider(Range.W, today, today)).when(
+                      data: (activity) => '${activity.totalMiles}',
+                      error: (err, stack) => '0.00',
+                      loading: () => '0.00'),
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
@@ -85,7 +96,10 @@ class TodayRecordCard extends StatelessWidget {
                 ),
                 Text(
                   // _printDuration(todayRecordTime),
-                  todayRecordTime,
+                  ref.read(activityDataProvider(Range.W, today, today)).when(
+                      data: (activity) => '${activity.totalHours}',
+                      error: (err, stack) => '0.00',
+                      loading: () => '0.00'),
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
