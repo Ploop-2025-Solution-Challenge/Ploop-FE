@@ -16,15 +16,15 @@ class PloggingActivityService {
 
     debugPrint('$headers, $body');
     try {
-      // final response = await http.post(url, headers: headers, body: body);
+      final response = await http.post(url, headers: headers, body: body);
 
-      // if (response.statusCode == 200) {
-      //   final routeId = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final routeId = jsonDecode(response.body);
 
-      //   debugPrint('OK: $routeId');
-      // } else {
-      //   debugPrint('post failed: ${response.statusCode} ${response.body}');
-      // }
+        debugPrint('OK: $routeId');
+      } else {
+        debugPrint('post failed: ${response.statusCode} ${response.body}');
+      }
     } catch (e) {
       debugPrint('error: $e');
     }

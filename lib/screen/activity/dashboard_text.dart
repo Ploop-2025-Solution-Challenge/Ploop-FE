@@ -105,8 +105,8 @@ class DashboardTextWidget extends ConsumerWidget {
                   dataProvider.when(
                     data: (activity) =>
                         '${activity.challengeCompleted}/${activity.challengeGoal}',
-                    loading: () => '0/12',
-                    error: (err, stack) => '0/144',
+                    loading: () => '0/0',
+                    error: (err, stack) => '0/0',
                   ),
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
