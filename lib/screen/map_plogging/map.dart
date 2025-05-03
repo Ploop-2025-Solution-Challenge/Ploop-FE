@@ -115,7 +115,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                   latitude: _latitude!,
                   longitude: _longitude!),
             ),
-          );
+          ).then((value) {
+            setState(() {}); // refresh after updating photo
+          });
 
           _showToast(postResult);
         }

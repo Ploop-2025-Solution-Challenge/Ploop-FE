@@ -29,10 +29,12 @@ class DateRangePicker extends StatelessWidget {
         children: ranges.map((label) {
           final isSelected = selected == label;
 
-          return DateRangeButton(
-            label: label,
-            isSelected: isSelected,
-            onTap: () => onChanged(label),
+          return Expanded(
+            child: DateRangeButton(
+              label: label,
+              isSelected: isSelected,
+              onTap: () => onChanged(label),
+            ),
           );
         }).toList(),
       ),
@@ -61,7 +63,7 @@ class DateRangeButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(vertical: 6.5.h),
-        width: 86.w,
+        // width: 86.w,
         decoration: ShapeDecoration(
           color: isSelected ? selectedColor : Colors.transparent,
           shape: RoundedRectangleBorder(
