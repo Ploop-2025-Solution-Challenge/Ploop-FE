@@ -2,7 +2,7 @@
 
 # Ploop
 
-<img src='assets/ploop-applogo.png' width=150px/>
+<img src='assets/logo/ploop-applogo.png' width=150px/>
 </br>
 
 ### Pick, Plog, and Keep the Loop Going!
