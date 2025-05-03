@@ -187,7 +187,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   int distanceFilterValue = 2;
 
   Future<void> startLocationUpdate() async {
-    final GoogleMapController controller = await _mapController.future;
     _ploggingRoute.clear();
     _ploggingPolylines.clear();
     _tracking = true;
@@ -225,8 +224,6 @@ class _MapPageState extends ConsumerState<MapPage> {
           width: 6,
         )
       };
-
-      controller.animateCamera(CameraUpdate.newLatLng(latLng));
     });
   }
 
