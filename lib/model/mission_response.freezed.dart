@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MissionResponse {
   String get partnerName;
-  List<Mission> get partnerMissions; // ?
+  List<Mission> get partnerMissions;
   List<Mission> get myMissions;
 
   /// Create a copy of MissionResponse
@@ -125,9 +125,7 @@ class _MissionResponse implements MissionResponse {
     return EqualUnmodifiableListView(_partnerMissions);
   }
 
-// ?
   final List<Mission> _myMissions;
-// ?
   @override
   List<Mission> get myMissions {
     if (_myMissions is EqualUnmodifiableListView) return _myMissions;

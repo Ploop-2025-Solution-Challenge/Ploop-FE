@@ -8,10 +8,10 @@ part of 'mission.dart';
 
 _Mission _$MissionFromJson(Map<String, dynamic> json) => _Mission(
       name: json['name'] as String,
-      isVerified: json['isVerified'] as bool,
+      verified: json['verified'] as bool,
     );
 
 Map<String, dynamic> _$MissionToJson(_Mission instance) => <String, dynamic>{
       'name': instance.name,
-      'isVerified': instance.isVerified,
+      'verified': instance.verified,
     };

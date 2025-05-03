@@ -7,9 +7,9 @@ class TodayRecordCard extends StatelessWidget {
   const TodayRecordCard({super.key});
 
   final int todayGarbageCount = 0;
-  final double todayMilesCount = 0.28;
-  final Duration todayRecordTime =
-      const Duration(hours: 0, minutes: 21, seconds: 32);
+  final double todayMilesCount = 0.00;
+  final String todayRecordTime = '0.00';
+  // const Duration(hours: 0, minutes: 21, seconds: 32);
 
   String _printDuration(Duration duration) {
     if (duration == Duration.zero) {
@@ -84,7 +84,8 @@ class TodayRecordCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 Text(
-                  _printDuration(todayRecordTime),
+                  // _printDuration(todayRecordTime),
+                  todayRecordTime,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],

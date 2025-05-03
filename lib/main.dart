@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/splash/flutter_splash.dart';
 import 'package:ploop_fe/theme.dart';
 import 'screen/activity/activity.dart';
 import 'screen/home/home.dart';
 import 'screen/map_plogging/map.dart';
-import 'screen/onboarding/onboarding.dart';
 import 'screen/world/world.dart';
 
 void main() async {
@@ -120,7 +118,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                           : const Color(0x58000000));
                 },
               ),
-              height: 65,
+              height: 65.h,
               backgroundColor: GrayScale.white,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               elevation: 0,

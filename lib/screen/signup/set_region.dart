@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,24 +70,44 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
         ref.read(userPreferenceNotifierProvider.notifier).setRegion(region);
 
         if (country == '' || region == '') {
-          showCupertinoDialog(
-            context: context,
-            builder: (context) => CupertinoAlertDialog(
-              title: const Text('Oops!'),
-              content: Text(
-                  'Please select your ${country == '' ? 'country' : 'region'}.'),
-              actions: [
-                CupertinoDialogAction(
-                  isDefaultAction: true,
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+          if (Platform.isIOS) {
+            showCupertinoDialog(
+              context: context,
+              builder: (context) => CupertinoAlertDialog(
+                title: const Text('Oops!'),
+                content: Text(
+                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
+                ],
+              ),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Oops!'),
+                content: Text(
+                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
         } else {
           Navigator.push(
             context,

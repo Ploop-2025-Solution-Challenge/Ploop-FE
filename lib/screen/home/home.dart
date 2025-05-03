@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends ConsumerWidget {
   const MainPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final authToken = ref.read(jwtNotifierProvider);
+    // final jwt = authToken.jwt;
+
+    // final data = ref.read(missionDataProvider);
+
+    // final List<Mission> missions = data.missions;
+
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -19,12 +27,12 @@ class MainPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
             children: [
-              PloopAppBar(),
+              const PloopAppBar(),
               // Page body
               Container(
                 padding: EdgeInsets.all(16.w),
                 child: Column(
-                  spacing: 12.h,
+                  spacing: 8.h,
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   // Weekly Challenge
@@ -33,28 +41,32 @@ class MainPage extends StatelessWidget {
                       'Weekly Challenge',
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                    ChallengeProgressCard(),
-                    // spacing ++
-                    SizedBox(
-                      height: 0.h,
-                    ),
+                    const ChallengeProgressCard(),
+
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         spacing: 8.w,
-                        children: const [
-                          // TODO: get current mission from server
-                          ChallengeCard(
-                            title: 'Pick up 7 cigarette butts',
-                            isVerified: false,
-                          ),
-                          ChallengeCard(
-                              title: 'Collect 5 paper waste items',
-                              isVerified: false),
-                          ChallengeCard(
-                              title: 'Grab 2 discarded straws',
-                              isVerified: false),
-                        ],
+                        // children: missions.map((mission) {
+                        //   return ChallengeCard(
+                        //     title: mission.info.description,
+                        //     isVerified: mission.completed,
+                        //   );
+                        // }).toList(),
+
+                        //  [
+                        //   // TODO: get current mission from server
+                        //   ChallengeCard(
+                        //     title: 'Pick up 7 cigarette butts',
+                        //     isVerified: false,
+                        //   ),
+                        //   ChallengeCard(
+                        //       title: 'Collect 5 paper waste items',
+                        //       isVerified: false),
+                        //   ChallengeCard(
+                        //       title: 'Grab 2 discarded straws',
+                        //       isVerified: false),
+                        // ],
                       ),
                     ),
                     SizedBox(

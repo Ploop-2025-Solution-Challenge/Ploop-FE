@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
-import 'package:ploop_fe/model/user_response.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
@@ -115,7 +114,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                   latitude: _latitude!,
                   longitude: _longitude!),
             ),
-          );
+          ).then((value) {
+            setState(() {}); // refresh after updating photo
+          });
 
           _showToast(postResult);
         }
@@ -187,7 +188,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   int distanceFilterValue = 2;
 
   Future<void> startLocationUpdate() async {
-    final GoogleMapController controller = await _mapController.future;
     _ploggingRoute.clear();
     _ploggingPolylines.clear();
     _tracking = true;
@@ -225,8 +225,6 @@ class _MapPageState extends ConsumerState<MapPage> {
           width: 6,
         )
       };
-
-      controller.animateCamera(CameraUpdate.newLatLng(latLng));
     });
   }
 

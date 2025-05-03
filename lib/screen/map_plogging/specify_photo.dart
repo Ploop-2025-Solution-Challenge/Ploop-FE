@@ -74,23 +74,45 @@ class _SpecifyPhotoState extends State<SpecifyPhoto> {
           Navigator.pop(context, 'fail');
         }
       } else {
-        showCupertinoDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-            title: const Text('Hold on!'),
-            content: const Text('You need to select a type before uploading.'),
-            actions: [
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+        if (Platform.isIOS) {
+          showCupertinoDialog(
+            context: context,
+            builder: (context) => CupertinoAlertDialog(
+              title: const Text('Hold on!'),
+              content:
+                  const Text('You need to select a type before uploading.'),
+              actions: [
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
+              ],
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => CupertinoAlertDialog(
+              title: const Text('Hold on!'),
+              content:
+                  const Text('You need to select a type before uploading.'),
+              actions: [
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
       }
     } catch (e) {
       Navigator.pop(context, 'fail');

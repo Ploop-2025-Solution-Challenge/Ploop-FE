@@ -50,7 +50,7 @@ class RoutePreviewWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.w),
 
               // route preview image
-              child: Container(
+              child: SizedBox(
                 width: 178.w,
                 height: 157.h,
                 child: RoutePreviewStaticMap(
