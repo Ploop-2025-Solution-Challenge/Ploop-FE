@@ -120,7 +120,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                           : const Color(0x58000000));
                 },
               ),
-              height: 65,
+              height: 65.h,
               backgroundColor: GrayScale.white,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               elevation: 0,

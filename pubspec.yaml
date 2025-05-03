@@ -75,6 +75,7 @@ flutter:
     # images
     - assets/images/onboarding-bg.jpg
     - assets/images/onboarding-deco.png
+    - assets/images/mission_error.png
 
     # icon assets
     - assets/icons/ios_neutral_rd_na@4x.png

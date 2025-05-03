@@ -14,9 +14,9 @@ part of 'mission.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Mission {
-  String get name; // mission name
-  bool get isVerified;
+mixin _$Mission implements DiagnosticableTreeMixin {
+  String get name;
+  bool get verified;
 
   /// Create a copy of Mission
   /// with the given fields replaced by the non-null parameter values.
@@ -29,22 +29,30 @@ mixin _$Mission {
   Map<String, dynamic> toJson();
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('type', 'Mission'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('verified', verified));
+  }
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is Mission &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.isVerified, isVerified) ||
-                other.isVerified == isVerified));
+            (identical(other.verified, verified) ||
+                other.verified == verified));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, isVerified);
+  int get hashCode => Object.hash(runtimeType, name, verified);
 
   @override
-  String toString() {
-    return 'Mission(name: $name, isVerified: $isVerified)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'Mission(name: $name, verified: $verified)';
   }
 }
 
@@ -53,7 +61,7 @@ abstract mixin class $MissionCopyWith<$Res> {
   factory $MissionCopyWith(Mission value, $Res Function(Mission) _then) =
       _$MissionCopyWithImpl;
   @useResult
-  $Res call({String name, bool isVerified});
+  $Res call({String name, bool verified});
 }
 
 /// @nodoc
@@ -69,16 +77,16 @@ class _$MissionCopyWithImpl<$Res> implements $MissionCopyWith<$Res> {
   @override
   $Res call({
     Object? name = null,
-    Object? isVerified = null,
+    Object? verified = null,
   }) {
     return _then(_self.copyWith(
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      isVerified: null == isVerified
-          ? _self.isVerified
-          : isVerified // ignore: cast_nullable_to_non_nullable
+      verified: null == verified
+          ? _self.verified
+          : verified // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -86,16 +94,15 @@ class _$MissionCopyWithImpl<$Res> implements $MissionCopyWith<$Res> {
 
 /// @nodoc
 @JsonSerializable()
-class _Mission implements Mission {
-  const _Mission({required this.name, required this.isVerified});
+class _Mission with DiagnosticableTreeMixin implements Mission {
+  const _Mission({required this.name, required this.verified});
   factory _Mission.fromJson(Map<String, dynamic> json) =>
       _$MissionFromJson(json);
 
   @override
   final String name;
-// mission name
   @override
-  final bool isVerified;
+  final bool verified;
 
   /// Create a copy of Mission
   /// with the given fields replaced by the non-null parameter values.
@@ -113,22 +120,30 @@ class _Mission implements Mission {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('type', 'Mission'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('verified', verified));
+  }
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Mission &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.isVerified, isVerified) ||
-                other.isVerified == isVerified));
+            (identical(other.verified, verified) ||
+                other.verified == verified));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, isVerified);
+  int get hashCode => Object.hash(runtimeType, name, verified);
 
   @override
-  String toString() {
-    return 'Mission(name: $name, isVerified: $isVerified)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'Mission(name: $name, verified: $verified)';
   }
 }
 
@@ -138,7 +153,7 @@ abstract mixin class _$MissionCopyWith<$Res> implements $MissionCopyWith<$Res> {
       __$MissionCopyWithImpl;
   @override
   @useResult
-  $Res call({String name, bool isVerified});
+  $Res call({String name, bool verified});
 }
 
 /// @nodoc
@@ -154,16 +169,16 @@ class __$MissionCopyWithImpl<$Res> implements _$MissionCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? name = null,
-    Object? isVerified = null,
+    Object? verified = null,
   }) {
     return _then(_Mission(
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      isVerified: null == isVerified
-          ? _self.isVerified
-          : isVerified // ignore: cast_nullable_to_non_nullable
+      verified: null == verified
+          ? _self.verified
+          : verified // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
