@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/model/activity_filter.dart';
+import 'package:ploop_fe/provider/activity_filter_provider.dart';
 import 'package:ploop_fe/provider/month_data_provider.dart';
 import 'package:ploop_fe/provider/week_data_provider.dart';
 import 'package:ploop_fe/provider/year_data_provider.dart';
@@ -88,7 +92,7 @@ class RangeSelector {
 }
 
 class GraphContainer extends ConsumerWidget {
-  final String viewMode;
+  final Range viewMode;
 
   const GraphContainer({super.key, required this.viewMode});
 
@@ -100,18 +104,18 @@ class GraphContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final weekDataProvider = ref.read(weekDataNotifierProvider);
-    final monthDataProvider = ref.read(monthDataNotifierProvider);
+    // final monthDataProvider = ref.read(monthDataNotifierProvider);
     final yearDataProvider = ref.read(yearDataNotifierProvider);
 
     final viewData = RangeSelector.setView(viewMode);
     final singleBarWidth = setWidth(348, 16, viewData.length);
-    final int maxVal = viewData
-        .map((e) => e.values)
-        .expand((e) => e)
-        .toList()
-        .reduce((curr, next) => curr > next ? curr : next);
+    // final int maxVal = viewData
+    //     .map((e) => e.values)
+    //     .expand((e) => e)
+    //     .toList()
+    //     .reduce((curr, next) => curr > next ? curr : next);
 
-    // final maxVal = weekDataProvider.maxVal ?? 0;
+    final maxVal = weekDataProvider.maxVal ?? 0;
 
     final double maxHeight = 206.h; // 228 - text area 22
 
@@ -130,12 +134,9 @@ class GraphContainer extends ConsumerWidget {
             (e) {
               String day = e.keys.first;
               int value = e[day]!;
-              debugPrint(
-                  '${e.values} / $graphMaxVal * $maxHeight = ${value / graphMaxVal * maxHeight}');
 
               final double barHeight =
                   maxVal != 0 ? value / graphMaxVal * maxHeight : 0;
-              debugPrint('$barHeight');
               return Column(
                 spacing: 4.h,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -170,15 +171,13 @@ class GraphContainer extends ConsumerWidget {
 }
 
 class GraphField extends ConsumerStatefulWidget {
-  final String viewMode;
+  final Range viewMode;
   final (DateTime, DateTime) dateRange;
-  // final List<int> lineLabels;
 
-  GraphField({
+  const GraphField({
     super.key,
     required this.dateRange,
     required this.viewMode,
-    // required this.lineLabels
   });
 
   @override
@@ -191,17 +190,33 @@ class _GraphFieldState extends ConsumerState<GraphField> {
   @override
   Widget build(BuildContext context) {
     final viewData = RangeSelector.setView(widget.viewMode);
+    final range = ref.watch(activityFilterNotifierProvider).range;
     // TEST
-    final weekDataNotifier = ref.watch(weekDataNotifierProvider.notifier);
-    final monthDataNotifier = ref.watch(monthDataNotifierProvider.notifier);
-    final yearDataNotifier = ref.watch(yearDataNotifierProvider.notifier);
+    // final weekDataNotifier = ref.watch(weekDataNotifierProvider.notifier);
+    // final monthDataNotifier = ref.watch(monthDataProvider.notifier);
+    // final yearDataNotifier = ref.watch(yearDataNotifierProvider.notifier);
+    final startDate = ref.read(activityFilterNotifierProvider).startDate;
+    final endDate = ref.read(activityFilterNotifierProvider).endDate;
 
-    List<int> values = viewData.map((e) => e.values).expand((e) => e).toList();
-    debugPrint(values.toString());
+    final dataProvider =
+        ref.watch(activityDataProvider(range, startDate, endDate));
+
+    // List<int> values = viewData.map((e) => e.values).expand((e) => e).toList();
+    final values = dataProvider
+            .whenData(
+              (e) => e.graphData.map((g) => g.trashCount).toList(),
+            )
+            .value ??
+        [];
+
+    // debugPrint(values.toString());
 
     // initialized
-    int maxVal = (values.reduce(
-        (curr, next) => curr > next ? curr : next)); // max value of data
+    int maxVal = 0;
+    if (values.isNotEmpty) {
+      maxVal = values.reduce(
+          (curr, next) => curr > next ? curr : next); // max value of data
+    }
 
     if (maxVal == 0) {
       setState(() {
@@ -209,7 +224,6 @@ class _GraphFieldState extends ConsumerState<GraphField> {
       });
     } else {
       int graphMaxVal = maxVal % 5 == 0 ? maxVal : maxVal + (5 - (maxVal % 5));
-      debugPrint('maxHeight: $graphMaxVal, max: $maxVal');
 
       final double valueGap = graphMaxVal / 5;
       lineLabels = List.generate(6, (i) {

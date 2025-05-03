@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/model/activity_filter.dart';
+import 'package:ploop_fe/screen/activity/activity.dart';
 import 'package:ploop_fe/theme.dart';
 
 class DateRangePicker extends StatelessWidget {
-  final List<String> ranges;
-  final String selected;
-  final ValueChanged<String> onChanged;
+  final List<Range> ranges;
+  final Range selected;
+  final ValueChanged<Range> onChanged;
 
   const DateRangePicker({
     super.key,
@@ -31,7 +33,7 @@ class DateRangePicker extends StatelessWidget {
 
           return Expanded(
             child: DateRangeButton(
-              label: label,
+              label: label.name,
               isSelected: isSelected,
               onTap: () => onChanged(label),
             ),
