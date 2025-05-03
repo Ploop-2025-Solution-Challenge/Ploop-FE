@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
-import 'package:ploop_fe/model/user_response.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ploop_fe/model/activity_response.dart';
-import 'package:ploop_fe/model/user_info_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'month_data_provider.g.dart';
@@ -29,7 +27,7 @@ class MonthDataNotifier extends _$MonthDataNotifier {
 
   void setMaxVal() {
     if (state.graphData.isEmpty) {
-      throw FormatException('state.graphData not set yet');
+      throw const FormatException('state.graphData not set yet');
     }
     final int maxVal = state.graphData
         .map((e) => e.trashCount)

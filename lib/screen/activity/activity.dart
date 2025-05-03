@@ -39,7 +39,7 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   DateRangePicker(
-                    ranges: ['W', 'M', 'Y'],
+                    ranges: const ['W', 'M', 'Y'],
                     selected: selectedRange,
                     onChanged: (value) {
                       setState(() {
@@ -70,11 +70,11 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
     switch (range) {
       case 'M':
         int currentMonth = (now.month % 12);
-        return (now.subtract(Duration(days: 29)), now); // month view
+        return (now.subtract(const Duration(days: 29)), now); // month view
       // case '3M':
       //   return (now.subtract(Duration(days: 89)), now);
       case 'Y':
-        return (now.subtract(Duration(days: 364)), now); // year view
+        return (now.subtract(const Duration(days: 364)), now); // year view
       case 'W':
       default:
         DateTime startOfWeek =

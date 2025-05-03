@@ -2,7 +2,6 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/model/activity_response.dart';
 import 'package:ploop_fe/provider/month_data_provider.dart';
 import 'package:ploop_fe/provider/week_data_provider.dart';
 import 'package:ploop_fe/provider/year_data_provider.dart';
@@ -119,7 +118,7 @@ class GraphContainer extends ConsumerWidget {
     int graphMaxVal = maxVal % 5 == 0 ? maxVal : maxVal + (5 - (maxVal % 5));
     // debugPrint(constraints.toString());
 
-    return Container(
+    return SizedBox(
       // color: Colors.green,
       width: 348.w,
       child: Row(
@@ -189,8 +188,6 @@ class GraphField extends ConsumerStatefulWidget {
 class _GraphFieldState extends ConsumerState<GraphField> {
   List<String> lineLabels = ['', '', '', '', '', ''];
 
-  void initState() {}
-
   @override
   Widget build(BuildContext context) {
     final viewData = RangeSelector.setView(widget.viewMode);
@@ -225,7 +222,7 @@ class _GraphFieldState extends ConsumerState<GraphField> {
     }
     // adjust
 
-    return Container(
+    return SizedBox(
       // color: Colors.yellow,
       // padding: EdgeInsets.only(top: 18.h),
       // width: 370.w,
@@ -250,7 +247,7 @@ class _GraphFieldState extends ConsumerState<GraphField> {
               ),
               Positioned(
                 bottom: 18.h,
-                child: Container(
+                child: SizedBox(
                   // color: const Color.fromRGBO(255, 172, 64, 0.311),
                   width: 348.w,
                   height: 228.h,

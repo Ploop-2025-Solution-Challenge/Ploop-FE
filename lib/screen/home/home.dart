@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/model/mission.dart';
-import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/model/mission_response.dart';
-import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
-import 'package:ploop_fe/service/mission_service.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
 
@@ -32,7 +27,7 @@ class MainPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
             children: [
-              PloopAppBar(),
+              const PloopAppBar(),
               // Page body
               Container(
                 padding: EdgeInsets.all(16.w),

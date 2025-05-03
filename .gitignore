@@ -1,6 +1,7 @@
 # API Keys related
 .env
 ios/Runner/GoogleService-Info.plist
+android/google-services.json
 
 # Miscellaneous
 *.class

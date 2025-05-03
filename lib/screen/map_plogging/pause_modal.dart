@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:graphic/graphic.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
@@ -75,7 +74,7 @@ class PauseModal extends ConsumerWidget {
             children: [
               // crossAxisAlignment: CrossAxisAlignment.center,
               Text(
-                "${DateFormat('dd. MM. y - hh:mm a').format(DateTime.now())}",
+                DateFormat('dd. MM. y - hh:mm a').format(DateTime.now()),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600, color: GrayScale.gray_300),
               ),

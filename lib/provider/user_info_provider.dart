@@ -1,4 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ploop_fe/model/user_info_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

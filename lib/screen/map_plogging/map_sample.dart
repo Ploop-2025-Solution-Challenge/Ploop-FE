@@ -50,7 +50,7 @@ class MapSampleState extends State<MapSample> {
 
   final Set<Marker> _litterMarkers = {};
   final Set<Marker> _binMarkers = {};
-  late Marker _routeMarkers = Marker(markerId: MarkerId('recommend'));
+  late Marker _routeMarkers = const Marker(markerId: MarkerId('recommend'));
 
   static const CameraPosition initialPos = CameraPosition(
     // target: LatLng(37.422131, -122.084801),
@@ -222,9 +222,6 @@ class MapSampleState extends State<MapSample> {
             if (widget.onMapCreated != null) {
               widget.onMapCreated!(controller);
             }
-          },
-          onCameraMove: (CameraPosition pos) async {
-            final _lastPosition = pos;
           },
           onCameraIdle: () async {
             GoogleMapController googleMapController = await _controller.future;

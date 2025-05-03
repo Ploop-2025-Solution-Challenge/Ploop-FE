@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
@@ -11,10 +10,8 @@ import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/model/route_model_test.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
-import 'package:ploop_fe/screen/home/ploop_appbar.dart';
 import 'package:ploop_fe/service/plogging_service.dart';
 import 'package:ploop_fe/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PloggingResult extends ConsumerWidget {
   final int amount;
@@ -157,7 +154,7 @@ class PloggingResult extends ConsumerWidget {
   }
 }
 
-/** TEST */
+/// TEST
 RouteModel resultTest = RouteModel(route: const [
   LatLng(37.631000, 127.078000),
   LatLng(37.631300, 127.077700),
