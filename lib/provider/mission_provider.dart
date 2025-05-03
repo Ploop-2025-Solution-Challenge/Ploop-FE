@@ -23,7 +23,7 @@ Future<MissionResponse> missionData(Ref ref) async {
     // debugPrint('$url, $headers');
 
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       debugPrint('OK: $responseData');
       return MissionResponse.fromJson(responseData);
     } else {
