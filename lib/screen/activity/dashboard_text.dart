@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:ploop_fe/model/activity_response.dart';
 import 'package:ploop_fe/provider/activity_filter_provider.dart';
 import 'package:ploop_fe/provider/activity_data_provider.dart';
 import 'package:ploop_fe/theme.dart';

@@ -130,7 +130,14 @@ class ChallengeProgressCard extends ConsumerWidget {
         ),
       );
     }, loading: () {
-      return const Text('Loading...');
+      return SizedBox(
+        height: 388.h,
+        child: Image.asset(
+          'assets/images/mission_error.png',
+          width: 370.w,
+          height: 388.h,
+        ),
+      );
     });
   }
 }
@@ -195,8 +202,7 @@ class ChallengeUserCard extends StatelessWidget {
   }
 }
 
-// TODO: convert to consumer widget when connecting to database
-class ChallengeCard extends StatefulWidget {
+class ChallengeCard extends ConsumerStatefulWidget {
   const ChallengeCard(
       {super.key, required this.title, required this.isVerified});
 
@@ -204,10 +210,10 @@ class ChallengeCard extends StatefulWidget {
   final bool isVerified;
 
   @override
-  State<StatefulWidget> createState() => ChallengeCardState();
+  ConsumerState<ChallengeCard> createState() => ChallengeCardState();
 }
 
-class ChallengeCardState extends State<ChallengeCard> {
+class ChallengeCardState extends ConsumerState<ChallengeCard> {
   late bool _isVerified;
   XFile? _image;
   Future getImage(ImageSource imageSource) async {

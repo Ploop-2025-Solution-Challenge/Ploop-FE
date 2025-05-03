@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/model/jwt.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/service/plogging_service.dart';
@@ -178,8 +178,8 @@ class PloggingResultMap extends ConsumerWidget {
     RouteModel model = RouteModel(
         routeId: '',
         route: activityRoute,
-        // userId: profile.id.toString(), // TODO: remove toString when api edited
-        userId: 'test',
+        userId: profile.id.toString(), // TODO: remove toString when api edited
+        // userId: 'test',
         updatedDateTime: DateTime.now());
     LatLng? center = model.getCenter();
     debugPrint('center: $center');
@@ -216,6 +216,7 @@ class PloggingResultMap extends ConsumerWidget {
           myLocationEnabled: false,
           myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
+          compassEnabled: false,
         ),
         Positioned(
           top: 22.h,

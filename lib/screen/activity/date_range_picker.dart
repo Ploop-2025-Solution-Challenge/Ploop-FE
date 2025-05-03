@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/model/activity_filter.dart';
-import 'package:ploop_fe/screen/activity/activity.dart';
 import 'package:ploop_fe/theme.dart';
 
 class DateRangePicker extends StatelessWidget {

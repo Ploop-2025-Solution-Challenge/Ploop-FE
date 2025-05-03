@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
-// temporary model
 class RouteModel {
   RouteModel(
       {required this.routeId,
@@ -19,7 +18,6 @@ class RouteModel {
   // format
   String fUpdateDateTime() {
     // format: "dd.mm.yyyy - hh:mm AM/PM"
-    // DateFormat('dd.MM.y - hh:mm a').format(DateTime(2025, 4, 7, 08, 16));
     return DateFormat('dd.MM.y - hh:mm a').format(updatedDateTime);
   }
 
@@ -59,14 +57,17 @@ class RouteModel {
 
       debugPrint('lat: $latDiff, lng: $lngDiff');
 
-      if (maxDiff < 0.005) return 16;
+      if (maxDiff < 0.005) return 15.5;
       if (maxDiff < 0.01) return 15;
       if (maxDiff < 0.05) return 13;
+      if (maxDiff < 0.075) return 12.5;
       if (maxDiff < 0.1) return 12;
-      if (maxDiff < 0.5) return 10;
+      if (maxDiff < 0.15) return 11.5;
+      // if (maxDiff < 0.2) return 11.5;
+      if (maxDiff < 0.5) return 10.5;
       if (maxDiff < 1) return 8;
       if (maxDiff < 2) return 7;
-      return 10;
+      return 6;
     } else {
       debugPrint("routeBound is null at RouteModel.getBoundsZoom()");
       throw Error();
