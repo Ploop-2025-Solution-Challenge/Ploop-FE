@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'month_data_provider.dart';
+part of 'activity_data_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activityDataHash() => r'8a18e57b2cdb641bd7ab3749a805e32a9e9578d3';
+String _$activityDataHash() => r'a129d58a5099c2025c3403e11891c1e8d7a7d429';
 
 /// Copied from Dart SDK
 class _SystemHash {

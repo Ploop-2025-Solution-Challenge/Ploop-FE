@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/model/activity_filter.dart';
 import 'package:ploop_fe/provider/activity_filter_provider.dart';
-import 'package:ploop_fe/provider/month_data_provider.dart';
 import 'package:ploop_fe/screen/activity/dashboard_graph.dart';
 import 'package:ploop_fe/screen/activity/date_range_picker.dart';
 import 'package:ploop_fe/theme.dart';

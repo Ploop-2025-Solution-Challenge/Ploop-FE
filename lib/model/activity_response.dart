@@ -22,8 +22,6 @@ abstract class ActivityResponse with _$ActivityResponse {
     required int challengeCompleted,
     required int challengeGoal,
     required List<GraphData> graphData,
-    int? maxVal,
-    int? graphMaxVal,
   }) = _ActivityResponse;
 
   factory ActivityResponse.fromJson(Map<String, dynamic> json) =>

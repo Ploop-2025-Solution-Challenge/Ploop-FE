@@ -1,16 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/model/activity_filter.dart';
 import 'package:ploop_fe/model/activity_response.dart';
-import 'package:ploop_fe/provider/activity_filter_provider.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'month_data_provider.g.dart';
+part 'activity_data_provider.g.dart';
 
 @riverpod
 Future<ActivityResponse> activityData(

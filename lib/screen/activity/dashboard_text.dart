@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/model/activity_response.dart';
 import 'package:ploop_fe/provider/activity_filter_provider.dart';
-import 'package:ploop_fe/provider/month_data_provider.dart';
+import 'package:ploop_fe/provider/activity_data_provider.dart';
 import 'package:ploop_fe/theme.dart';
 
 class DashboardTextWidget extends ConsumerWidget {
@@ -33,7 +33,7 @@ class DashboardTextWidget extends ConsumerWidget {
           ],
         );
       },
-      loading: () => const CircularProgressIndicator(),
+      loading: () => const Text('Loading...'),
       error: (err, stack) => Text('error: $err'),
     );
   }
