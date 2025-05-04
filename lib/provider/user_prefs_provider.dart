@@ -14,7 +14,6 @@ class UserPreferenceNotifier extends _$UserPreferenceNotifier {
       age: 0,
       gender: '',
       country: '',
-      region: '',
       difficulty: '',
       motivation: '',
       preferredArea: [],
@@ -23,10 +22,6 @@ class UserPreferenceNotifier extends _$UserPreferenceNotifier {
 
   void setCountry(String country) {
     state = state.copyWith(country: country);
-  }
-
-  void setRegion(String region) {
-    state = state.copyWith(region: region);
   }
 
   void setAge(int age) {
@@ -61,7 +56,6 @@ class UserPreferenceNotifier extends _$UserPreferenceNotifier {
         age: 0,
         gender: '',
         country: '',
-        region: '',
         difficulty: '',
         motivation: '',
         preferredArea: []);

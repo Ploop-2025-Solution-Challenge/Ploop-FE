@@ -354,7 +354,7 @@ Future<void> _checkPermission(BuildContext context) async {
                             .textTheme
                             .headlineMedium
                             ?.copyWith(
-                              wordSpacing: -0.4.sp,
+                              letterSpacing: -0.3.sp,
                               fontSize: 17.sp,
                               color: const Color.fromARGB(255, 0, 122, 255),
                             )),
@@ -367,7 +367,7 @@ Future<void> _checkPermission(BuildContext context) async {
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontSize: 17.sp,
-                                wordSpacing: -0.4.sp,
+                                letterSpacing: -0.3.sp,
                                 fontWeight: FontWeight.w600,
                                 color: const Color.fromARGB(255, 0, 122, 255),
                               ),

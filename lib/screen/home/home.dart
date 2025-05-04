@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
@@ -10,8 +14,44 @@ class MainPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final authToken = ref.read(jwtNotifierProvider);
-    // final jwt = authToken.jwt;
+    final authToken = ref.read(jwtNotifierProvider);
+    final jwt = authToken.jwt;
+    if (jwt == null) {
+      Platform.isIOS
+          ? showCupertinoDialog(
+              context: context,
+              builder: (context) => CupertinoAlertDialog(
+                title: const Text('Something went wrong.'),
+                content: const Text('Please sign in again.'),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Something went wrong.'),
+                content: const Text('Please sign in again.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+    }
 
     // final data = ref.read(missionDataProvider);
 

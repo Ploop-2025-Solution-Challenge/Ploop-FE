@@ -338,6 +338,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                               .headlineMedium
                               ?.copyWith(
                                 fontSize: 17.sp,
+                                letterSpacing: -0.3.sp,
                                 color: const Color.fromARGB(255, 0, 122, 255),
                               )),
                       onPressed: () => Navigator.of(context).pop(),
@@ -351,6 +352,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                             .headlineMedium
                             ?.copyWith(
                               fontSize: 17.sp,
+                              letterSpacing: -0.3.sp,
                               fontWeight: FontWeight.w600,
                               color: const Color.fromARGB(255, 0, 122, 255),
                             ),

@@ -18,8 +18,7 @@ mixin _$UserRequest {
   String get nickname;
   int get age;
   String get gender;
-  String get country;
-  String get region;
+  String get country; // required String region,
   String get difficulty;
   String get motivation;
   List<String> get preferredArea;
@@ -44,7 +43,6 @@ mixin _$UserRequest {
             (identical(other.age, age) || other.age == age) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.country, country) || other.country == country) &&
-            (identical(other.region, region) || other.region == region) &&
             (identical(other.difficulty, difficulty) ||
                 other.difficulty == difficulty) &&
             (identical(other.motivation, motivation) ||
@@ -61,14 +59,13 @@ mixin _$UserRequest {
       age,
       gender,
       country,
-      region,
       difficulty,
       motivation,
       const DeepCollectionEquality().hash(preferredArea));
 
   @override
   String toString() {
-    return 'UserRequest(nickname: $nickname, age: $age, gender: $gender, country: $country, region: $region, difficulty: $difficulty, motivation: $motivation, preferredArea: $preferredArea)';
+    return 'UserRequest(nickname: $nickname, age: $age, gender: $gender, country: $country, difficulty: $difficulty, motivation: $motivation, preferredArea: $preferredArea)';
   }
 }
 
@@ -83,7 +80,6 @@ abstract mixin class $UserRequestCopyWith<$Res> {
       int age,
       String gender,
       String country,
-      String region,
       String difficulty,
       String motivation,
       List<String> preferredArea});
@@ -105,7 +101,6 @@ class _$UserRequestCopyWithImpl<$Res> implements $UserRequestCopyWith<$Res> {
     Object? age = null,
     Object? gender = null,
     Object? country = null,
-    Object? region = null,
     Object? difficulty = null,
     Object? motivation = null,
     Object? preferredArea = null,
@@ -126,10 +121,6 @@ class _$UserRequestCopyWithImpl<$Res> implements $UserRequestCopyWith<$Res> {
       country: null == country
           ? _self.country
           : country // ignore: cast_nullable_to_non_nullable
-              as String,
-      region: null == region
-          ? _self.region
-          : region // ignore: cast_nullable_to_non_nullable
               as String,
       difficulty: null == difficulty
           ? _self.difficulty
@@ -155,7 +146,6 @@ class _UserRequest implements UserRequest {
       required this.age,
       required this.gender,
       required this.country,
-      required this.region,
       required this.difficulty,
       required this.motivation,
       required final List<String> preferredArea})
@@ -171,8 +161,7 @@ class _UserRequest implements UserRequest {
   final String gender;
   @override
   final String country;
-  @override
-  final String region;
+// required String region,
   @override
   final String difficulty;
   @override
@@ -210,7 +199,6 @@ class _UserRequest implements UserRequest {
             (identical(other.age, age) || other.age == age) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.country, country) || other.country == country) &&
-            (identical(other.region, region) || other.region == region) &&
             (identical(other.difficulty, difficulty) ||
                 other.difficulty == difficulty) &&
             (identical(other.motivation, motivation) ||
@@ -227,14 +215,13 @@ class _UserRequest implements UserRequest {
       age,
       gender,
       country,
-      region,
       difficulty,
       motivation,
       const DeepCollectionEquality().hash(_preferredArea));
 
   @override
   String toString() {
-    return 'UserRequest(nickname: $nickname, age: $age, gender: $gender, country: $country, region: $region, difficulty: $difficulty, motivation: $motivation, preferredArea: $preferredArea)';
+    return 'UserRequest(nickname: $nickname, age: $age, gender: $gender, country: $country, difficulty: $difficulty, motivation: $motivation, preferredArea: $preferredArea)';
   }
 }
 
@@ -251,7 +238,6 @@ abstract mixin class _$UserRequestCopyWith<$Res>
       int age,
       String gender,
       String country,
-      String region,
       String difficulty,
       String motivation,
       List<String> preferredArea});
@@ -273,7 +259,6 @@ class __$UserRequestCopyWithImpl<$Res> implements _$UserRequestCopyWith<$Res> {
     Object? age = null,
     Object? gender = null,
     Object? country = null,
-    Object? region = null,
     Object? difficulty = null,
     Object? motivation = null,
     Object? preferredArea = null,
@@ -294,10 +279,6 @@ class __$UserRequestCopyWithImpl<$Res> implements _$UserRequestCopyWith<$Res> {
       country: null == country
           ? _self.country
           : country // ignore: cast_nullable_to_non_nullable
-              as String,
-      region: null == region
-          ? _self.region
-          : region // ignore: cast_nullable_to_non_nullable
               as String,
       difficulty: null == difficulty
           ? _self.difficulty

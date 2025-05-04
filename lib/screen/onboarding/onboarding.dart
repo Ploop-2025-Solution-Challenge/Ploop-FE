@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +13,9 @@ const List<String> scopes = <String>[
 ];
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
+  clientId: Platform.isAndroid
+      ? '226017564204-qk2q8le5ttafdt4ai88tpuj1i46hno5r.apps.googleusercontent.com'
+      : null,
   scopes: scopes,
 );
 
@@ -23,7 +28,8 @@ class OnboardingPage extends StatelessWidget {
     return Stack(alignment: Alignment.center, children: [
       Image.asset(
         'assets/images/onboarding-bg.jpg',
-        width: 402.w,
+        width: double.infinity,
+        height: double.infinity,
         fit: BoxFit.cover,
       ),
       Positioned(
@@ -60,7 +66,7 @@ class OnboardingPage extends StatelessWidget {
                     fontSize: 14.sp,
                     color: Colors.white,
                     height: 1.92,
-                    letterSpacing: -0.08,
+                    letterSpacing: 0.12.sp,
                   ),
             ),
 
@@ -135,7 +141,10 @@ class LoginButton extends ConsumerWidget {
             Image.asset('assets/icons/signin-logo.png'),
             Text(
               'Start with Google',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(letterSpacing: 0.12.sp),
             )
           ],
         ),

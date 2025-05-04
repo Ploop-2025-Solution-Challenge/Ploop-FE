@@ -23,7 +23,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
   Widget build(BuildContext context) {
     return PrefsPageLayout(
       firstPage: true,
-      question: 'Please select your country and region',
+      question: 'Please select your country',
       title1: 'Country',
       // TODO: remove const when connecting database
       widget1: CustomDropDownMenu(
@@ -48,35 +48,17 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
           'Austrailia',
         ],
       ),
-      title2: 'Region',
-      widget2: CustomDropDownMenu(
-        selected: region,
-        onSelected: (val) => setState(
-          () {
-            region = val;
-            debugPrint('selected $val');
-          },
-        ),
-        entryList: const [
-          'Seoul',
-          'London',
-          'Tokyo',
-          'Washington D.C.',
-          'Berlin'
-        ],
-      ),
-      onButtonPressed: () {
-        ref.read(userPreferenceNotifierProvider.notifier).setCountry(country);
-        ref.read(userPreferenceNotifierProvider.notifier).setRegion(region);
 
-        if (country == '' || region == '') {
+      onButtonPressed: () {
+        ref.watch(userPreferenceNotifierProvider.notifier).setCountry(country);
+
+        if (country == '') {
           if (Platform.isIOS) {
             showCupertinoDialog(
               context: context,
               builder: (context) => CupertinoAlertDialog(
                 title: const Text('Oops!'),
-                content: Text(
-                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                content: const Text('Please select your country.'),
                 actions: [
                   CupertinoDialogAction(
                     isDefaultAction: true,
@@ -94,8 +76,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Oops!'),
-                content: Text(
-                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                content: const Text('Please select your country.'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),

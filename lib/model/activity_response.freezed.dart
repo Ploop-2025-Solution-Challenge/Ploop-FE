@@ -178,8 +178,6 @@ mixin _$ActivityResponse {
   int get challengeCompleted;
   int get challengeGoal;
   List<GraphData> get graphData;
-  int? get maxVal;
-  int? get graphMaxVal;
 
   /// Create a copy of ActivityResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -207,10 +205,7 @@ mixin _$ActivityResponse {
                 other.challengeCompleted == challengeCompleted) &&
             (identical(other.challengeGoal, challengeGoal) ||
                 other.challengeGoal == challengeGoal) &&
-            const DeepCollectionEquality().equals(other.graphData, graphData) &&
-            (identical(other.maxVal, maxVal) || other.maxVal == maxVal) &&
-            (identical(other.graphMaxVal, graphMaxVal) ||
-                other.graphMaxVal == graphMaxVal));
+            const DeepCollectionEquality().equals(other.graphData, graphData));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -222,13 +217,11 @@ mixin _$ActivityResponse {
       totalHours,
       challengeCompleted,
       challengeGoal,
-      const DeepCollectionEquality().hash(graphData),
-      maxVal,
-      graphMaxVal);
+      const DeepCollectionEquality().hash(graphData));
 
   @override
   String toString() {
-    return 'ActivityResponse(totalTrash: $totalTrash, totalMiles: $totalMiles, totalHours: $totalHours, challengeCompleted: $challengeCompleted, challengeGoal: $challengeGoal, graphData: $graphData, maxVal: $maxVal, graphMaxVal: $graphMaxVal)';
+    return 'ActivityResponse(totalTrash: $totalTrash, totalMiles: $totalMiles, totalHours: $totalHours, challengeCompleted: $challengeCompleted, challengeGoal: $challengeGoal, graphData: $graphData)';
   }
 }
 
@@ -244,9 +237,7 @@ abstract mixin class $ActivityResponseCopyWith<$Res> {
       double totalHours,
       int challengeCompleted,
       int challengeGoal,
-      List<GraphData> graphData,
-      int? maxVal,
-      int? graphMaxVal});
+      List<GraphData> graphData});
 }
 
 /// @nodoc
@@ -268,8 +259,6 @@ class _$ActivityResponseCopyWithImpl<$Res>
     Object? challengeCompleted = null,
     Object? challengeGoal = null,
     Object? graphData = null,
-    Object? maxVal = freezed,
-    Object? graphMaxVal = freezed,
   }) {
     return _then(_self.copyWith(
       totalTrash: null == totalTrash
@@ -296,14 +285,6 @@ class _$ActivityResponseCopyWithImpl<$Res>
           ? _self.graphData
           : graphData // ignore: cast_nullable_to_non_nullable
               as List<GraphData>,
-      maxVal: freezed == maxVal
-          ? _self.maxVal
-          : maxVal // ignore: cast_nullable_to_non_nullable
-              as int?,
-      graphMaxVal: freezed == graphMaxVal
-          ? _self.graphMaxVal
-          : graphMaxVal // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
@@ -317,9 +298,7 @@ class _ActivityResponse implements ActivityResponse {
       required this.totalHours,
       required this.challengeCompleted,
       required this.challengeGoal,
-      required final List<GraphData> graphData,
-      this.maxVal,
-      this.graphMaxVal})
+      required final List<GraphData> graphData})
       : _graphData = graphData;
   factory _ActivityResponse.fromJson(Map<String, dynamic> json) =>
       _$ActivityResponseFromJson(json);
@@ -341,11 +320,6 @@ class _ActivityResponse implements ActivityResponse {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_graphData);
   }
-
-  @override
-  final int? maxVal;
-  @override
-  final int? graphMaxVal;
 
   /// Create a copy of ActivityResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -378,10 +352,7 @@ class _ActivityResponse implements ActivityResponse {
             (identical(other.challengeGoal, challengeGoal) ||
                 other.challengeGoal == challengeGoal) &&
             const DeepCollectionEquality()
-                .equals(other._graphData, _graphData) &&
-            (identical(other.maxVal, maxVal) || other.maxVal == maxVal) &&
-            (identical(other.graphMaxVal, graphMaxVal) ||
-                other.graphMaxVal == graphMaxVal));
+                .equals(other._graphData, _graphData));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -393,13 +364,11 @@ class _ActivityResponse implements ActivityResponse {
       totalHours,
       challengeCompleted,
       challengeGoal,
-      const DeepCollectionEquality().hash(_graphData),
-      maxVal,
-      graphMaxVal);
+      const DeepCollectionEquality().hash(_graphData));
 
   @override
   String toString() {
-    return 'ActivityResponse(totalTrash: $totalTrash, totalMiles: $totalMiles, totalHours: $totalHours, challengeCompleted: $challengeCompleted, challengeGoal: $challengeGoal, graphData: $graphData, maxVal: $maxVal, graphMaxVal: $graphMaxVal)';
+    return 'ActivityResponse(totalTrash: $totalTrash, totalMiles: $totalMiles, totalHours: $totalHours, challengeCompleted: $challengeCompleted, challengeGoal: $challengeGoal, graphData: $graphData)';
   }
 }
 
@@ -417,9 +386,7 @@ abstract mixin class _$ActivityResponseCopyWith<$Res>
       double totalHours,
       int challengeCompleted,
       int challengeGoal,
-      List<GraphData> graphData,
-      int? maxVal,
-      int? graphMaxVal});
+      List<GraphData> graphData});
 }
 
 /// @nodoc
@@ -441,8 +408,6 @@ class __$ActivityResponseCopyWithImpl<$Res>
     Object? challengeCompleted = null,
     Object? challengeGoal = null,
     Object? graphData = null,
-    Object? maxVal = freezed,
-    Object? graphMaxVal = freezed,
   }) {
     return _then(_ActivityResponse(
       totalTrash: null == totalTrash
@@ -469,14 +434,6 @@ class __$ActivityResponseCopyWithImpl<$Res>
           ? _self._graphData
           : graphData // ignore: cast_nullable_to_non_nullable
               as List<GraphData>,
-      maxVal: freezed == maxVal
-          ? _self.maxVal
-          : maxVal // ignore: cast_nullable_to_non_nullable
-              as int?,
-      graphMaxVal: freezed == graphMaxVal
-          ? _self.graphMaxVal
-          : graphMaxVal // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }

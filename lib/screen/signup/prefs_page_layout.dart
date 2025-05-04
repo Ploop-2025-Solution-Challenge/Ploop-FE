@@ -28,7 +28,7 @@ class PrefsPageLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 874.h,
+      // height: 874.h,
       color: Colors.white,
       child: SafeArea(
         child: Stack(
