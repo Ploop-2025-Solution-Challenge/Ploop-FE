@@ -86,7 +86,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         LatLng(37.62360, 127.07040),
         LatLng(37.62335, 127.07025)
       ],
-      userId: '',
+      userId: -1,
       updatedDateTime: DateTime.now());
   Set<Polyline> recommend_polylines = {};
 
@@ -98,13 +98,11 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      debugPrint('image is saved at: ${pickedFile.path}');
 
       if (_image != null) {
         await getCurrentLocation();
 
         if (_latitude == null || _longitude == null) {
-          debugPrint('something in position is null');
           return;
         }
 
@@ -117,9 +115,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   latitude: _latitude!,
                   longitude: _longitude!),
             ),
-          ).then((value) {
-            setState(() {}); // refresh after updating photo
-          });
+          );
 
           _showToast(postResult);
         }
@@ -139,7 +135,6 @@ class _MapPageState extends ConsumerState<MapPage> {
       setState(() {
         if (_stopwatch.isRunning) {
           _updateElapsedTime();
-          debugPrint('time update: $_elapsedTime');
         }
       });
     });
@@ -229,9 +224,6 @@ class _MapPageState extends ConsumerState<MapPage> {
         _movedDistance += distanceInMeters / 1609.344;
       }
       previousPos = currentPos;
-
-      debugPrint("latitude: ${position.latitude}");
-      debugPrint("longitude: ${position.longitude}");
 
       _ploggingPolylines = {
         Polyline(
@@ -323,6 +315,8 @@ class _MapPageState extends ConsumerState<MapPage> {
       positionedToastBuilder: (context, child, gravity) =>
           Positioned(top: 154.h, left: 16.w, child: child),
     );
+    // refresh
+    setState(() {});
   }
 
   Future<void> checkPermissionWhenStart() async {
@@ -401,7 +395,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
-      // debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
     });
   }
 
@@ -419,7 +412,6 @@ class _MapPageState extends ConsumerState<MapPage> {
       if (_stopwatch.isRunning) {
         _updateElapsedTime();
       }
-      debugPrint('is Plogging?$_isPloggingStarted');
     });
   }
 
@@ -444,11 +436,8 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   void _endPlogging() {
-    debugPrint('route: $_ploggingRoute');
-
     setState(() {
       _isPloggingActive = false;
-      debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
 
       final ploggingNotifier =
           ref.read(ploggingActivityNotifierProvider.notifier);
@@ -485,7 +474,6 @@ class _MapPageState extends ConsumerState<MapPage> {
         );
       },
     );
-    debugPrint(result);
     if (result == null) {
       _isPloggingActive = true;
       _resumePlogging();
@@ -493,7 +481,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   void _resumePlogging() {
-    debugPrint('is plogging? $_isPloggingStarted');
     // _isPloggingActive = true;
     _stopwatch.start();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -691,7 +678,6 @@ class _MapPageState extends ConsumerState<MapPage> {
                   child: !_isPloggingStarted
                       ? CameraButton(
                           onPressed: () async {
-                            debugPrint('camera pressed');
                             await getImage(ImageSource.camera);
                           },
                         )

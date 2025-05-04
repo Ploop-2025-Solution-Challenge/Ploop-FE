@@ -15,9 +15,7 @@ part 'activity_data_provider.g.dart';
 @riverpod
 Future<ActivityResponse> activityData(
     Ref ref, Range range, DateTime startDate, DateTime endDate) async {
-  // final filter = ref.watch(activityFilterNotifierProvider);
   final jwt = ref.read(jwtNotifierProvider).jwt;
-  debugPrint('jwt: $jwt');
 
   final String startParam = DateFormat('y-MM-dd').format(startDate);
   final String endParam = DateFormat('y-MM-dd').format(endDate);
@@ -30,7 +28,7 @@ Future<ActivityResponse> activityData(
       'Authorization': 'Bearer $jwt'
     };
     final response = await http.get(url, headers: headers);
-    debugPrint('$url, $headers');
+    // debugPrint('$url, $headers');
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));

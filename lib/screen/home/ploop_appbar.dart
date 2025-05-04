@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,8 +32,10 @@ class _PloopAppBarState extends ConsumerState<PloopAppBar> {
       region: null);
 
   void _getUserProfile() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwt = prefs.getString('jwt');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? jwt = prefs.getString('jwt');
+
+    final jwt = ref.read(jwtNotifierProvider).jwt;
     if (jwt != null) {
       final profile = await UserService.getUserProfile(jwt);
       if (profile != null) {

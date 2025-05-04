@@ -155,15 +155,6 @@ class PloggingResult extends ConsumerWidget {
 }
 
 /// TEST
-RouteModel resultTest = RouteModel(route: const [
-  LatLng(37.631000, 127.078000),
-  LatLng(37.631300, 127.077700),
-  LatLng(37.631600, 127.077400),
-  LatLng(37.631900, 127.077100),
-  LatLng(37.632200, 127.076800),
-  LatLng(37.632500, 127.076500),
-  LatLng(37.632800, 127.076200),
-], userId: "2", updatedDateTime: DateTime(2025, 4, 29, 1, 7), routeId: "2");
 
 class PloggingResultMap extends ConsumerWidget {
   final List<LatLng> activityRoute;
@@ -178,7 +169,7 @@ class PloggingResultMap extends ConsumerWidget {
     RouteModel model = RouteModel(
         routeId: '',
         route: activityRoute,
-        userId: profile.id.toString(), // TODO: remove toString when api edited
+        userId: profile.id, // TODO: remove toString when api edited
         // userId: 'test',
         updatedDateTime: DateTime.now());
     LatLng? center = model.getCenter();

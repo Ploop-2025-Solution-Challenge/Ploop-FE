@@ -9,30 +9,13 @@ import 'package:ploop_fe/theme.dart';
 class TodayRecordCard extends ConsumerWidget {
   const TodayRecordCard({super.key});
 
-  // final int todayGarbageCount = 0;
-  // final double todayMilesCount = 0.00;
-  // final String todayRecordTime = '0.00';
-  // const Duration(hours: 0, minutes: 21, seconds: 32);
-
-  // String _printDuration(Duration duration) {
-  //   if (duration == Duration.zero) {
-  //     return '0:00';
-  //   }
-
-  //   String twoDigits(int n) => n.toString().padLeft(2, "0");
-  //   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
-  //   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
-
-  //   if (duration.inHours < 1) {
-  //     return "$twoDigitMinutes:$twoDigitSeconds";
-  //   } else {
-  //     return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final today = DateTime.now();
+    final DateTime today = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 0, 0, 0, 0);
+    final DateTime todayEnd = DateTime(DateTime.now().year,
+        DateTime.now().month, DateTime.now().day, 23, 59, 59, 999);
+
     return Container(
       width: 370.w,
       height: 80.h,
@@ -52,10 +35,12 @@ class TodayRecordCard extends ConsumerWidget {
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 Text(
-                  ref.read(activityDataProvider(Range.W, today, today)).when(
-                      data: (activity) => '${activity.totalTrash}',
-                      error: (err, stack) => '0',
-                      loading: () => '0'),
+                  ref
+                      .watch(activityDataProvider(Range.W, today, todayEnd))
+                      .when(
+                          data: (activity) => '${activity.totalTrash}',
+                          error: (err, stack) => '0',
+                          loading: () => 'Loading...'),
                   // '$todayGarbageCount',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
@@ -74,10 +59,13 @@ class TodayRecordCard extends ConsumerWidget {
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 Text(
-                  ref.read(activityDataProvider(Range.W, today, today)).when(
-                      data: (activity) => '${activity.totalMiles}',
-                      error: (err, stack) => '0.00',
-                      loading: () => '0.00'),
+                  ref
+                      .watch(activityDataProvider(Range.W, today, todayEnd))
+                      .when(
+                          data: (activity) =>
+                              activity.totalMiles.toStringAsFixed(2),
+                          error: (err, stack) => '0.00',
+                          loading: () => 'Loading...'),
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
@@ -96,10 +84,12 @@ class TodayRecordCard extends ConsumerWidget {
                 ),
                 Text(
                   // _printDuration(todayRecordTime),
-                  ref.read(activityDataProvider(Range.W, today, today)).when(
-                      data: (activity) => '${activity.totalHours}',
-                      error: (err, stack) => '0.00',
-                      loading: () => '0.00'),
+                  ref
+                      .watch(activityDataProvider(Range.W, today, todayEnd))
+                      .when(
+                          data: (activity) => '${activity.totalHours}',
+                          error: (err, stack) => '0.00',
+                          loading: () => 'Loading...'),
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],

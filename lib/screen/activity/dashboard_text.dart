@@ -65,7 +65,8 @@ class DashboardTextWidget extends ConsumerWidget {
               children: [
                 Text(
                     dataProvider.when(
-                      data: (activity) => '${activity.totalMiles}',
+                      data: (activity) =>
+                          activity.totalMiles.toStringAsFixed(2),
                       loading: () => '0.0',
                       error: (err, stack) => '0.0',
                     ),

@@ -61,8 +61,6 @@ class TrashspotService {
         headers: headers,
       );
 
-      // debugPrint("DEBUG: ${response.body}");
-
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
         // debugPrint('OK: $responseData');

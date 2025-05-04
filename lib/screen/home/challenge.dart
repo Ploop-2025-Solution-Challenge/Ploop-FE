@@ -222,7 +222,6 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
 
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      debugPrint('image is saved at: ${pickedFile.path}');
 
       if (_image != null) {
         // Navigator.push(context,

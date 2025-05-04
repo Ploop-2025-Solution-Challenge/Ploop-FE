@@ -10,7 +10,7 @@ class RouteModel {
       required this.updatedDateTime});
 
   final String routeId;
-  final String userId;
+  final int userId;
   final List<LatLng> route;
   LatLngBounds? routeBound;
   final DateTime updatedDateTime;

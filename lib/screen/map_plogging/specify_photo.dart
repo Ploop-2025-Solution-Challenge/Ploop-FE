@@ -2,16 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/bin_request.dart';
 import 'package:ploop_fe/model/trashspot_request.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SpecifyPhoto extends StatefulWidget {
+class SpecifyPhoto extends ConsumerStatefulWidget {
   final String imagePath;
   final double latitude;
   final double longitude;
@@ -23,17 +25,18 @@ class SpecifyPhoto extends StatefulWidget {
       required this.longitude});
 
   @override
-  State<StatefulWidget> createState() => _SpecifyPhotoState();
+  ConsumerState<SpecifyPhoto> createState() => _SpecifyPhotoState();
 }
 
 enum ImageType { bin, area }
 
-class _SpecifyPhotoState extends State<SpecifyPhoto> {
+class _SpecifyPhotoState extends ConsumerState<SpecifyPhoto> {
   ImageType? selectedType;
 
   Future sendImageByType(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwt = prefs.getString('jwt');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? jwt = prefs.getString('jwt');
+    final jwt = ref.read(jwtNotifierProvider).jwt;
     final image = XFile(widget.imagePath);
 
     try {

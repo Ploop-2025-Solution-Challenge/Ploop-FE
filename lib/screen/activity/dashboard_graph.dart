@@ -31,8 +31,10 @@ class SingleBar {
 
 class GraphContainer extends ConsumerWidget {
   final Range viewMode;
+  final int maxVal;
 
-  const GraphContainer({super.key, required this.viewMode});
+  const GraphContainer(
+      {super.key, required this.viewMode, required this.maxVal});
 
   double setWidth(int width, int spacing, int barCount) {
     // debugPrint("$width, $spacing, $barCount");
@@ -56,7 +58,7 @@ class GraphContainer extends ConsumerWidget {
         //     .toList()
         //     .reduce((curr, next) => curr > next ? curr : next);
 
-        final maxVal = activity.maxVal ?? 0;
+        // final maxVal = activity.maxVal ?? 0;
 
         final double maxHeight = 206.h; // 228 - text area 22
 
@@ -136,8 +138,8 @@ class _GraphFieldState extends ConsumerState<GraphField> {
   Widget build(BuildContext context) {
     final range = ref.watch(activityFilterNotifierProvider).range;
 
-    final startDate = ref.read(activityFilterNotifierProvider).startDate;
-    final endDate = ref.read(activityFilterNotifierProvider).endDate;
+    final startDate = ref.watch(activityFilterNotifierProvider).startDate;
+    final endDate = ref.watch(activityFilterNotifierProvider).endDate;
 
     final dataProvider =
         ref.watch(activityDataProvider(range, startDate, endDate));
@@ -154,8 +156,8 @@ class _GraphFieldState extends ConsumerState<GraphField> {
     // initialized
     int maxVal = 0;
     if (values.isNotEmpty) {
-      maxVal = values.reduce(
-          (curr, next) => curr > next ? curr : next); // max value of data
+      maxVal = values.reduce((curr, next) => curr > next ? curr : next);
+      debugPrint('max: $maxVal');
     }
 
     if (maxVal == 0) {
@@ -205,7 +207,8 @@ class _GraphFieldState extends ConsumerState<GraphField> {
                   // color: const Color.fromRGBO(255, 172, 64, 0.311),
                   width: 348.w,
                   height: 228.h,
-                  child: GraphContainer(viewMode: widget.viewMode),
+                  child:
+                      GraphContainer(viewMode: widget.viewMode, maxVal: maxVal),
                 ),
               ),
             ],
@@ -244,7 +247,6 @@ class GraphLine extends StatelessWidget {
   }
 }
 
-// TODO; seperate days by given range
 class DateRangeUnit extends StatelessWidget {
   final (DateTime, DateTime) dateRange;
   const DateRangeUnit({super.key, required this.dateRange});

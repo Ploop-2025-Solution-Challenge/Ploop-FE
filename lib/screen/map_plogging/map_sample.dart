@@ -3,17 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MapSample extends StatefulWidget {
+class MapSample extends ConsumerStatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
@@ -39,10 +41,10 @@ class MapSample extends StatefulWidget {
   });
 
   @override
-  State<MapSample> createState() => MapSampleState();
+  ConsumerState<MapSample> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapSampleState extends ConsumerState<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -83,8 +85,10 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _fetchAreaPosition(bounds) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jwt = prefs.getString('jwt');
+    // final prefs = await SharedPreferences.getInstance();
+    // final jwt = prefs.getString('jwt');
+
+    final jwt = ref.read(jwtNotifierProvider).jwt;
 
     if (jwt != null) {
       final trashspotPosList =
@@ -120,8 +124,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _fetchBinPosition(bounds) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jwt = prefs.getString('jwt');
+    final jwt = ref.read(jwtNotifierProvider).jwt;
 
     if (jwt != null) {
       final binPosList = await BinService.getBinPosition(jwt, bounds);
@@ -157,8 +160,7 @@ class MapSampleState extends State<MapSample> {
 
   void _fetchRecommend(bounds) async {
     // TODO: connect server api
-    // final prefs = await SharedPreferences.getInstance();
-    // final jwt = prefs.getString('jwt');
+    // final jwt = ref.read(jwtNotifierProvider).jwt;
 
     // if (jwt != null) {
     //   // final routePosList = await route;
@@ -352,6 +354,7 @@ Future<void> _checkPermission(BuildContext context) async {
                             .textTheme
                             .headlineMedium
                             ?.copyWith(
+                              wordSpacing: -0.4.sp,
                               fontSize: 17.sp,
                               color: const Color.fromARGB(255, 0, 122, 255),
                             )),
@@ -364,13 +367,14 @@ Future<void> _checkPermission(BuildContext context) async {
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontSize: 17.sp,
+                                wordSpacing: -0.4.sp,
                                 fontWeight: FontWeight.w600,
                                 color: const Color.fromARGB(255, 0, 122, 255),
                               ),
                     ),
                     onPressed: () async {
-                      Navigator.of(context).pop(); // 다이얼로그 닫기
-                      await openAppSettings(); // 설정 열기
+                      Navigator.of(context).pop();
+                      await openAppSettings();
                     },
                   ),
                 ],
@@ -392,8 +396,8 @@ Future<void> _checkPermission(BuildContext context) async {
                   TextButton(
                     child: const Text("Go to settings"),
                     onPressed: () async {
-                      Navigator.of(context).pop(); // 다이얼로그 닫기
-                      await openAppSettings(); // 설정 열기
+                      Navigator.of(context).pop();
+                      await openAppSettings();
                     },
                   ),
                 ],
