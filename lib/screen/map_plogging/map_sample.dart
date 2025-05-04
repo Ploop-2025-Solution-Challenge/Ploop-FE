@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
@@ -64,6 +67,9 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () => _checkPermission(context));
+
     setInitialPos();
   }
 
@@ -277,6 +283,8 @@ class MapSampleState extends State<MapSample> {
   Future<void> _goToCurrentLocation() async {
     final GoogleMapController controller = await _controller.future;
 
+    // await _checkPermission(context);
+
     Position position = await _determinePosition();
 
     controller.animateCamera(
@@ -314,4 +322,84 @@ Future<Position> _determinePosition() async {
   }
 
   return await Geolocator.getCurrentPosition();
+}
+
+Future<void> _checkPermission(BuildContext context) async {
+  final locationStatus = await Permission.locationWhenInUse.status;
+
+  if (!locationStatus.isGranted) {
+    final result = await Permission.locationWhenInUse.request();
+    if (!result.isGranted) {
+      return Future.error('Location permission is required.');
+    }
+  }
+
+  final geolocatorPermission = await Geolocator.checkPermission();
+  if (geolocatorPermission == LocationPermission.whileInUse &&
+      context.mounted) {
+    Platform.isIOS
+        ? await showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text("Background Location Access Needed"),
+                content: const Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text("Cancel",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontSize: 17.sp,
+                              color: const Color.fromARGB(255, 0, 122, 255),
+                            )),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    // isDefaultAction: true,
+                    child: Text(
+                      "Go to settings",
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromARGB(255, 0, 122, 255),
+                              ),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                      await openAppSettings(); // 설정 열기
+                    },
+                  ),
+                ],
+              );
+            },
+          )
+        : await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Background Location Access Needed"),
+                content: const Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                actions: [
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  TextButton(
+                    child: const Text("Go to settings"),
+                    onPressed: () async {
+                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                      await openAppSettings(); // 설정 열기
+                    },
+                  ),
+                ],
+              );
+            });
+  }
+
+  // 이미 always 권한이 있다면 아무 것도 하지 않음
 }

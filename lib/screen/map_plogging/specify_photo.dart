@@ -96,13 +96,12 @@ class _SpecifyPhotoState extends State<SpecifyPhoto> {
         } else {
           showDialog(
             context: context,
-            builder: (context) => CupertinoAlertDialog(
+            builder: (context) => AlertDialog(
               title: const Text('Hold on!'),
               content:
                   const Text('You need to select a type before uploading.'),
               actions: [
-                CupertinoDialogAction(
-                  isDefaultAction: true,
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text(
                     'OK',

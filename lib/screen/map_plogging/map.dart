@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
@@ -136,6 +139,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       setState(() {
         if (_stopwatch.isRunning) {
           _updateElapsedTime();
+          debugPrint('time update: $_elapsedTime');
         }
       });
     });
@@ -188,15 +192,27 @@ class _MapPageState extends ConsumerState<MapPage> {
   int distanceFilterValue = 2;
 
   Future<void> startLocationUpdate() async {
+    await checkPermissionWhenStart();
     _ploggingRoute.clear();
     _ploggingPolylines.clear();
     _tracking = true;
 
     positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: distanceFilterValue,
-      ),
+      locationSettings: Platform.isIOS
+          ? AppleSettings(
+              accuracy: LocationAccuracy.best,
+              activityType: ActivityType.fitness,
+              distanceFilter: distanceFilterValue,
+              pauseLocationUpdatesAutomatically: true,
+              showBackgroundLocationIndicator: true,
+              allowBackgroundLocationUpdates: true,
+            )
+          : AndroidSettings(
+              accuracy: LocationAccuracy.best,
+              distanceFilter: distanceFilterValue,
+              forceLocationManager: false,
+              intervalDuration: const Duration(seconds: 5),
+            ),
     );
     positionSubscription = positionStream!.listen((Position position) {
       currentPos = position;
@@ -307,6 +323,77 @@ class _MapPageState extends ConsumerState<MapPage> {
       positionedToastBuilder: (context, child, gravity) =>
           Positioned(top: 154.h, left: 16.w, child: child),
     );
+  }
+
+  Future<void> checkPermissionWhenStart() async {
+    var status = await Permission.locationAlways.status;
+    if (!status.isGranted && mounted) {
+      Platform.isIOS
+          ? await showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  title: const Text("Background Location Access Needed"),
+                  content: const Text(
+                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  actions: [
+                    CupertinoDialogAction(
+                      child: Text("Cancel",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                fontSize: 17.sp,
+                                color: const Color.fromARGB(255, 0, 122, 255),
+                              )),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text(
+                        "Go to settings",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w600,
+                              color: const Color.fromARGB(255, 0, 122, 255),
+                            ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // 다이얼로그 닫기
+                        await openAppSettings(); // 설정 열기
+                      },
+                    ),
+                  ],
+                );
+              },
+            )
+          : await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Background Location Access Needed"),
+                  content: const Text(
+                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  actions: [
+                    TextButton(
+                      child: const Text("Cancel"),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    TextButton(
+                      child: const Text("Go to settings"),
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // 다이얼로그 닫기
+                        await openAppSettings(); // 설정 열기
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+    }
   }
 
   Future<void> getCurrentLocation() async {
