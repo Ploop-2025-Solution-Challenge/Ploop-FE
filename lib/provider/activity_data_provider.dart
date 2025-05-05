@@ -32,7 +32,7 @@ Future<ActivityResponse> activityData(
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      debugPrint('OK: ${responseData['totalHours'].runtimeType}');
+      debugPrint('OK: $responseData');
       return ActivityResponse.fromJson(responseData);
     } else {
       debugPrint('${response.statusCode}: ${response.body}');
