@@ -18,7 +18,13 @@ Google Developer Group on Campus : SEOULTECH
 
 ## Getting Started
 
-## ⚠️ GoogleService-Info.plist and API Keys are not included in this repository
+## API Keys are not included in this repository
+
+### iOS
 
 - Ask member to get `GoogleService-Info.plist` file, add it into `ios/Runner` folder.
 - For Google API Keys, Ask member to get `.env` file, add it at the root directory of this project.
+
+### Android
+
+- Ask member to get `google-services.json` file, add it into `android/app` folder.
