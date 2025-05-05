@@ -13,7 +13,7 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
     return const ActivityRequest(
         userId: '',
         activityRoute: [],
-        timeDuration: '',
+        timeDuration: 0.0,
         updatedDateTime: '',
         distanceMiles: 0.0,
         trashCollectedCount: 0);
@@ -28,14 +28,14 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
     }
   }
 
-  void setTimeDuration(String duration) {
+  void setTimeDuration(double duration) {
     state = state.copyWith(timeDuration: duration);
   }
 
   void setUpdatedTime() {
     // need formatting
     final formattedNow = DateTime.now().toIso8601String();
-    // "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}T${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}";
+
     state = state.copyWith(updatedDateTime: formattedNow);
   }
 
@@ -59,7 +59,7 @@ class PloggingActivityNotifier extends _$PloggingActivityNotifier {
     state = const ActivityRequest(
         userId: '',
         activityRoute: [],
-        timeDuration: '',
+        timeDuration: 0.0,
         updatedDateTime: '',
         distanceMiles: 0.0,
         trashCollectedCount: 0);

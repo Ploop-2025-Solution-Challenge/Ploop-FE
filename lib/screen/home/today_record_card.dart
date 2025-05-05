@@ -87,7 +87,8 @@ class TodayRecordCard extends ConsumerWidget {
                   ref
                       .watch(activityDataProvider(Range.W, today, todayEnd))
                       .when(
-                          data: (activity) => activity.totalHours.toString(),
+                          data: (activity) =>
+                              activity.totalHours.toStringAsFixed(2),
                           error: (err, stack) => '0.00',
                           loading: () => 'Loading...'),
                   style: Theme.of(context).textTheme.labelMedium,

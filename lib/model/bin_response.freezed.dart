@@ -18,6 +18,8 @@ mixin _$BinResponse {
   int get id;
   double get latitude;
   double get longitude;
+  String get imageUrl;
+  String get createdAt;
 
   /// Create a copy of BinResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -38,16 +40,21 @@ mixin _$BinResponse {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, latitude, longitude);
+  int get hashCode =>
+      Object.hash(runtimeType, id, latitude, longitude, imageUrl, createdAt);
 
   @override
   String toString() {
-    return 'BinResponse(id: $id, latitude: $latitude, longitude: $longitude)';
+    return 'BinResponse(id: $id, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, createdAt: $createdAt)';
   }
 }
 
@@ -57,7 +64,12 @@ abstract mixin class $BinResponseCopyWith<$Res> {
           BinResponse value, $Res Function(BinResponse) _then) =
       _$BinResponseCopyWithImpl;
   @useResult
-  $Res call({int id, double latitude, double longitude});
+  $Res call(
+      {int id,
+      double latitude,
+      double longitude,
+      String imageUrl,
+      String createdAt});
 }
 
 /// @nodoc
@@ -75,6 +87,8 @@ class _$BinResponseCopyWithImpl<$Res> implements $BinResponseCopyWith<$Res> {
     Object? id = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? imageUrl = null,
+    Object? createdAt = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -89,6 +103,14 @@ class _$BinResponseCopyWithImpl<$Res> implements $BinResponseCopyWith<$Res> {
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      imageUrl: null == imageUrl
+          ? _self.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -97,7 +119,11 @@ class _$BinResponseCopyWithImpl<$Res> implements $BinResponseCopyWith<$Res> {
 @JsonSerializable()
 class _BinResponse implements BinResponse {
   const _BinResponse(
-      {required this.id, required this.latitude, required this.longitude});
+      {required this.id,
+      required this.latitude,
+      required this.longitude,
+      required this.imageUrl,
+      required this.createdAt});
   factory _BinResponse.fromJson(Map<String, dynamic> json) =>
       _$BinResponseFromJson(json);
 
@@ -107,6 +133,10 @@ class _BinResponse implements BinResponse {
   final double latitude;
   @override
   final double longitude;
+  @override
+  final String imageUrl;
+  @override
+  final String createdAt;
 
   /// Create a copy of BinResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -132,16 +162,21 @@ class _BinResponse implements BinResponse {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, latitude, longitude);
+  int get hashCode =>
+      Object.hash(runtimeType, id, latitude, longitude, imageUrl, createdAt);
 
   @override
   String toString() {
-    return 'BinResponse(id: $id, latitude: $latitude, longitude: $longitude)';
+    return 'BinResponse(id: $id, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, createdAt: $createdAt)';
   }
 }
 
@@ -153,7 +188,12 @@ abstract mixin class _$BinResponseCopyWith<$Res>
       __$BinResponseCopyWithImpl;
   @override
   @useResult
-  $Res call({int id, double latitude, double longitude});
+  $Res call(
+      {int id,
+      double latitude,
+      double longitude,
+      String imageUrl,
+      String createdAt});
 }
 
 /// @nodoc
@@ -171,6 +211,8 @@ class __$BinResponseCopyWithImpl<$Res> implements _$BinResponseCopyWith<$Res> {
     Object? id = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? imageUrl = null,
+    Object? createdAt = null,
   }) {
     return _then(_BinResponse(
       id: null == id
@@ -185,6 +227,14 @@ class __$BinResponseCopyWithImpl<$Res> implements _$BinResponseCopyWith<$Res> {
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      imageUrl: null == imageUrl
+          ? _self.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

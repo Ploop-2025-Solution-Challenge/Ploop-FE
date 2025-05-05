@@ -9,6 +9,8 @@ abstract class TrashspotResponse with _$TrashspotResponse {
     required int id,
     required double latitude,
     required double longitude,
+    required String imageUrl,
+    required String createdAt,
   }) = _TrashspotResponse;
 
   factory TrashspotResponse.fromJson(Map<String, dynamic> json) =>

@@ -13,7 +13,7 @@ _ActivityRequest _$ActivityRequestFromJson(Map<String, dynamic> json) =>
           .map((e) =>
               (e as List<dynamic>).map((e) => (e as num).toDouble()).toList())
           .toList(),
-      timeDuration: json['timeDuration'] as String,
+      timeDuration: (json['timeDuration'] as num).toDouble(),
       updatedDateTime: json['updatedDateTime'] as String,
       distanceMiles: (json['distanceMiles'] as num).toDouble(),
       trashCollectedCount: (json['trashCollectedCount'] as num).toInt(),

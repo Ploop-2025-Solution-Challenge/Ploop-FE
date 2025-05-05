@@ -16,7 +16,7 @@ import 'package:ploop_fe/theme.dart';
 class PloggingResult extends ConsumerWidget {
   final int amount;
   final double miles;
-  final String time;
+  final double time;
   final List<LatLng> route;
   final Set<Polyline> polylines;
 
@@ -118,7 +118,7 @@ class PloggingResult extends ConsumerWidget {
                         Column(
                           spacing: 2.h,
                           children: [
-                            Text(time,
+                            Text(time.toStringAsFixed(2),
                                 style:
                                     Theme.of(context).textTheme.displaySmall),
                             Text(

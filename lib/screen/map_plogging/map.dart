@@ -56,7 +56,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   final Stopwatch _stopwatch = Stopwatch();
   late Timer timer;
   late Duration _elapsedTime;
-  late String _elapsedTimeString;
+  late double _elapsedTimeFormat;
 
   int _pickedAmount = 0;
   double _movedDistance = 0;
@@ -129,7 +129,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     fToast = FToast();
     fToast.init(context);
     _elapsedTime = Duration.zero;
-    _elapsedTimeString = "";
+    _elapsedTimeFormat = 0.0;
 
     timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
@@ -420,13 +420,13 @@ class _MapPageState extends ConsumerState<MapPage> {
   void _updateElapsedTime() {
     setState(() {
       _elapsedTime = _stopwatch.elapsed;
-      _elapsedTimeString = _formatTime(_elapsedTime);
+      _elapsedTimeFormat = _formatTime(_elapsedTime);
     });
   }
 
-  String _formatTime(Duration time) {
+  double _formatTime(Duration time) {
     double hours = time.inSeconds / 3600;
-    return hours.toStringAsFixed(2);
+    return hours;
   }
 
   void _pausePlogging() {
@@ -447,7 +447,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
       // Set all required data
       ploggingNotifier.setRoute(_ploggingRoute);
-      ploggingNotifier.setTimeDuration(_elapsedTimeString);
+      ploggingNotifier.setTimeDuration(_elapsedTimeFormat);
       ploggingNotifier.setUpdatedTime();
       ploggingNotifier.setCollectedCount(_pickedAmount);
       ploggingNotifier.setDistance(_movedDistance);
@@ -470,7 +470,7 @@ class _MapPageState extends ConsumerState<MapPage> {
           onClose: _resumePlogging,
           amount: _pickedAmount,
           miles: _movedDistance,
-          formattedTime: _elapsedTimeString,
+          formattedTime: _elapsedTimeFormat,
           route: _ploggingRoute,
           polylines: _ploggingPolylines,
         );
@@ -570,7 +570,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                             Column(
                               spacing: 2.h,
                               children: [
-                                Text(_elapsedTimeString,
+                                Text(_elapsedTimeFormat.toStringAsFixed(2),
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall),

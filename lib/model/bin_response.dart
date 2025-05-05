@@ -9,6 +9,8 @@ abstract class BinResponse with _$BinResponse {
     required int id,
     required double latitude,
     required double longitude,
+    required String imageUrl,
+    required String createdAt,
   }) = _BinResponse;
 
   factory BinResponse.fromJson(Map<String, dynamic> json) =>

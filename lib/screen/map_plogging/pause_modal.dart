@@ -12,7 +12,7 @@ class PauseModal extends ConsumerWidget {
   final VoidCallback onClose;
   final int amount;
   final double miles;
-  final String formattedTime;
+  final double formattedTime;
   final List<LatLng> route;
   final Set<Polyline> polylines;
 
@@ -111,7 +111,7 @@ class PauseModal extends ConsumerWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text(formattedTime,
+                      Text(formattedTime.toStringAsFixed(2),
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Hours',

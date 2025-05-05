@@ -8,7 +8,7 @@ abstract class ActivityRequest with _$ActivityRequest {
   const factory ActivityRequest({
     required String userId,
     required List<List<double>> activityRoute,
-    required String timeDuration,
+    required double timeDuration,
     required String updatedDateTime,
     required double distanceMiles,
     required int trashCollectedCount,
