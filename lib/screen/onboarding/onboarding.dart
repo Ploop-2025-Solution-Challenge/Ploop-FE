@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
 
@@ -100,18 +102,59 @@ class LoginButton extends ConsumerWidget {
         // check if context is valid
         if (!context.mounted) return;
 
+        final countries = await ref.read(countryListProvider.future);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SetRegionPage()),
+          MaterialPageRoute(
+            builder: (_) => SetRegionPage(countries: countries),
+          ),
         );
       }
     } catch (error) {
       debugPrint("Sign-in error: $error");
 
       if (!context.mounted) return;
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Failed signing in with Google.')),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed signing in with Google.')),
+      );
+      if (Platform.isIOS) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Something went wrong.'),
+            content:
+                const Text('Failed signing in with Google.\nPlease try again.'),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Something went wrong.'),
+            content:
+                const Text('Failed signing in with Google.\nPlease try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

@@ -3,13 +3,19 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
+import 'package:ploop_fe/theme.dart';
 import 'set_personal_info.dart';
 import 'widgets/custom_dropdown.dart';
 
 class SetRegionPage extends ConsumerStatefulWidget {
-  const SetRegionPage({super.key});
+  SetRegionPage({
+    super.key,
+    required this.countries,
+  });
+  List<String> countries;
 
   @override
   ConsumerState<SetRegionPage> createState() => _SetRegionPageState();
@@ -17,7 +23,6 @@ class SetRegionPage extends ConsumerStatefulWidget {
 
 class _SetRegionPageState extends ConsumerState<SetRegionPage> {
   String country = '';
-  String region = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,21 +37,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
               country = val;
               debugPrint('selected $val');
             })),
-        entryList: const [
-          'Korea',
-          'United Kingdom',
-          'Japan',
-          'United States',
-          'Germany',
-          'India',
-          'China',
-          'France',
-          'Italy',
-          'Russia',
-          'Switzerland',
-          'New Zealand',
-          'Austrailia',
-        ],
+        entryList: widget.countries,
       ),
 
       onButtonPressed: () {

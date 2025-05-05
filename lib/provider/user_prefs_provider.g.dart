@@ -7,7 +7,7 @@ part of 'user_prefs_provider.dart';
 // **************************************************************************
 
 String _$userPreferenceNotifierHash() =>
-    r'919b9d21a9127578224db21963839f7d59906f26';
+    r'8d69d66d03ad163aeb59bb79f2e7df8074fa96db';
 
 /// See also [UserPreferenceNotifier].
 @ProviderFor(UserPreferenceNotifier)
