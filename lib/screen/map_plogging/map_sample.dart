@@ -404,6 +404,4 @@ Future<void> _checkPermission(BuildContext context) async {
               );
             });
   }
-
-  // 이미 always 권한이 있다면 아무 것도 하지 않음
 }

@@ -15,8 +15,9 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$RouteModel {
-  String get routeId;
+  int get routeId;
   @LatLngConverter()
+  @JsonKey(name: 'activityRouteJson')
   List<LatLng> get route;
   DateTime get updatedDateTime;
 
@@ -59,8 +60,8 @@ abstract mixin class $RouteModelCopyWith<$Res> {
       _$RouteModelCopyWithImpl;
   @useResult
   $Res call(
-      {String routeId,
-      @LatLngConverter() List<LatLng> route,
+      {int routeId,
+      @LatLngConverter() @JsonKey(name: 'activityRouteJson') List<LatLng> route,
       DateTime updatedDateTime});
 }
 
@@ -84,7 +85,7 @@ class _$RouteModelCopyWithImpl<$Res> implements $RouteModelCopyWith<$Res> {
       routeId: null == routeId
           ? _self.routeId
           : routeId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       route: null == route
           ? _self.route
           : route // ignore: cast_nullable_to_non_nullable
@@ -102,17 +103,20 @@ class _$RouteModelCopyWithImpl<$Res> implements $RouteModelCopyWith<$Res> {
 class _RouteModel implements RouteModel {
   _RouteModel(
       {required this.routeId,
-      @LatLngConverter() required final List<LatLng> route,
+      @LatLngConverter()
+      @JsonKey(name: 'activityRouteJson')
+      required final List<LatLng> route,
       required this.updatedDateTime})
       : _route = route;
   factory _RouteModel.fromJson(Map<String, dynamic> json) =>
       _$RouteModelFromJson(json);
 
   @override
-  final String routeId;
+  final int routeId;
   final List<LatLng> _route;
   @override
   @LatLngConverter()
+  @JsonKey(name: 'activityRouteJson')
   List<LatLng> get route {
     if (_route is EqualUnmodifiableListView) return _route;
     // ignore: implicit_dynamic_type
@@ -168,8 +172,8 @@ abstract mixin class _$RouteModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String routeId,
-      @LatLngConverter() List<LatLng> route,
+      {int routeId,
+      @LatLngConverter() @JsonKey(name: 'activityRouteJson') List<LatLng> route,
       DateTime updatedDateTime});
 }
 
@@ -193,7 +197,7 @@ class __$RouteModelCopyWithImpl<$Res> implements _$RouteModelCopyWith<$Res> {
       routeId: null == routeId
           ? _self.routeId
           : routeId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       route: null == route
           ? _self._route
           : route // ignore: cast_nullable_to_non_nullable

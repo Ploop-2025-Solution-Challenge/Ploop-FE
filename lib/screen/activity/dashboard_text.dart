@@ -85,7 +85,8 @@ class DashboardTextWidget extends ConsumerWidget {
               children: [
                 Text(
                     dataProvider.when(
-                      data: (activity) => activity.totalHours.toString(),
+                      data: (activity) =>
+                          activity.totalHours.toStringAsFixed(2),
                       loading: () => '0.00',
                       error: (err, stack) => '0.00',
                     ),

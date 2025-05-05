@@ -63,7 +63,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   // TEST DATA
   RouteModel recommendedRoute = RouteModel(
-      routeId: 'recommend',
+      routeId: 0,
       route: const <LatLng>[
         LatLng(37.62813, 127.073059),
         LatLng(37.62785, 127.07295),
@@ -689,12 +689,16 @@ class _MapPageState extends ConsumerState<MapPage> {
                     top: 175.h,
                     right: 23.w,
                     child: RouteRecommendReasonWidget(
-                        onClosePressed: () {
-                          setState(() {
-                            _showRouteReason = false;
-                          });
-                        },
-                        recommendedRoute: test1),
+                      onClosePressed: () {
+                        setState(() {
+                          _showRouteReason = false;
+                        });
+                      },
+                      recommendedRoute: RouteModel(
+                          routeId: -2,
+                          route: [],
+                          updatedDateTime: DateTime.now()),
+                    ),
                   ),
               ],
             ),

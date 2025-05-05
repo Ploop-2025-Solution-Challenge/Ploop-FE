@@ -10,8 +10,10 @@ part 'route_model.g.dart';
 @freezed
 abstract class RouteModel with _$RouteModel {
   factory RouteModel({
-    required String routeId,
-    @LatLngConverter() required List<LatLng> route,
+    required int routeId,
+    @LatLngConverter()
+    @JsonKey(name: 'activityRouteJson')
+    required List<LatLng> route,
     required DateTime updatedDateTime,
   }) = _RouteModel;
 
@@ -83,8 +85,8 @@ extension RouteModelExtension on RouteModel {
     final routeBound = createLatLngBounds();
     if (routeBound != null) {
       return LatLng(
-        (routeBound!.northeast.latitude + routeBound!.southwest.latitude) / 2,
-        (routeBound!.northeast.longitude + routeBound!.southwest.longitude) / 2,
+        (routeBound.northeast.latitude + routeBound.southwest.latitude) / 2,
+        (routeBound.northeast.longitude + routeBound.southwest.longitude) / 2,
       );
     } else {
       debugPrint("routeBound is null at RouteModel.getCenter()");

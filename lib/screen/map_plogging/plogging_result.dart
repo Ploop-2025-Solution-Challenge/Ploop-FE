@@ -167,7 +167,7 @@ class PloggingResultMap extends ConsumerWidget {
     // final resultProvider = ref.watch(ploggingActivityNotifierProvider.notifier);
     final profile = ref.read(userInfoNotifierProvider);
     RouteModel model = RouteModel(
-        routeId: '',
+        routeId: -1,
         route: activityRoute,
 
         // userId: 'test',

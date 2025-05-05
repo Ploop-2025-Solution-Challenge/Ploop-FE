@@ -1,25 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ploop_fe/model/route_model.dart';
+import 'package:ploop_fe/provider/world_route_provider.dart';
 import 'package:ploop_fe/theme.dart';
 
-class WorldMap extends StatefulWidget {
+class WorldMap extends ConsumerStatefulWidget {
   final List<RouteModel> data;
-  final String? selectedMarkerId;
+  final int? selectedMarkerId;
   final bool isRouteDrawing;
   final bool enablePreview;
-  final Function(String) onMarkerTap;
+  final Function(int) onMarkerTap;
   final Set<Polyline> polylines;
 
   final RouteModel? selectedRoute;
   final Function(GoogleMapController)? onMapCreated;
+  final VoidCallback onCameraIdle;
 
   const WorldMap(
       {super.key,
+      required this.onCameraIdle,
       required this.selectedMarkerId,
       required this.onMarkerTap,
       required this.data,
@@ -30,10 +34,10 @@ class WorldMap extends StatefulWidget {
       this.onMapCreated});
 
   @override
-  State<WorldMap> createState() => WorldMapState();
+  ConsumerState<WorldMap> createState() => WorldMapState();
 }
 
-class WorldMapState extends State<WorldMap> {
+class WorldMapState extends ConsumerState<WorldMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   LatLng? currentPos;
@@ -97,6 +101,7 @@ class WorldMapState extends State<WorldMap> {
               widget.onMapCreated!(controller);
             }
           },
+          onCameraIdle: widget.onCameraIdle,
           myLocationButtonEnabled: false,
         ),
         // current location button
