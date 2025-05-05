@@ -86,7 +86,6 @@ class _MapPageState extends ConsumerState<MapPage> {
         LatLng(37.62360, 127.07040),
         LatLng(37.62335, 127.07025)
       ],
-      userId: -1,
       updatedDateTime: DateTime.now());
   Set<Polyline> recommend_polylines = {};
 

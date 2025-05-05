@@ -169,7 +169,7 @@ class PloggingResultMap extends ConsumerWidget {
     RouteModel model = RouteModel(
         routeId: '',
         route: activityRoute,
-        userId: profile.id, // TODO: remove toString when api edited
+
         // userId: 'test',
         updatedDateTime: DateTime.now());
     LatLng? center = model.getCenter();

@@ -16,7 +16,7 @@ RouteModel test1 = RouteModel(route: const [
   LatLng(37.422800, -122.084000),
   LatLng(37.422900, -122.083700),
   LatLng(37.423000, -122.083400),
-], userId: 2, updatedDateTime: DateTime(2025, 4, 7, 8, 16), routeId: "1");
+], updatedDateTime: DateTime(2025, 4, 7, 8, 16), routeId: "1");
 RouteModel test2 = RouteModel(route: const [
   LatLng(37.424500, -122.081500),
   LatLng(37.424700, -122.081200),
@@ -24,7 +24,7 @@ RouteModel test2 = RouteModel(route: const [
   LatLng(37.425100, -122.080600),
   LatLng(37.425300, -122.080300),
   LatLng(37.425500, -122.080000),
-], userId: 2, updatedDateTime: DateTime(2025, 4, 25, 22, 10), routeId: "2");
+], updatedDateTime: DateTime(2025, 4, 25, 22, 10), routeId: "2");
 /* */
 
 class WorldPage extends StatefulWidget {
