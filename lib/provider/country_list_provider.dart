@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'country_list_provider.g.dart';

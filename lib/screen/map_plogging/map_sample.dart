@@ -10,17 +10,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
+import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MapSample extends ConsumerStatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
   final bool isPloggingStarted;
-  final RouteModel recommend;
+  final List<LatLng> recommend;
   final Function(GoogleMapController)? onMapCreated;
   final Position? currentPosition;
 
@@ -159,36 +159,26 @@ class MapSampleState extends ConsumerState<MapSample> {
   }
 
   void _fetchRecommend(bounds) async {
-    // TODO: connect server api
-    // final jwt = ref.read(jwtNotifierProvider).jwt;
+    final recommendation =
+        await ref.watch(routeRecommendationProvider(bounds).future);
 
-    // if (jwt != null) {
-    //   // final routePosList = await route;
-
-    //   // should be neither empty or null
-    //   if (binPosList != null) {
-    //     if (binPosList.isEmpty) {
-    //       debugPrint('no bin in range');
-    //       return;
-    //     }
-    debugPrint(
-        '${LatLng(widget.recommend.route[0].latitude, widget.recommend.route[0].longitude)}');
-    setState(
-      () {
-        _routeMarkers = Marker(
-          icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
-              width: 36.w, height: 41.h),
-          markerId: const MarkerId('recommend'),
-          position: (LatLng(widget.recommend.route[0].latitude,
-              widget.recommend.route[0].longitude)),
-          visible: true,
-        );
-      },
-    );
-    // } else {
-    //   debugPrint('binPosList is empty');
-    //   }
-    // }
+    if (recommendation != null) {
+      final route = recommendation.recommendationRoute;
+      debugPrint('${LatLng(route[0].latitude, route[0].longitude)}');
+      setState(
+        () {
+          _routeMarkers = Marker(
+            icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+                width: 36.w, height: 41.h),
+            markerId: const MarkerId('recommend'),
+            position: (LatLng(route[0].latitude, route[0].longitude)),
+            visible: true,
+          );
+        },
+      );
+    } else {
+      debugPrint('null recommendation. not enough trashspot');
+    }
   }
 
   @override
@@ -220,7 +210,7 @@ class MapSampleState extends ConsumerState<MapSample> {
           polylines: allPolylines,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
-          onMapCreated: (controller) {
+          onMapCreated: (controller) async {
             try {
               _goToCurrentLocation();
             } catch (e) {
@@ -235,14 +225,14 @@ class MapSampleState extends ConsumerState<MapSample> {
             GoogleMapController googleMapController = await _controller.future;
             LatLngBounds bounds = await googleMapController.getVisibleRegion();
 
-            debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
-            debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
-            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
-            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
+            // debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
+            // debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
+            // debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
+            // debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
 
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
-            _fetchRecommend(bounds);
+            // _fetchRecommend(bounds);
           },
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
@@ -329,7 +319,7 @@ Future<Position> _determinePosition() async {
 Future<void> _checkPermission(BuildContext context) async {
   final locationStatus = await Permission.locationWhenInUse.status;
 
-  if (!locationStatus.isGranted) {
+  if (!locationStatus.isGranted && context.mounted) {
     final result = await Permission.locationWhenInUse.request();
     if (!result.isGranted) {
       return Future.error('Location permission is required.');

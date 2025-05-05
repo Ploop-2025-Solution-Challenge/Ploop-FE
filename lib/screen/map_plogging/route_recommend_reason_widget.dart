@@ -1,16 +1,22 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ploop_fe/model/route_model.dart';
+import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/theme.dart';
 
 class RouteRecommendReasonWidget extends StatelessWidget {
   final VoidCallback onClosePressed;
-  final RouteModel recommendedRoute;
+  final List<LatLng> recommendedRoute;
+  final String motivation;
 
   const RouteRecommendReasonWidget({
     super.key,
     required this.onClosePressed,
     required this.recommendedRoute,
+    required this.motivation,
   });
 
   @override
@@ -43,12 +49,24 @@ class RouteRecommendReasonWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
-                'Enjoy a refreshing walk surrounded by greenery and fresh air.',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: GrayScale.white)),
+            DefaultTextStyle(
+              style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: GrayScale.white) ??
+                  const TextStyle(color: GrayScale.white),
+              child: AnimatedTextKit(
+                repeatForever: false,
+                totalRepeatCount: 1,
+                animatedTexts: [
+                  TyperAnimatedText(
+                    motivation != ""
+                        ? motivation
+                        : 'Recommendation is not available right now.',
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

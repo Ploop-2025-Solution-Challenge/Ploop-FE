@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
+import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
@@ -19,7 +20,6 @@ import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
 import 'package:ploop_fe/screen/map_plogging/route_recommend_reason_widget.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
-import 'package:ploop_fe/screen/world/world.dart';
 import 'package:ploop_fe/theme.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
@@ -57,37 +57,22 @@ class _MapPageState extends ConsumerState<MapPage> {
   late Timer timer;
   late Duration _elapsedTime;
   late double _elapsedTimeFormat;
+  List<LatLng> route = [];
 
   int _pickedAmount = 0;
   double _movedDistance = 0;
 
-  // TEST DATA
-  RouteModel recommendedRoute = RouteModel(
-      routeId: 0,
-      route: const <LatLng>[
-        LatLng(37.62813, 127.073059),
-        LatLng(37.62785, 127.07295),
-        LatLng(37.62760, 127.07280),
-        LatLng(37.62735, 127.07265),
-        LatLng(37.62710, 127.07250),
-        LatLng(37.62685, 127.07235),
-        LatLng(37.62660, 127.07220),
-        LatLng(37.62635, 127.07205),
-        LatLng(37.62610, 127.07190),
-        LatLng(37.62585, 127.07175),
-        LatLng(37.62560, 127.07160),
-        LatLng(37.62535, 127.07145),
-        LatLng(37.62510, 127.07130),
-        LatLng(37.62485, 127.07115),
-        LatLng(37.62460, 127.07100),
-        LatLng(37.62435, 127.07085),
-        LatLng(37.62410, 127.07070),
-        LatLng(37.62385, 127.07055),
-        LatLng(37.62360, 127.07040),
-        LatLng(37.62335, 127.07025)
-      ],
-      updatedDateTime: DateTime.now());
   Set<Polyline> recommend_polylines = {};
+
+  late StreamSubscription<Position> positionSubscription;
+  Stream<Position>? positionStream;
+  Position? currentPos;
+  Position? previousPos;
+  bool _tracking = false;
+  List<LatLng> _ploggingRoute = [];
+  Set<Polyline> _ploggingPolylines = {};
+  int distanceFilterValue = 2;
+  String motivation = "";
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -146,44 +131,45 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   /// Draw Polyline of recommended route
-  void _buildPolyline() {
-    setState(() {
-      // _showRoute = true;
+  Future<void> _buildPolyline() async {
+    final GoogleMapController controller = await _mapController.future;
+    LatLngBounds bounds = await controller.getVisibleRegion();
+    final recommended =
+        await ref.read(routeRecommendationProvider(bounds).future);
 
-      recommend_polylines.add(Polyline(
-          polylineId: PolylineId('recommend'),
-          points: recommendedRoute.route,
-          color: theme().recommend,
-          visible: _showRoute,
-          width: 6));
+    if (recommended != null) {
+      setState(() {
+        route = recommended.recommendationRoute;
+        motivation = recommended.motivation;
 
-      _zoomToRoute();
+        recommend_polylines.add(Polyline(
+            polylineId: PolylineId('recommend'),
+            points: route,
+            color: theme().recommend,
+            visible: _showRoute,
+            width: 6));
 
-      if (!_showRoute) {
-        recommend_polylines.clear();
-      }
-    });
+        _zoomToRoute();
+
+        if (!_showRoute) {
+          recommend_polylines.clear();
+        }
+      });
+    }
   }
 
   Future<void> _zoomToRoute() async {
     final GoogleMapController controller = await _mapController.future;
+    final RouteModel model =
+        RouteModel(route: route, routeId: 0, updatedDateTime: DateTime.now());
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(recommendedRoute.getCenter().latitude + 0.0015,
-              recommendedRoute.getCenter().longitude),
-          recommendedRoute.getBoundsZoom()),
+          LatLng(
+              model.getCenter().latitude + 0.0015, model.getCenter().longitude),
+          model.getBoundsZoom()),
     );
   }
-
-  late StreamSubscription<Position> positionSubscription;
-  Stream<Position>? positionStream;
-  Position? currentPos;
-  Position? previousPos;
-  bool _tracking = false;
-  List<LatLng> _ploggingRoute = [];
-  Set<Polyline> _ploggingPolylines = {};
-  int distanceFilterValue = 2;
 
   Future<void> startLocationUpdate() async {
     await checkPermissionWhenStart();
@@ -262,10 +248,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     _tracking = false;
     positionSubscription.cancel();
   }
-
-  // void updateLocation(Position position) {
-  //   currentPos = position;
-  // }
 
   void _showToast(String result) {
     Widget toast = Container(
@@ -357,8 +339,8 @@ class _MapPageState extends ConsumerState<MapPage> {
                             ),
                       ),
                       onPressed: () async {
-                        Navigator.of(context).pop(); // 다이얼로그 닫기
-                        await openAppSettings(); // 설정 열기
+                        Navigator.of(context).pop();
+                        await openAppSettings();
                       },
                     ),
                   ],
@@ -380,8 +362,8 @@ class _MapPageState extends ConsumerState<MapPage> {
                     TextButton(
                       child: const Text("Go to settings"),
                       onPressed: () async {
-                        Navigator.of(context).pop(); // 다이얼로그 닫기
-                        await openAppSettings(); // 설정 열기
+                        Navigator.of(context).pop();
+                        await openAppSettings();
                       },
                     ),
                   ],
@@ -626,7 +608,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     isPloggingStarted: _isPloggingStarted,
                     ploggingPolylines: _ploggingPolylines,
                     recommendPolylines: recommend_polylines,
-                    recommend: recommendedRoute,
+                    recommend: route,
                     currentPosition: currentPos,
                     onMapCreated: (GoogleMapController controller) {
                       _mapController.complete(controller);
@@ -694,10 +676,8 @@ class _MapPageState extends ConsumerState<MapPage> {
                           _showRouteReason = false;
                         });
                       },
-                      recommendedRoute: RouteModel(
-                          routeId: -2,
-                          route: [],
-                          updatedDateTime: DateTime.now()),
+                      recommendedRoute: route,
+                      motivation: motivation,
                     ),
                   ),
               ],
