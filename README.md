@@ -18,7 +18,7 @@ Google Developer Group on Campus : SEOULTECH
 
 ## Getting Started
 
-## API Keys are not included in this repository
+## ⚠️ API Keys are not included in this repository
 
 ### iOS
 
