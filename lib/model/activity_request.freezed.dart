@@ -17,7 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$ActivityRequest {
   String get userId;
   List<List<double>> get activityRoute;
-  String get timeDuration;
+  double get timeDuration;
   String get updatedDateTime;
   double get distanceMiles;
   int get trashCollectedCount;
@@ -77,7 +77,7 @@ abstract mixin class $ActivityRequestCopyWith<$Res> {
   $Res call(
       {String userId,
       List<List<double>> activityRoute,
-      String timeDuration,
+      double timeDuration,
       String updatedDateTime,
       double distanceMiles,
       int trashCollectedCount});
@@ -115,7 +115,7 @@ class _$ActivityRequestCopyWithImpl<$Res>
       timeDuration: null == timeDuration
           ? _self.timeDuration
           : timeDuration // ignore: cast_nullable_to_non_nullable
-              as String,
+              as double,
       updatedDateTime: null == updatedDateTime
           ? _self.updatedDateTime
           : updatedDateTime // ignore: cast_nullable_to_non_nullable
@@ -157,7 +157,7 @@ class _ActivityRequest implements ActivityRequest {
   }
 
   @override
-  final String timeDuration;
+  final double timeDuration;
   @override
   final String updatedDateTime;
   @override
@@ -226,7 +226,7 @@ abstract mixin class _$ActivityRequestCopyWith<$Res>
   $Res call(
       {String userId,
       List<List<double>> activityRoute,
-      String timeDuration,
+      double timeDuration,
       String updatedDateTime,
       double distanceMiles,
       int trashCollectedCount});
@@ -264,7 +264,7 @@ class __$ActivityRequestCopyWithImpl<$Res>
       timeDuration: null == timeDuration
           ? _self.timeDuration
           : timeDuration // ignore: cast_nullable_to_non_nullable
-              as String,
+              as double,
       updatedDateTime: null == updatedDateTime
           ? _self.updatedDateTime
           : updatedDateTime // ignore: cast_nullable_to_non_nullable

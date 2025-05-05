@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,68 +29,12 @@ class SingleBar {
   }
 }
 
-// class RangeSelector {
-//   String mode = 'week';
-//   static List<Map<String, int>> data = [];
-
-//   static List<Map<String, int>> testWeekData = [
-//     {'Mon': 4},
-//     {'Tue': 6},
-//     {'Wed': 2},
-//     {'Thr': 14},
-//     {'Fri': 2},
-//     {'Sat': 6},
-//     {'Sun': 8}
-//   ];
-
-//   // static List<Map<String, int>> testWeekData = [
-//   //   {'Mon': 0},
-//   //   {'Tue': 0},
-//   //   {'Wed': 0},
-//   //   {'Thr': 0},
-//   //   {'Fri': 0},
-//   //   {'Sat': 0},
-//   //   {'Sun': 0}
-//   // ];
-//   static List<Map<String, int>> testMonthData = [
-//     {'1W': 40},
-//     {'2W': 60},
-//     {'3W': 21},
-//     {'4W': 120},
-//   ];
-
-//   static List<Map<String, int>> testYearData = [
-//     {'1': 40},
-//     {'2': 60},
-//     {'3': 21},
-//     {'4': 120},
-//     {'5': 21},
-//     {'6': 160},
-//     {'7': 80},
-//     {'8': 80},
-//     {'9': 80},
-//     {'10': 80},
-//     {'11': 80},
-//     {'12': 80},
-//   ];
-
-//   static List<Map<String, int>> setView(mode) {
-//     if (mode == 'W') {
-//       data = testWeekData;
-//     } else if (mode == 'M') {
-//       data = testMonthData;
-//     } else if (mode == 'Y') {
-//       data = testYearData;
-//     }
-
-//     return data;
-//   }
-// }
-
 class GraphContainer extends ConsumerWidget {
   final Range viewMode;
+  final int maxVal;
 
-  const GraphContainer({super.key, required this.viewMode});
+  const GraphContainer(
+      {super.key, required this.viewMode, required this.maxVal});
 
   double setWidth(int width, int spacing, int barCount) {
     // debugPrint("$width, $spacing, $barCount");
@@ -110,13 +52,6 @@ class GraphContainer extends ConsumerWidget {
     return dataProvider.when(
       data: (activity) {
         final singleBarWidth = setWidth(348, 16, activity.graphData.length);
-        // final int maxVal = viewData
-        //     .map((e) => e.values)
-        //     .expand((e) => e)
-        //     .toList()
-        //     .reduce((curr, next) => curr > next ? curr : next);
-
-        final maxVal = activity.maxVal ?? 0;
 
         final double maxHeight = 206.h; // 228 - text area 22
 
@@ -174,67 +109,6 @@ class GraphContainer extends ConsumerWidget {
     );
   }
 }
-//     final singleBarWidth = setWidth(348, 16, dataProvider.graphData.length);
-//     // final int maxVal = viewData
-//     //     .map((e) => e.values)
-//     //     .expand((e) => e)
-//     //     .toList()
-//     //     .reduce((curr, next) => curr > next ? curr : next);
-
-//     final maxVal = weekDataProvider.maxVal ?? 0;
-
-//     final double maxHeight = 206.h; // 228 - text area 22
-
-//     int graphMaxVal = maxVal % 5 == 0 ? maxVal : maxVal + (5 - (maxVal % 5));
-//     // debugPrint(constraints.toString());
-
-//     return SizedBox(
-//       // color: Colors.green,
-//       width: 348.w,
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.end,
-//         mainAxisSize: MainAxisSize.min,
-//         spacing: 16.w,
-//         children: [
-//           ...viewData.map(
-//             (e) {
-//               String day = e.keys.first;
-//               int value = e[day]!;
-
-//               final double barHeight =
-//                   maxVal != 0 ? value / graphMaxVal * maxHeight : 0;
-//               return Column(
-//                 spacing: 4.h,
-//                 mainAxisAlignment: MainAxisAlignment.end,
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Container(
-//                     width: singleBarWidth,
-//                     height: barHeight,
-//                     decoration: BoxDecoration(
-//                       color: theme().color_600,
-//                       borderRadius: BorderRadius.only(
-//                         topLeft: Radius.circular(5.w),
-//                         topRight: Radius.circular(5.w),
-//                       ),
-//                     ),
-//                   ),
-//                   Text(
-//                     day,
-//                     style: Theme.of(context)
-//                         .textTheme
-//                         .bodySmall
-//                         ?.copyWith(fontWeight: FontWeight.w600),
-//                   ),
-//                 ],
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class GraphField extends ConsumerStatefulWidget {
   final Range viewMode;
@@ -255,19 +129,14 @@ class _GraphFieldState extends ConsumerState<GraphField> {
 
   @override
   Widget build(BuildContext context) {
-    // final viewData = RangeSelector.setView(widget.viewMode);
     final range = ref.watch(activityFilterNotifierProvider).range;
-    // TEST
-    // final weekDataNotifier = ref.watch(weekDataNotifierProvider.notifier);
-    // final monthDataNotifier = ref.watch(monthDataProvider.notifier);
-    // final yearDataNotifier = ref.watch(yearDataNotifierProvider.notifier);
-    final startDate = ref.read(activityFilterNotifierProvider).startDate;
-    final endDate = ref.read(activityFilterNotifierProvider).endDate;
+
+    final startDate = ref.watch(activityFilterNotifierProvider).startDate;
+    final endDate = ref.watch(activityFilterNotifierProvider).endDate;
 
     final dataProvider =
         ref.watch(activityDataProvider(range, startDate, endDate));
 
-    // List<int> values = viewData.map((e) => e.values).expand((e) => e).toList();
     final values = dataProvider
             .whenData(
               (e) => e.graphData.map((g) => g.trashCount).toList(),
@@ -280,8 +149,8 @@ class _GraphFieldState extends ConsumerState<GraphField> {
     // initialized
     int maxVal = 0;
     if (values.isNotEmpty) {
-      maxVal = values.reduce(
-          (curr, next) => curr > next ? curr : next); // max value of data
+      maxVal = values.reduce((curr, next) => curr > next ? curr : next);
+      debugPrint('max: $maxVal');
     }
 
     if (maxVal == 0) {
@@ -303,9 +172,6 @@ class _GraphFieldState extends ConsumerState<GraphField> {
     // adjust
 
     return SizedBox(
-      // color: Colors.yellow,
-      // padding: EdgeInsets.only(top: 18.h),
-      // width: 370.w,
       height: 270.h,
       child: Column(
         children: [
@@ -328,15 +194,14 @@ class _GraphFieldState extends ConsumerState<GraphField> {
               Positioned(
                 bottom: 18.h,
                 child: SizedBox(
-                  // color: const Color.fromRGBO(255, 172, 64, 0.311),
                   width: 348.w,
                   height: 228.h,
-                  child: GraphContainer(viewMode: widget.viewMode),
+                  child:
+                      GraphContainer(viewMode: widget.viewMode, maxVal: maxVal),
                 ),
               ),
             ],
           ),
-          // DateRangeUnit(dateRange: dateRange),
         ],
       ),
     );
@@ -365,22 +230,6 @@ class GraphLine extends StatelessWidget {
               .labelSmall
               ?.copyWith(height: 0.01, color: GrayScale.gray_200),
         ),
-      ],
-    );
-  }
-}
-
-// TODO; seperate days by given range
-class DateRangeUnit extends StatelessWidget {
-  final (DateTime, DateTime) dateRange;
-  const DateRangeUnit({super.key, required this.dateRange});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 36.w,
-      children: [
-        Text('${dateRange.$2.difference(dateRange.$1).inDays + 1}'),
       ],
     );
   }

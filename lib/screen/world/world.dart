@@ -1,58 +1,90 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
+import 'package:ploop_fe/provider/world_route_provider.dart';
 import 'package:ploop_fe/screen/world/route_preview_widget.dart';
 import 'package:ploop_fe/screen/world/world_map.dart';
 import 'package:ploop_fe/theme.dart';
 
-/* TEST */
-RouteModel test1 = RouteModel(route: const [
-  LatLng(37.422131, -122.084801),
-  LatLng(37.422400, -122.084600),
-  LatLng(37.422650, -122.084300),
-  LatLng(37.422800, -122.084000),
-  LatLng(37.422900, -122.083700),
-  LatLng(37.423000, -122.083400),
-], userId: "1", updatedDateTime: DateTime(2025, 4, 7, 8, 16), routeId: "1");
-RouteModel test2 = RouteModel(route: const [
-  LatLng(37.424500, -122.081500),
-  LatLng(37.424700, -122.081200),
-  LatLng(37.424900, -122.080900),
-  LatLng(37.425100, -122.080600),
-  LatLng(37.425300, -122.080300),
-  LatLng(37.425500, -122.080000),
-], userId: "2", updatedDateTime: DateTime(2025, 4, 25, 22, 10), routeId: "2");
-/* */
+// /* TEST */
+// RouteModel test1 = RouteModel(route: const [
+//   LatLng(37.422131, -122.084801),
+//   LatLng(37.422400, -122.084600),
+//   LatLng(37.422650, -122.084300),
+//   LatLng(37.422800, -122.084000),
+//   LatLng(37.422900, -122.083700),
+//   LatLng(37.423000, -122.083400),
+// ], updatedDateTime: DateTime(2025, 4, 7, 8, 16), routeId: ");
+// RouteModel test2 = RouteModel(route: const [
+//   LatLng(37.424500, -122.081500),
+//   LatLng(37.424700, -122.081200),
+//   LatLng(37.424900, -122.080900),
+//   LatLng(37.425100, -122.080600),
+//   LatLng(37.425300, -122.080300),
+//   LatLng(37.425500, -122.080000),
+// ], updatedDateTime: DateTime(2025, 4, 25, 22, 10), routeId: "2");
+// /* */
 
-class WorldPage extends StatefulWidget {
+class WorldPage extends ConsumerStatefulWidget {
   const WorldPage({super.key});
 
   @override
-  State<WorldPage> createState() => _WorldPageState();
+  ConsumerState<WorldPage> createState() => _WorldPageState();
 }
 
-class _WorldPageState extends State<WorldPage> {
-  List<RouteModel> routeData = [test1, test2];
+class _WorldPageState extends ConsumerState<WorldPage> {
+  late List<RouteModel> routeData;
 
   bool enablePreview = false;
   RouteModel? selectedRoute;
-  String? selectedMarkerId;
+  int? selectedMarkerId;
   bool isRouteDrawing = false;
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
   Set<Polyline> polylines = {};
 
+  @override
+  void initState() {
+    super.initState();
+    routeData = [];
+  }
+
+  void _onCameraIdle() async {
+    final GoogleMapController controller = await _mapController.future;
+    LatLngBounds bounds = await controller.getVisibleRegion();
+    _fetchWorldRoute(bounds);
+  }
+
+  Future<void> _fetchWorldRoute(bounds) async {
+    final result = await ref.watch(worldRouteProvider(bounds).future);
+    if (result != null && mounted) {
+      setState(() {
+        routeData = result;
+      });
+    }
+  }
+
+  Future<void> fetchWorldRoutes(WidgetRef ref, LatLngBounds bounds) async {
+    final routes = await ref.read(worldRouteProvider(bounds).future);
+    if (routes != null) {
+      debugPrint('received route count: ${routes.length}');
+    } else {
+      debugPrint('cannot fetch route');
+    }
+  }
+
   // temp
-  RouteModel findRouteInfo(String routeId) {
+  RouteModel findRouteInfo(int routeId) {
     debugPrint('input routeId is $routeId');
     return routeData.firstWhere((routeModel) => routeModel.routeId == routeId);
   }
 
-  void _handleMarkerTap(String routeId) {
+  void _handleMarkerTap(int routeId) {
     isRouteDrawing = false;
     // tapping for the first time
     if (selectedMarkerId != routeId) {
@@ -148,16 +180,18 @@ class _WorldPageState extends State<WorldPage> {
           ),
         ),
         WorldMap(
-            data: routeData,
-            selectedMarkerId: selectedMarkerId,
-            onMarkerTap: _handleMarkerTap,
-            isRouteDrawing: isRouteDrawing,
-            enablePreview: enablePreview,
-            selectedRoute: selectedRoute,
-            polylines: polylines,
-            onMapCreated: (controller) {
-              _mapController.complete(controller);
-            }),
+          data: routeData,
+          selectedMarkerId: selectedMarkerId,
+          onMarkerTap: _handleMarkerTap,
+          isRouteDrawing: isRouteDrawing,
+          enablePreview: enablePreview,
+          selectedRoute: selectedRoute,
+          polylines: polylines,
+          onCameraIdle: _onCameraIdle,
+          onMapCreated: (controller) {
+            _mapController.complete(controller);
+          },
+        ),
         SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
@@ -168,14 +202,15 @@ class _WorldPageState extends State<WorldPage> {
             top: 400.h,
             left: 28.w,
             child: RoutePreviewWidget(
-                key: ValueKey(selectedRoute!.routeId), // refresh preview map
-                selectedRouteModel: selectedRoute!,
-                onClosePressed: _togglePreview,
-                onRoutePressed: () {
-                  debugPrint('route pressed');
-                  _buildPolyline();
-                  _drawRouteOnMap();
-                }),
+              key: ValueKey(selectedRoute!.routeId), // refresh preview map
+              selectedRouteModel: selectedRoute!,
+              onClosePressed: _togglePreview,
+              onRoutePressed: () {
+                debugPrint('route pressed');
+                _buildPolyline();
+                _drawRouteOnMap();
+              },
+            ),
           ),
       ],
     );

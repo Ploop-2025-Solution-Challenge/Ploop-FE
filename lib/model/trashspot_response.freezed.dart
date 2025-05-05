@@ -18,6 +18,8 @@ mixin _$TrashspotResponse {
   int get id;
   double get latitude;
   double get longitude;
+  String get imageUrl;
+  String get createdAt;
 
   /// Create a copy of TrashspotResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -39,16 +41,21 @@ mixin _$TrashspotResponse {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, latitude, longitude);
+  int get hashCode =>
+      Object.hash(runtimeType, id, latitude, longitude, imageUrl, createdAt);
 
   @override
   String toString() {
-    return 'TrashspotResponse(id: $id, latitude: $latitude, longitude: $longitude)';
+    return 'TrashspotResponse(id: $id, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, createdAt: $createdAt)';
   }
 }
 
@@ -58,7 +65,12 @@ abstract mixin class $TrashspotResponseCopyWith<$Res> {
           TrashspotResponse value, $Res Function(TrashspotResponse) _then) =
       _$TrashspotResponseCopyWithImpl;
   @useResult
-  $Res call({int id, double latitude, double longitude});
+  $Res call(
+      {int id,
+      double latitude,
+      double longitude,
+      String imageUrl,
+      String createdAt});
 }
 
 /// @nodoc
@@ -77,6 +89,8 @@ class _$TrashspotResponseCopyWithImpl<$Res>
     Object? id = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? imageUrl = null,
+    Object? createdAt = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -91,6 +105,14 @@ class _$TrashspotResponseCopyWithImpl<$Res>
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      imageUrl: null == imageUrl
+          ? _self.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -99,7 +121,11 @@ class _$TrashspotResponseCopyWithImpl<$Res>
 @JsonSerializable()
 class _TrashspotResponse implements TrashspotResponse {
   const _TrashspotResponse(
-      {required this.id, required this.latitude, required this.longitude});
+      {required this.id,
+      required this.latitude,
+      required this.longitude,
+      required this.imageUrl,
+      required this.createdAt});
   factory _TrashspotResponse.fromJson(Map<String, dynamic> json) =>
       _$TrashspotResponseFromJson(json);
 
@@ -109,6 +135,10 @@ class _TrashspotResponse implements TrashspotResponse {
   final double latitude;
   @override
   final double longitude;
+  @override
+  final String imageUrl;
+  @override
+  final String createdAt;
 
   /// Create a copy of TrashspotResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -134,16 +164,21 @@ class _TrashspotResponse implements TrashspotResponse {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, latitude, longitude);
+  int get hashCode =>
+      Object.hash(runtimeType, id, latitude, longitude, imageUrl, createdAt);
 
   @override
   String toString() {
-    return 'TrashspotResponse(id: $id, latitude: $latitude, longitude: $longitude)';
+    return 'TrashspotResponse(id: $id, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, createdAt: $createdAt)';
   }
 }
 
@@ -155,7 +190,12 @@ abstract mixin class _$TrashspotResponseCopyWith<$Res>
       __$TrashspotResponseCopyWithImpl;
   @override
   @useResult
-  $Res call({int id, double latitude, double longitude});
+  $Res call(
+      {int id,
+      double latitude,
+      double longitude,
+      String imageUrl,
+      String createdAt});
 }
 
 /// @nodoc
@@ -174,6 +214,8 @@ class __$TrashspotResponseCopyWithImpl<$Res>
     Object? id = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? imageUrl = null,
+    Object? createdAt = null,
   }) {
     return _then(_TrashspotResponse(
       id: null == id
@@ -188,6 +230,14 @@ class __$TrashspotResponseCopyWithImpl<$Res>
           ? _self.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      imageUrl: null == imageUrl
+          ? _self.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

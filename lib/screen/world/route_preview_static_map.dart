@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/theme.dart';
 
 class RoutePreviewStaticMap extends StatelessWidget {

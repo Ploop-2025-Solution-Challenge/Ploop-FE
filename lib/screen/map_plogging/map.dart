@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,8 +9,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
+import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
 import 'package:ploop_fe/screen/map_plogging/pickup_counter.dart';
@@ -16,7 +20,6 @@ import 'package:ploop_fe/screen/map_plogging/pause_modal.dart';
 import 'package:ploop_fe/screen/map_plogging/route_recommend_reason_widget.dart';
 import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
-import 'package:ploop_fe/screen/world/world.dart';
 import 'package:ploop_fe/theme.dart';
 import 'camera_button_on_map.dart';
 import 'map_filter_button.dart';
@@ -53,39 +56,23 @@ class _MapPageState extends ConsumerState<MapPage> {
   final Stopwatch _stopwatch = Stopwatch();
   late Timer timer;
   late Duration _elapsedTime;
-  late String _elapsedTimeString;
+  late double _elapsedTimeFormat;
+  List<LatLng> route = [];
 
   int _pickedAmount = 0;
   double _movedDistance = 0;
 
-  // TEST DATA
-  RouteModel recommendedRoute = RouteModel(
-      routeId: 'recommend',
-      route: const <LatLng>[
-        LatLng(37.62813, 127.073059),
-        LatLng(37.62785, 127.07295),
-        LatLng(37.62760, 127.07280),
-        LatLng(37.62735, 127.07265),
-        LatLng(37.62710, 127.07250),
-        LatLng(37.62685, 127.07235),
-        LatLng(37.62660, 127.07220),
-        LatLng(37.62635, 127.07205),
-        LatLng(37.62610, 127.07190),
-        LatLng(37.62585, 127.07175),
-        LatLng(37.62560, 127.07160),
-        LatLng(37.62535, 127.07145),
-        LatLng(37.62510, 127.07130),
-        LatLng(37.62485, 127.07115),
-        LatLng(37.62460, 127.07100),
-        LatLng(37.62435, 127.07085),
-        LatLng(37.62410, 127.07070),
-        LatLng(37.62385, 127.07055),
-        LatLng(37.62360, 127.07040),
-        LatLng(37.62335, 127.07025)
-      ],
-      userId: '',
-      updatedDateTime: DateTime.now());
   Set<Polyline> recommend_polylines = {};
+
+  late StreamSubscription<Position> positionSubscription;
+  Stream<Position>? positionStream;
+  Position? currentPos;
+  Position? previousPos;
+  bool _tracking = false;
+  List<LatLng> _ploggingRoute = [];
+  Set<Polyline> _ploggingPolylines = {};
+  int distanceFilterValue = 2;
+  String motivation = "";
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -95,13 +82,11 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      debugPrint('image is saved at: ${pickedFile.path}');
 
       if (_image != null) {
         await getCurrentLocation();
 
         if (_latitude == null || _longitude == null) {
-          debugPrint('something in position is null');
           return;
         }
 
@@ -114,9 +99,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   latitude: _latitude!,
                   longitude: _longitude!),
             ),
-          ).then((value) {
-            setState(() {}); // refresh after updating photo
-          });
+          );
 
           _showToast(postResult);
         }
@@ -130,7 +113,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     fToast = FToast();
     fToast.init(context);
     _elapsedTime = Duration.zero;
-    _elapsedTimeString = "";
+    _elapsedTimeFormat = 0.0;
 
     timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
@@ -148,55 +131,68 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   /// Draw Polyline of recommended route
-  void _buildPolyline() {
-    setState(() {
-      // _showRoute = true;
+  Future<void> _buildPolyline() async {
+    final GoogleMapController controller = await _mapController.future;
+    LatLngBounds bounds = await controller.getVisibleRegion();
+    final recommended =
+        await ref.read(routeRecommendationProvider(bounds).future);
 
-      recommend_polylines.add(Polyline(
-          polylineId: PolylineId('recommend'),
-          points: recommendedRoute.route,
-          color: theme().recommend,
-          visible: _showRoute,
-          width: 6));
+    if (recommended != null) {
+      setState(() {
+        route = recommended.recommendationRoute;
+        motivation = recommended.motivation;
 
-      _zoomToRoute();
+        recommend_polylines.add(Polyline(
+            polylineId: PolylineId('recommend'),
+            points: route,
+            color: theme().recommend,
+            visible: _showRoute,
+            width: 6));
 
-      if (!_showRoute) {
-        recommend_polylines.clear();
-      }
-    });
+        _zoomToRoute();
+
+        if (!_showRoute) {
+          recommend_polylines.clear();
+        }
+      });
+    }
   }
 
   Future<void> _zoomToRoute() async {
     final GoogleMapController controller = await _mapController.future;
+    final RouteModel model =
+        RouteModel(route: route, routeId: 0, updatedDateTime: DateTime.now());
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(recommendedRoute.getCenter().latitude + 0.0015,
-              recommendedRoute.getCenter().longitude),
-          recommendedRoute.getBoundsZoom()),
+          LatLng(
+              model.getCenter().latitude + 0.0015, model.getCenter().longitude),
+          model.getBoundsZoom()),
     );
   }
 
-  late StreamSubscription<Position> positionSubscription;
-  Stream<Position>? positionStream;
-  Position? currentPos;
-  Position? previousPos;
-  bool _tracking = false;
-  List<LatLng> _ploggingRoute = [];
-  Set<Polyline> _ploggingPolylines = {};
-  int distanceFilterValue = 2;
-
   Future<void> startLocationUpdate() async {
+    await checkPermissionWhenStart();
     _ploggingRoute.clear();
     _ploggingPolylines.clear();
     _tracking = true;
 
     positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: distanceFilterValue,
-      ),
+      locationSettings: Platform.isIOS
+          ? AppleSettings(
+              accuracy: LocationAccuracy.best,
+              activityType: ActivityType.fitness,
+              distanceFilter: distanceFilterValue,
+              pauseLocationUpdatesAutomatically: true,
+              showBackgroundLocationIndicator: true,
+              allowBackgroundLocationUpdates: true,
+            )
+          : AndroidSettings(
+              accuracy: LocationAccuracy.best,
+              distanceFilter: distanceFilterValue,
+              forceLocationManager: false,
+              intervalDuration: const Duration(seconds: 5),
+            ),
     );
     positionSubscription = positionStream!.listen((Position position) {
       currentPos = position;
@@ -213,9 +209,6 @@ class _MapPageState extends ConsumerState<MapPage> {
         _movedDistance += distanceInMeters / 1609.344;
       }
       previousPos = currentPos;
-
-      debugPrint("latitude: ${position.latitude}");
-      debugPrint("longitude: ${position.longitude}");
 
       _ploggingPolylines = {
         Polyline(
@@ -255,10 +248,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     _tracking = false;
     positionSubscription.cancel();
   }
-
-  // void updateLocation(Position position) {
-  //   currentPos = position;
-  // }
 
   void _showToast(String result) {
     Widget toast = Container(
@@ -307,6 +296,81 @@ class _MapPageState extends ConsumerState<MapPage> {
       positionedToastBuilder: (context, child, gravity) =>
           Positioned(top: 154.h, left: 16.w, child: child),
     );
+    // refresh
+    setState(() {});
+  }
+
+  Future<void> checkPermissionWhenStart() async {
+    var status = await Permission.locationAlways.status;
+    if (!status.isGranted && mounted) {
+      Platform.isIOS
+          ? await showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  title: const Text("Background Location Access Needed"),
+                  content: const Text(
+                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  actions: [
+                    CupertinoDialogAction(
+                      child: Text("Cancel",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                fontSize: 17.sp,
+                                letterSpacing: -0.3.sp,
+                                color: const Color.fromARGB(255, 0, 122, 255),
+                              )),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text(
+                        "Go to settings",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontSize: 17.sp,
+                              letterSpacing: -0.3.sp,
+                              fontWeight: FontWeight.w600,
+                              color: const Color.fromARGB(255, 0, 122, 255),
+                            ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await openAppSettings();
+                      },
+                    ),
+                  ],
+                );
+              },
+            )
+          : await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Background Location Access Needed"),
+                  content: const Text(
+                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  actions: [
+                    TextButton(
+                      child: const Text("Cancel"),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    TextButton(
+                      child: const Text("Go to settings"),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await openAppSettings();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+    }
   }
 
   Future<void> getCurrentLocation() async {
@@ -314,7 +378,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
-      // debugPrint('this image is taken at ${pos.latitude}, ${pos.longitude}');
     });
   }
 
@@ -332,20 +395,19 @@ class _MapPageState extends ConsumerState<MapPage> {
       if (_stopwatch.isRunning) {
         _updateElapsedTime();
       }
-      debugPrint('is Plogging?$_isPloggingStarted');
     });
   }
 
   void _updateElapsedTime() {
     setState(() {
       _elapsedTime = _stopwatch.elapsed;
-      _elapsedTimeString = _formatTime(_elapsedTime);
+      _elapsedTimeFormat = _formatTime(_elapsedTime);
     });
   }
 
-  String _formatTime(Duration time) {
+  double _formatTime(Duration time) {
     double hours = time.inSeconds / 3600;
-    return hours.toStringAsFixed(2);
+    return hours;
   }
 
   void _pausePlogging() {
@@ -357,11 +419,8 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   void _endPlogging() {
-    debugPrint('route: $_ploggingRoute');
-
     setState(() {
       _isPloggingActive = false;
-      debugPrint("$_elapsedTimeString, $_pickedAmount, $_movedDistance");
 
       final ploggingNotifier =
           ref.read(ploggingActivityNotifierProvider.notifier);
@@ -369,7 +428,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
       // Set all required data
       ploggingNotifier.setRoute(_ploggingRoute);
-      ploggingNotifier.setTimeDuration(_elapsedTimeString);
+      ploggingNotifier.setTimeDuration(_elapsedTimeFormat);
       ploggingNotifier.setUpdatedTime();
       ploggingNotifier.setCollectedCount(_pickedAmount);
       ploggingNotifier.setDistance(_movedDistance);
@@ -392,13 +451,12 @@ class _MapPageState extends ConsumerState<MapPage> {
           onClose: _resumePlogging,
           amount: _pickedAmount,
           miles: _movedDistance,
-          formattedTime: _elapsedTimeString,
+          formattedTime: _elapsedTimeFormat,
           route: _ploggingRoute,
           polylines: _ploggingPolylines,
         );
       },
     );
-    debugPrint(result);
     if (result == null) {
       _isPloggingActive = true;
       _resumePlogging();
@@ -406,7 +464,6 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   void _resumePlogging() {
-    debugPrint('is plogging? $_isPloggingStarted');
     // _isPloggingActive = true;
     _stopwatch.start();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -494,7 +551,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                             Column(
                               spacing: 2.h,
                               children: [
-                                Text(_elapsedTimeString,
+                                Text(_elapsedTimeFormat.toStringAsFixed(2),
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall),
@@ -551,7 +608,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     isPloggingStarted: _isPloggingStarted,
                     ploggingPolylines: _ploggingPolylines,
                     recommendPolylines: recommend_polylines,
-                    recommend: recommendedRoute,
+                    recommend: route,
                     currentPosition: currentPos,
                     onMapCreated: (GoogleMapController controller) {
                       _mapController.complete(controller);
@@ -604,7 +661,6 @@ class _MapPageState extends ConsumerState<MapPage> {
                   child: !_isPloggingStarted
                       ? CameraButton(
                           onPressed: () async {
-                            debugPrint('camera pressed');
                             await getImage(ImageSource.camera);
                           },
                         )
@@ -615,12 +671,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                     top: 175.h,
                     right: 23.w,
                     child: RouteRecommendReasonWidget(
-                        onClosePressed: () {
-                          setState(() {
-                            _showRouteReason = false;
-                          });
-                        },
-                        recommendedRoute: test1),
+                      onClosePressed: () {
+                        setState(() {
+                          _showRouteReason = false;
+                        });
+                      },
+                      recommendedRoute: route,
+                      motivation: motivation,
+                    ),
                   ),
               ],
             ),

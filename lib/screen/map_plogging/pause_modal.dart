@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:ploop_fe/provider/plogging_provider.dart';
-import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/plogging_result.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/theme.dart';
@@ -14,7 +12,7 @@ class PauseModal extends ConsumerWidget {
   final VoidCallback onClose;
   final int amount;
   final double miles;
-  final String formattedTime;
+  final double formattedTime;
   final List<LatLng> route;
   final Set<Polyline> polylines;
 
@@ -113,7 +111,7 @@ class PauseModal extends ConsumerWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text(formattedTime,
+                      Text(formattedTime.toStringAsFixed(2),
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Hours',
@@ -129,18 +127,6 @@ class PauseModal extends ConsumerWidget {
               StopPloggingButton(
                 onPressed: () {
                   onFinish();
-                  final resultProvider =
-                      ref.watch(ploggingActivityNotifierProvider.notifier);
-
-                  final profile = ref.read(userInfoNotifierProvider);
-
-                  resultProvider.setCollectedCount(amount);
-                  resultProvider.setDistance(miles);
-                  resultProvider.setRoute(route);
-                  resultProvider.setTimeDuration(formattedTime);
-                  resultProvider.setUpdatedTime();
-                  resultProvider.setUserId(profile.id);
-                  // resultProvider.setUserId(-1); // TEST
 
                   Navigator.push(
                     context,

@@ -45,6 +45,8 @@ dependencies:
   graphic: ^2.5.1
   fluttertoast: ^8.2.12
   geocoding: ^3.0.0
+  permission_handler: ^12.0.0+1
+  animated_text_kit: ^4.2.3
 
 dev_dependencies:
   flutter_test:

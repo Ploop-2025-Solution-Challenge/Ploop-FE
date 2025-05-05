@@ -1,21 +1,26 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:ploop_fe/model/route_model.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
+import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class MapSample extends StatefulWidget {
+class MapSample extends ConsumerStatefulWidget {
   final bool showLitterArea;
   final bool showBin;
   final bool showRoute;
   final bool isPloggingStarted;
-  final RouteModel recommend;
+  final List<LatLng> recommend;
   final Function(GoogleMapController)? onMapCreated;
   final Position? currentPosition;
 
@@ -36,10 +41,10 @@ class MapSample extends StatefulWidget {
   });
 
   @override
-  State<MapSample> createState() => MapSampleState();
+  ConsumerState<MapSample> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapSampleState extends ConsumerState<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -64,6 +69,9 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () => _checkPermission(context));
+
     setInitialPos();
   }
 
@@ -77,8 +85,10 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _fetchAreaPosition(bounds) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jwt = prefs.getString('jwt');
+    // final prefs = await SharedPreferences.getInstance();
+    // final jwt = prefs.getString('jwt');
+
+    final jwt = ref.read(jwtNotifierProvider).jwt;
 
     if (jwt != null) {
       final trashspotPosList =
@@ -114,8 +124,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _fetchBinPosition(bounds) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jwt = prefs.getString('jwt');
+    final jwt = ref.read(jwtNotifierProvider).jwt;
 
     if (jwt != null) {
       final binPosList = await BinService.getBinPosition(jwt, bounds);
@@ -150,37 +159,26 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _fetchRecommend(bounds) async {
-    // TODO: connect server api
-    // final prefs = await SharedPreferences.getInstance();
-    // final jwt = prefs.getString('jwt');
+    final recommendation =
+        await ref.watch(routeRecommendationProvider(bounds).future);
 
-    // if (jwt != null) {
-    //   // final routePosList = await route;
-
-    //   // should be neither empty or null
-    //   if (binPosList != null) {
-    //     if (binPosList.isEmpty) {
-    //       debugPrint('no bin in range');
-    //       return;
-    //     }
-    debugPrint(
-        '${LatLng(widget.recommend.route[0].latitude, widget.recommend.route[0].longitude)}');
-    setState(
-      () {
-        _routeMarkers = Marker(
-          icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
-              width: 36.w, height: 41.h),
-          markerId: const MarkerId('recommend'),
-          position: (LatLng(widget.recommend.route[0].latitude,
-              widget.recommend.route[0].longitude)),
-          visible: true,
-        );
-      },
-    );
-    // } else {
-    //   debugPrint('binPosList is empty');
-    //   }
-    // }
+    if (recommendation != null) {
+      final route = recommendation.recommendationRoute;
+      debugPrint('${LatLng(route[0].latitude, route[0].longitude)}');
+      setState(
+        () {
+          _routeMarkers = Marker(
+            icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+                width: 36.w, height: 41.h),
+            markerId: const MarkerId('recommend'),
+            position: (LatLng(route[0].latitude, route[0].longitude)),
+            visible: true,
+          );
+        },
+      );
+    } else {
+      debugPrint('null recommendation. not enough trashspot');
+    }
   }
 
   @override
@@ -212,7 +210,7 @@ class MapSampleState extends State<MapSample> {
           polylines: allPolylines,
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
-          onMapCreated: (controller) {
+          onMapCreated: (controller) async {
             try {
               _goToCurrentLocation();
             } catch (e) {
@@ -227,14 +225,14 @@ class MapSampleState extends State<MapSample> {
             GoogleMapController googleMapController = await _controller.future;
             LatLngBounds bounds = await googleMapController.getVisibleRegion();
 
-            debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
-            debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
-            debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
-            debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
+            // debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
+            // debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
+            // debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
+            // debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
 
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
-            _fetchRecommend(bounds);
+            // _fetchRecommend(bounds);
           },
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
@@ -277,6 +275,8 @@ class MapSampleState extends State<MapSample> {
   Future<void> _goToCurrentLocation() async {
     final GoogleMapController controller = await _controller.future;
 
+    // await _checkPermission(context);
+
     Position position = await _determinePosition();
 
     controller.animateCamera(
@@ -314,4 +314,84 @@ Future<Position> _determinePosition() async {
   }
 
   return await Geolocator.getCurrentPosition();
+}
+
+Future<void> _checkPermission(BuildContext context) async {
+  final locationStatus = await Permission.locationWhenInUse.status;
+
+  if (!locationStatus.isGranted && context.mounted) {
+    final result = await Permission.locationWhenInUse.request();
+    if (!result.isGranted) {
+      return Future.error('Location permission is required.');
+    }
+  }
+
+  final geolocatorPermission = await Geolocator.checkPermission();
+  if (geolocatorPermission == LocationPermission.whileInUse &&
+      context.mounted) {
+    Platform.isIOS
+        ? await showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text("Background Location Access Needed"),
+                content: const Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text("Cancel",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              letterSpacing: -0.3.sp,
+                              fontSize: 17.sp,
+                              color: const Color.fromARGB(255, 0, 122, 255),
+                            )),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    // isDefaultAction: true,
+                    child: Text(
+                      "Go to settings",
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontSize: 17.sp,
+                                letterSpacing: -0.3.sp,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromARGB(255, 0, 122, 255),
+                              ),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await openAppSettings();
+                    },
+                  ),
+                ],
+              );
+            },
+          )
+        : await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Background Location Access Needed"),
+                content: const Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                actions: [
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  TextButton(
+                    child: const Text("Go to settings"),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await openAppSettings();
+                    },
+                  ),
+                ],
+              );
+            });
+  }
 }

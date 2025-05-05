@@ -6,7 +6,8 @@ import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static Future<void> sendIdTokenToServer(String idToken, WidgetRef ref) async {
+  static Future<String?> sendIdTokenToServer(
+      String idToken, WidgetRef ref) async {
     final url = Uri.parse('https://api.ploop.store/api/auth/login');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'idToken': idToken});
@@ -24,11 +25,13 @@ class AuthService {
         jwtProvider.setToken();
 
         debugPrint('saved jwt: $jwt');
+        return jwt;
       } else {
         debugPrint('login failed: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       debugPrint('error: $e');
     }
+    return null;
   }
 }

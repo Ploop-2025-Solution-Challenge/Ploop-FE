@@ -10,7 +10,7 @@ abstract class UserRequest with _$UserRequest {
     required int age,
     required String gender,
     required String country,
-    required String region,
+    // required String region,
     required String difficulty,
     required String motivation,
     required List<String> preferredArea,

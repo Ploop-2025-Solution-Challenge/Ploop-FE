@@ -3,13 +3,19 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
+import 'package:ploop_fe/theme.dart';
 import 'set_personal_info.dart';
 import 'widgets/custom_dropdown.dart';
 
 class SetRegionPage extends ConsumerStatefulWidget {
-  const SetRegionPage({super.key});
+  SetRegionPage({
+    super.key,
+    required this.countries,
+  });
+  List<String> countries;
 
   @override
   ConsumerState<SetRegionPage> createState() => _SetRegionPageState();
@@ -17,13 +23,12 @@ class SetRegionPage extends ConsumerStatefulWidget {
 
 class _SetRegionPageState extends ConsumerState<SetRegionPage> {
   String country = '';
-  String region = '';
 
   @override
   Widget build(BuildContext context) {
     return PrefsPageLayout(
       firstPage: true,
-      question: 'Please select your country and region',
+      question: 'Please select your country',
       title1: 'Country',
       // TODO: remove const when connecting database
       widget1: CustomDropDownMenu(
@@ -32,51 +37,19 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
               country = val;
               debugPrint('selected $val');
             })),
-        entryList: const [
-          'Korea',
-          'United Kingdom',
-          'Japan',
-          'United States',
-          'Germany',
-          'India',
-          'China',
-          'France',
-          'Italy',
-          'Russia',
-          'Switzerland',
-          'New Zealand',
-          'Austrailia',
-        ],
+        entryList: widget.countries,
       ),
-      title2: 'Region',
-      widget2: CustomDropDownMenu(
-        selected: region,
-        onSelected: (val) => setState(
-          () {
-            region = val;
-            debugPrint('selected $val');
-          },
-        ),
-        entryList: const [
-          'Seoul',
-          'London',
-          'Tokyo',
-          'Washington D.C.',
-          'Berlin'
-        ],
-      ),
-      onButtonPressed: () {
-        ref.read(userPreferenceNotifierProvider.notifier).setCountry(country);
-        ref.read(userPreferenceNotifierProvider.notifier).setRegion(region);
 
-        if (country == '' || region == '') {
+      onButtonPressed: () {
+        ref.watch(userPreferenceNotifierProvider.notifier).setCountry(country);
+
+        if (country == '') {
           if (Platform.isIOS) {
             showCupertinoDialog(
               context: context,
               builder: (context) => CupertinoAlertDialog(
                 title: const Text('Oops!'),
-                content: Text(
-                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                content: const Text('Please select your country.'),
                 actions: [
                   CupertinoDialogAction(
                     isDefaultAction: true,
@@ -94,8 +67,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Oops!'),
-                content: Text(
-                    'Please select your ${country == '' ? 'country' : 'region'}.'),
+                content: const Text('Please select your country.'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),

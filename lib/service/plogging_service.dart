@@ -14,7 +14,6 @@ class PloggingActivityService {
     };
     final body = jsonEncode(activity.toJson());
 
-    debugPrint('$headers, $body');
     try {
       final response = await http.post(url, headers: headers, body: body);
 

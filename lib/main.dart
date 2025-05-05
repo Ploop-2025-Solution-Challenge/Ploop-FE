@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,9 +22,18 @@ void main() async {
       child: MyApp(),
     ),
   );
+
+  if (Platform.isAndroid) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
+  }
 }
 
 Future<void> _passAllApiKeysToIOS() async {
+  if (!Platform.isIOS) return;
   const platform = MethodChannel('com.example.ploopFe/env');
 
   try {

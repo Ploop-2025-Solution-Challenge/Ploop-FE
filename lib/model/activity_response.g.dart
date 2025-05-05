@@ -27,8 +27,6 @@ _ActivityResponse _$ActivityResponseFromJson(Map<String, dynamic> json) =>
       graphData: (json['graphData'] as List<dynamic>)
           .map((e) => GraphData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      maxVal: (json['maxVal'] as num?)?.toInt(),
-      graphMaxVal: (json['graphMaxVal'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ActivityResponseToJson(_ActivityResponse instance) =>
@@ -39,6 +37,4 @@ Map<String, dynamic> _$ActivityResponseToJson(_ActivityResponse instance) =>
       'challengeCompleted': instance.challengeCompleted,
       'challengeGoal': instance.challengeGoal,
       'graphData': instance.graphData,
-      'maxVal': instance.maxVal,
-      'graphMaxVal': instance.graphMaxVal,
     };

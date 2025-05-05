@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'latlng_converter.dart';
 import 'package:intl/intl.dart';
 
-// temporary model
-class RouteModel {
-  RouteModel(
-      {required this.routeId,
-      required this.route,
-      required this.userId,
-      required this.updatedDateTime});
+part 'route_model.freezed.dart';
+part 'route_model.g.dart';
 
-  final String routeId;
-  final String userId;
-  final List<LatLng> route;
-  LatLngBounds? routeBound;
-  final DateTime updatedDateTime;
+@freezed
+abstract class RouteModel with _$RouteModel {
+  factory RouteModel({
+    required int routeId,
+    @LatLngConverter()
+    @JsonKey(name: 'activityRouteJson')
+    required List<LatLng> route,
+    required DateTime updatedDateTime,
+  }) = _RouteModel;
 
+  factory RouteModel.fromJson(Map<String, dynamic> json) =>
+      _$RouteModelFromJson(json);
+}
+
+extension RouteModelExtension on RouteModel {
   // format
   String fUpdateDateTime() {
     // format: "dd.mm.yyyy - hh:mm AM/PM"
-    // DateFormat('dd.MM.y - hh:mm a').format(DateTime(2025, 4, 7, 08, 16));
     return DateFormat('dd.MM.y - hh:mm a').format(updatedDateTime);
   }
 
@@ -36,37 +41,40 @@ class RouteModel {
       east = point.longitude > east ? point.longitude : east;
     }
 
-    routeBound = LatLngBounds(
+    final routeBound = LatLngBounds(
       southwest: LatLng(south, west),
       northeast: LatLng(north, east),
     );
 
-    return routeBound!;
+    return routeBound;
   }
 
   // make proper zoom to show route in a view
   double getBoundsZoom() {
-    createLatLngBounds();
+    final routeBound = createLatLngBounds();
     if (routeBound != null) {
       final latDiff =
-          (routeBound!.northeast.latitude - routeBound!.southwest.latitude)
-              .abs();
+          (routeBound.northeast.latitude - routeBound.southwest.latitude).abs();
       final lngDiff =
-          (routeBound!.northeast.longitude - routeBound!.southwest.longitude)
+          (routeBound.northeast.longitude - routeBound.southwest.longitude)
               .abs();
 
       final maxDiff = latDiff > lngDiff ? latDiff : lngDiff;
 
-      debugPrint('lat: $latDiff, lng: $lngDiff');
+      debugPrint('maxDiff: $maxDiff');
 
-      if (maxDiff < 0.005) return 16;
+      if (maxDiff < 0.005) return 15.5;
       if (maxDiff < 0.01) return 15;
+      if (maxDiff < 0.025) return 14;
       if (maxDiff < 0.05) return 13;
+      if (maxDiff < 0.075) return 12.5;
       if (maxDiff < 0.1) return 12;
-      if (maxDiff < 0.5) return 10;
+      if (maxDiff < 0.15) return 11.5;
+      // if (maxDiff < 0.2) return 11.5;
+      if (maxDiff < 0.5) return 10.5;
       if (maxDiff < 1) return 8;
       if (maxDiff < 2) return 7;
-      return 10;
+      return 6;
     } else {
       debugPrint("routeBound is null at RouteModel.getBoundsZoom()");
       throw Error();
@@ -74,11 +82,11 @@ class RouteModel {
   }
 
   LatLng getCenter() {
-    createLatLngBounds();
+    final routeBound = createLatLngBounds();
     if (routeBound != null) {
       return LatLng(
-        (routeBound!.northeast.latitude + routeBound!.southwest.latitude) / 2,
-        (routeBound!.northeast.longitude + routeBound!.southwest.longitude) / 2,
+        (routeBound.northeast.latitude + routeBound.southwest.latitude) / 2,
+        (routeBound.northeast.longitude + routeBound.southwest.longitude) / 2,
       );
     } else {
       debugPrint("routeBound is null at RouteModel.getCenter()");

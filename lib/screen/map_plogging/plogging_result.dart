@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/model/jwt.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/service/plogging_service.dart';
@@ -16,7 +16,7 @@ import 'package:ploop_fe/theme.dart';
 class PloggingResult extends ConsumerWidget {
   final int amount;
   final double miles;
-  final String time;
+  final double time;
   final List<LatLng> route;
   final Set<Polyline> polylines;
 
@@ -118,7 +118,7 @@ class PloggingResult extends ConsumerWidget {
                         Column(
                           spacing: 2.h,
                           children: [
-                            Text(time,
+                            Text(time.toStringAsFixed(2),
                                 style:
                                     Theme.of(context).textTheme.displaySmall),
                             Text(
@@ -155,15 +155,6 @@ class PloggingResult extends ConsumerWidget {
 }
 
 /// TEST
-RouteModel resultTest = RouteModel(route: const [
-  LatLng(37.631000, 127.078000),
-  LatLng(37.631300, 127.077700),
-  LatLng(37.631600, 127.077400),
-  LatLng(37.631900, 127.077100),
-  LatLng(37.632200, 127.076800),
-  LatLng(37.632500, 127.076500),
-  LatLng(37.632800, 127.076200),
-], userId: "2", updatedDateTime: DateTime(2025, 4, 29, 1, 7), routeId: "2");
 
 class PloggingResultMap extends ConsumerWidget {
   final List<LatLng> activityRoute;
@@ -176,10 +167,10 @@ class PloggingResultMap extends ConsumerWidget {
     // final resultProvider = ref.watch(ploggingActivityNotifierProvider.notifier);
     final profile = ref.read(userInfoNotifierProvider);
     RouteModel model = RouteModel(
-        routeId: '',
+        routeId: -1,
         route: activityRoute,
-        // userId: profile.id.toString(), // TODO: remove toString when api edited
-        userId: 'test',
+
+        // userId: 'test',
         updatedDateTime: DateTime.now());
     LatLng? center = model.getCenter();
     debugPrint('center: $center');
@@ -216,6 +207,7 @@ class PloggingResultMap extends ConsumerWidget {
           myLocationEnabled: false,
           myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
+          compassEnabled: false,
         ),
         Positioned(
           top: 22.h,
@@ -277,7 +269,7 @@ class _AddressBoxState extends State<AddressBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.5.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.5.w, vertical: 4.h),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.w),

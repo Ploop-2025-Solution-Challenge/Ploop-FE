@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
+import 'package:ploop_fe/theme.dart';
 
 import 'set_nickname.dart';
 import 'widgets/custom_datepicker.dart';
@@ -95,13 +96,20 @@ class _SetPersonalInfoPageState extends ConsumerState<SetPersonalInfoPage> {
               builder: (context) => AlertDialog(
                 title: const Text('Oops!'),
                 content: Text(
-                    'Please select your ${age == -1 ? 'birthday' : 'gender'}.'),
+                  'Please select your ${age == -1 ? 'birthday' : 'gender'}.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(letterSpacing: 0.45),
+                ),
                 actions: [
                   TextButton(
+                    style:
+                        TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'OK',
-                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                      style: TextStyle(color: GrayScale.black),
                     ),
                   ),
                 ],

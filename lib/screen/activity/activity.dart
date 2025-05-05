@@ -33,7 +33,7 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
           children: [
             const PloopAppBar(),
             Padding(
-              padding: EdgeInsets.all(14.w),
+              padding: EdgeInsets.all(15.w),
               child: Column(
                 spacing: 16.h,
                 crossAxisAlignment: CrossAxisAlignment.start,

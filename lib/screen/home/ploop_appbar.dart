@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,8 +35,10 @@ class _PloopAppBarState extends ConsumerState<PloopAppBar> {
       region: null);
 
   void _getUserProfile() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwt = prefs.getString('jwt');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? jwt = prefs.getString('jwt');
+
+    final jwt = ref.read(jwtNotifierProvider).jwt;
     if (jwt != null) {
       final profile = await UserService.getUserProfile(jwt);
       if (profile != null) {
@@ -59,6 +65,13 @@ class _PloopAppBarState extends ConsumerState<PloopAppBar> {
     super.initState();
     _getUserProfile();
   }
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: Platform.isAndroid
+        ? '226017564204-qk2q8le5ttafdt4ai88tpuj1i46hno5r.apps.googleusercontent.com'
+        : null,
+    // scopes: scopes,
+  );
 
   @override
   Widget build(BuildContext context) {
