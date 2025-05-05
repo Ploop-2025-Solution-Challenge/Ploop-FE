@@ -26,7 +26,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initApp() async {
-    final account = await GoogleSignIn().signIn();
+    final account = await GoogleSignIn().signInSilently();
     if (account != null) {
       final auth = await account.authentication;
 
@@ -44,12 +44,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         }
       }
 
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (_) => const MainScaffold()),
-      //   );
-      // } else {
-
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainScaffold()),
+      );
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OnboardingPage()),

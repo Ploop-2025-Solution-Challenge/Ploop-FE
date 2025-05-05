@@ -52,13 +52,6 @@ class GraphContainer extends ConsumerWidget {
     return dataProvider.when(
       data: (activity) {
         final singleBarWidth = setWidth(348, 16, activity.graphData.length);
-        // final int maxVal = viewData
-        //     .map((e) => e.values)
-        //     .expand((e) => e)
-        //     .toList()
-        //     .reduce((curr, next) => curr > next ? curr : next);
-
-        // final maxVal = activity.maxVal ?? 0;
 
         final double maxHeight = 206.h; // 228 - text area 22
 
@@ -178,10 +171,7 @@ class _GraphFieldState extends ConsumerState<GraphField> {
     }
     // adjust
 
-    return Container(
-      // color: Colors.yellow,
-      // padding: EdgeInsets.only(top: 18.h),
-      // width: 370.w,
+    return SizedBox(
       height: 270.h,
       child: Column(
         children: [
@@ -204,7 +194,6 @@ class _GraphFieldState extends ConsumerState<GraphField> {
               Positioned(
                 bottom: 18.h,
                 child: SizedBox(
-                  // color: const Color.fromRGBO(255, 172, 64, 0.311),
                   width: 348.w,
                   height: 228.h,
                   child:
@@ -213,7 +202,6 @@ class _GraphFieldState extends ConsumerState<GraphField> {
               ),
             ],
           ),
-          // DateRangeUnit(dateRange: dateRange),
         ],
       ),
     );
@@ -242,21 +230,6 @@ class GraphLine extends StatelessWidget {
               .labelSmall
               ?.copyWith(height: 0.01, color: GrayScale.gray_200),
         ),
-      ],
-    );
-  }
-}
-
-class DateRangeUnit extends StatelessWidget {
-  final (DateTime, DateTime) dateRange;
-  const DateRangeUnit({super.key, required this.dateRange});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 36.w,
-      children: [
-        Text('${dateRange.$2.difference(dateRange.$1).inDays + 1}'),
       ],
     );
   }
