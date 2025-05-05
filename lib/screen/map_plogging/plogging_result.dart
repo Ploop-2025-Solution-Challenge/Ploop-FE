@@ -269,7 +269,7 @@ class _AddressBoxState extends State<AddressBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.5.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.5.w, vertical: 4.h),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.w),
