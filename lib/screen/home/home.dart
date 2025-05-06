@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ploop_fe/model/mission.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
+import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
@@ -53,10 +55,6 @@ class MainPage extends ConsumerWidget {
             );
     }
 
-    // final data = ref.read(missionDataProvider);
-
-    // final List<Mission> missions = data.missions;
-
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -87,26 +85,25 @@ class MainPage extends ConsumerWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         spacing: 8.w,
-                        // children: missions.map((mission) {
-                        //   return ChallengeCard(
-                        //     title: mission.info.description,
-                        //     isVerified: mission.completed,
-                        //   );
-                        // }).toList(),
-
-                        //  [
-                        //   // TODO: get current mission from server
-                        //   ChallengeCard(
-                        //     title: 'Pick up 7 cigarette butts',
-                        //     isVerified: false,
-                        //   ),
-                        //   ChallengeCard(
-                        //       title: 'Collect 5 paper waste items',
-                        //       isVerified: false),
-                        //   ChallengeCard(
-                        //       title: 'Grab 2 discarded straws',
-                        //       isVerified: false),
-                        // ],
+                        children: ref.watch(missionDataProvider).when(
+                              data: (mission) => mission.myMissions
+                                  .map((e) => ChallengeCard(
+                                      title: e.name, isVerified: e.verified))
+                                  .toList(),
+                              loading: () => const [
+                                ChallengeCard(
+                                    title: 'Loading', isVerified: false),
+                                ChallengeCard(
+                                    title: 'Loading', isVerified: false),
+                                ChallengeCard(
+                                    title: 'Loading', isVerified: false),
+                              ],
+                              error: (err, stack) => [
+                                Text('error',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall)
+                              ],
+                            ),
                       ),
                     ),
                     SizedBox(

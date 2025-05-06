@@ -6,7 +6,7 @@ part of 'world_route_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$worldRouteHash() => r'c2b541b78c60b585626445f8941838ef3f1441e5';
+String _$worldRouteHash() => r'740d007cddd2a4d8c3e5c1fb8d92cd3e9155dbc6';
 
 /// Copied from Dart SDK
 class _SystemHash {

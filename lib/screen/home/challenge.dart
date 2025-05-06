@@ -12,9 +12,9 @@ class ChallengeProgressCard extends ConsumerWidget {
   const ChallengeProgressCard({super.key});
 
   // multiply this factor to colored width of graph
-  final int totalChallengeCount = 3;
-  final int myProgress = 1;
-  final int otherProgress = 3;
+  // final int totalChallengeCount = 3;
+  // final int myProgress = 1;
+  // final int otherProgress = 3;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,9 +22,19 @@ class ChallengeProgressCard extends ConsumerWidget {
     final AsyncValue<MissionResponse> missionsAsync =
         ref.watch(missionDataProvider);
 
-    final double totalPercentage =
-        (myProgress + otherProgress) / (totalChallengeCount * 2);
     return missionsAsync.when(data: (missionResponse) {
+      final int totalChallengeCount = missionResponse.myMissions.length +
+          missionResponse.partnerMissions.length;
+
+      final int myProgress = missionResponse.myMissions
+          .where((mission) => mission.verified)
+          .length;
+      final int partnerProgress = missionResponse.partnerMissions
+          .where((mission) => mission.verified)
+          .length;
+
+      final double totalPercentage =
+          (myProgress + partnerProgress) / (totalChallengeCount * 2);
       return Container(
         alignment: Alignment.topLeft,
         decoration: BoxDecoration(
@@ -107,11 +117,13 @@ class ChallengeProgressCard extends ConsumerWidget {
                       username: myProfile.nickname!,
                       verifiedChallengeCount: myProgress,
                       totalChallengeCount: totalChallengeCount,
+                      profileImageUrl: myProfile.pictureUrl!,
                     ),
                     ChallengeUserCard(
                       username: missionResponse.partnerName,
-                      verifiedChallengeCount: otherProgress,
+                      verifiedChallengeCount: partnerProgress,
                       totalChallengeCount: totalChallengeCount,
+                      profileImageUrl: missionResponse.partnerImageUrl,
                     ),
                   ],
                 ),
@@ -147,12 +159,14 @@ class ChallengeUserCard extends StatelessWidget {
       {super.key,
       required this.username,
       required this.verifiedChallengeCount,
-      required this.totalChallengeCount});
+      required this.totalChallengeCount,
+      required this.profileImageUrl});
 
   // get data with user id?
   final String username;
   final int totalChallengeCount;
   final int verifiedChallengeCount;
+  final String profileImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -175,9 +189,7 @@ class ChallengeUserCard extends StatelessWidget {
               CircleAvatar(
                 backgroundImage:
                     const AssetImage('assets/icons/default-user-icon.png'),
-                // foregroundImage: userProfile.profileImageUrl != null
-                //     ? NetworkImage(userProfile.profileImageUrl!)
-                //     : null,
+                foregroundImage: NetworkImage(profileImageUrl),
                 radius: 20.w,
               ),
               ConstrainedBox(
@@ -193,7 +205,7 @@ class ChallengeUserCard extends StatelessWidget {
             ],
           ),
           Text(
-            '$verifiedChallengeCount/$totalChallengeCount',
+            '$verifiedChallengeCount/${(totalChallengeCount / 2).toInt()}',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
