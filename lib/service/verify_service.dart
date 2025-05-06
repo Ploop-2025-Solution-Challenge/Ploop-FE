@@ -7,7 +7,8 @@ import 'package:image_picker/image_picker.dart';
 class VerifyService {
   static Future<bool> postVerification(
       int userMissionId, String jwt, XFile imageFile) async {
-    final url = Uri.parse('https://api.ploop.store/api/mission/verification');
+    final url = Uri.parse(
+        'https://api.ploop.store/api/mission/verification?userMissionId=$userMissionId');
     final headers = {
       'Authorization': 'Bearer $jwt',
     };
@@ -18,14 +19,16 @@ class VerifyService {
 
       final bytes = await imageFile.readAsBytes();
       final multipartFile = http.MultipartFile.fromBytes(
-        'image',
+        'file',
         bytes,
         filename: imageFile.name,
       );
       request.files.add(multipartFile);
-      request.fields['userMissionId'] = userMissionId.toString();
+      // request.fields['userMissionId'] = userMissionId.toString();
 
       final streamedResponse = await request.send();
+      debugPrint(
+          '${request.url}, ${request.headers}, ${request.fields}, ${request.files}');
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
