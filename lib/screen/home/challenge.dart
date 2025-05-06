@@ -171,7 +171,7 @@ class ChallengeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
+      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 8.h),
       // alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5.w)),
@@ -197,7 +197,7 @@ class ChallengeUserCard extends StatelessWidget {
                 child: Text(
                   textWidthBasis: TextWidthBasis.parent,
                   // softWrap: true,
-                  username ?? 'Loading...',
+                  username,
                   overflow: TextOverflow.fade,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
