@@ -26,7 +26,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initApp() async {
-    final account = await GoogleSignIn().signInSilently();
+    // final account = await GoogleSignIn().signIn(); // TEST
+    final account = await GoogleSignIn().signInSilently(); // PROD
     if (account != null) {
       final auth = await account.authentication;
 

@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ploop_fe/model/mission_response.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
+import 'package:ploop_fe/screen/home/verify_result.dart';
+import 'package:ploop_fe/service/verify_service.dart';
 import 'package:ploop_fe/theme.dart';
 
 // maybe consumer widget?
@@ -133,6 +136,20 @@ class ChallengeProgressCard extends ConsumerWidget {
         ),
       );
     }, error: (error, stackTrace) {
+      // TEST
+      // return Container(
+      //   decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.circular(8),
+      //     color: Colors.black,
+      //   ),
+      //   width: 370.w,
+      //   height: 214.h,
+      //   child: Text('$error, $stackTrace',
+      //       style: Theme.of(context)
+      //           .textTheme
+      //           .bodySmall
+      //           ?.copyWith(color: GrayScale.gray_100)),
+      // );
       return SizedBox(
         height: 388.h,
         child: Image.asset(
@@ -216,10 +233,14 @@ class ChallengeUserCard extends StatelessWidget {
 
 class ChallengeCard extends ConsumerStatefulWidget {
   const ChallengeCard(
-      {super.key, required this.title, required this.isVerified});
+      {super.key,
+      required this.title,
+      required this.isVerified,
+      required this.id});
 
   final String title;
   final bool isVerified;
+  final int id;
 
   @override
   ConsumerState<ChallengeCard> createState() => ChallengeCardState();
@@ -231,19 +252,32 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
   Future getImage(ImageSource imageSource) async {
     final picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-
+    final id = widget.id;
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
 
       if (_image != null) {
-        // Navigator.push(context,
-        // MaterialPageRoute(builder: (builder) => const VerifyFailed()));
-        verifyMission();
+        final bool verifyResult = await verifyMission();
+        if (verifyResult && mounted) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const VerifySuccess()));
+          // return to home after few seconds?
+        } else if (!verifyResult && mounted) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const VerifyFailed()));
+        }
       }
     }
   }
 
-  void verifyMission() {}
+  Future<bool> verifyMission() async {
+    final jwt = ref.read(jwtNotifierProvider).jwt;
+
+    final response =
+        await VerifyService.postVerification(widget.id, jwt!, _image!);
+
+    return response;
+  }
 
   @override
   void initState() {

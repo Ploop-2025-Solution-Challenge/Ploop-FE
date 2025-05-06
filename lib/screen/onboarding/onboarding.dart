@@ -114,9 +114,9 @@ class LoginButton extends ConsumerWidget {
       debugPrint("Sign-in error: $error");
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed signing in with Google.')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Failed signing in with Google.')),
+      // );
       if (Platform.isIOS) {
         showCupertinoDialog(
           context: context,

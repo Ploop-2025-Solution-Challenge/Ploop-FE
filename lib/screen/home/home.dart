@@ -88,20 +88,23 @@ class MainPage extends ConsumerWidget {
                         children: ref.watch(missionDataProvider).when(
                               data: (mission) => mission.myMissions
                                   .map((e) => ChallengeCard(
-                                      title: e.name, isVerified: e.verified))
+                                        title: e.name,
+                                        isVerified: e.verified,
+                                        id: e.userMissionId,
+                                      ))
                                   .toList(),
                               loading: () => const [
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
+                                // ChallengeCard(
+                                //     title: 'Loading', isVerified: false),
+                                // ChallengeCard(
+                                //     title: 'Loading', isVerified: false),
+                                // ChallengeCard(
+                                //     title: 'Loading', isVerified: false),
                               ],
                               error: (err, stack) => [
-                                Text('error',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall)
+                                // Text('error',
+                                //     style:
+                                //         Theme.of(context).textTheme.bodySmall)
                               ],
                             ),
                       ),
