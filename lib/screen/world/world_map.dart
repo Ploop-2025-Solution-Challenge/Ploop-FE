@@ -43,7 +43,7 @@ class WorldMapState extends ConsumerState<WorldMap> {
   LatLng? currentPos;
 
   /* TEMPORARY MODEL */
-  List<RouteModel> data = [];
+  // List<RouteModel> data = [];
 
   // temporary: GooglePlex position
   static const CameraPosition initialPos = CameraPosition(
@@ -54,19 +54,18 @@ class WorldMapState extends ConsumerState<WorldMap> {
   @override
   void initState() {
     super.initState();
-    data = widget.data;
+    // data = widget.data;
   }
 
   // set marker icon by status
   Set<Marker> _buildMarker() {
-    if (data.isEmpty) {
-      debugPrint("route data is empty");
+    if (widget.data.isEmpty) {
+      // debugPrint("route data is empty");
     }
-    return data.map((routeModel) {
-      bool isMarkerSelected =
-          widget.selectedMarkerId == routeModel.routeId.toString();
+    return widget.data.map((routeModel) {
+      bool isMarkerSelected = widget.selectedMarkerId == routeModel.routeId;
       return Marker(
-        position: routeModel.route[0],
+        position: routeModel.activityRoute[0],
         markerId: MarkerId(routeModel.routeId.toString()),
         icon: isMarkerSelected
             ? AssetMapBitmap('assets/markers/icon_user_route_selected.png',
@@ -149,8 +148,8 @@ class WorldMapState extends ConsumerState<WorldMap> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    debugPrint(position.latitude.toString());
-    debugPrint(position.longitude.toString());
+    // debugPrint(position.latitude.toString());
+    // debugPrint(position.longitude.toString());
   }
 }
 

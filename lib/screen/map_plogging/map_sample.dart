@@ -232,7 +232,7 @@ class MapSampleState extends ConsumerState<MapSample> {
 
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
-            // _fetchRecommend(bounds);
+            _fetchRecommend(bounds);
           },
           myLocationEnabled: true,
           myLocationButtonEnabled: false,

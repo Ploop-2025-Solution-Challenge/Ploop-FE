@@ -17,8 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$RouteModel {
   int get routeId;
   @LatLngConverter()
-  @JsonKey(name: 'activityRouteJson')
-  List<LatLng> get route;
+  List<LatLng> get activityRoute;
   DateTime get updatedDateTime;
 
   /// Create a copy of RouteModel
@@ -37,7 +36,8 @@ mixin _$RouteModel {
         (other.runtimeType == runtimeType &&
             other is RouteModel &&
             (identical(other.routeId, routeId) || other.routeId == routeId) &&
-            const DeepCollectionEquality().equals(other.route, route) &&
+            const DeepCollectionEquality()
+                .equals(other.activityRoute, activityRoute) &&
             (identical(other.updatedDateTime, updatedDateTime) ||
                 other.updatedDateTime == updatedDateTime));
   }
@@ -45,11 +45,11 @@ mixin _$RouteModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, routeId,
-      const DeepCollectionEquality().hash(route), updatedDateTime);
+      const DeepCollectionEquality().hash(activityRoute), updatedDateTime);
 
   @override
   String toString() {
-    return 'RouteModel(routeId: $routeId, route: $route, updatedDateTime: $updatedDateTime)';
+    return 'RouteModel(routeId: $routeId, activityRoute: $activityRoute, updatedDateTime: $updatedDateTime)';
   }
 }
 
@@ -61,7 +61,7 @@ abstract mixin class $RouteModelCopyWith<$Res> {
   @useResult
   $Res call(
       {int routeId,
-      @LatLngConverter() @JsonKey(name: 'activityRouteJson') List<LatLng> route,
+      @LatLngConverter() List<LatLng> activityRoute,
       DateTime updatedDateTime});
 }
 
@@ -78,7 +78,7 @@ class _$RouteModelCopyWithImpl<$Res> implements $RouteModelCopyWith<$Res> {
   @override
   $Res call({
     Object? routeId = null,
-    Object? route = null,
+    Object? activityRoute = null,
     Object? updatedDateTime = null,
   }) {
     return _then(_self.copyWith(
@@ -86,9 +86,9 @@ class _$RouteModelCopyWithImpl<$Res> implements $RouteModelCopyWith<$Res> {
           ? _self.routeId
           : routeId // ignore: cast_nullable_to_non_nullable
               as int,
-      route: null == route
-          ? _self.route
-          : route // ignore: cast_nullable_to_non_nullable
+      activityRoute: null == activityRoute
+          ? _self.activityRoute
+          : activityRoute // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
       updatedDateTime: null == updatedDateTime
           ? _self.updatedDateTime
@@ -103,24 +103,21 @@ class _$RouteModelCopyWithImpl<$Res> implements $RouteModelCopyWith<$Res> {
 class _RouteModel implements RouteModel {
   _RouteModel(
       {required this.routeId,
-      @LatLngConverter()
-      @JsonKey(name: 'activityRouteJson')
-      required final List<LatLng> route,
+      @LatLngConverter() required final List<LatLng> activityRoute,
       required this.updatedDateTime})
-      : _route = route;
+      : _activityRoute = activityRoute;
   factory _RouteModel.fromJson(Map<String, dynamic> json) =>
       _$RouteModelFromJson(json);
 
   @override
   final int routeId;
-  final List<LatLng> _route;
+  final List<LatLng> _activityRoute;
   @override
   @LatLngConverter()
-  @JsonKey(name: 'activityRouteJson')
-  List<LatLng> get route {
-    if (_route is EqualUnmodifiableListView) return _route;
+  List<LatLng> get activityRoute {
+    if (_activityRoute is EqualUnmodifiableListView) return _activityRoute;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_route);
+    return EqualUnmodifiableListView(_activityRoute);
   }
 
   @override
@@ -147,7 +144,8 @@ class _RouteModel implements RouteModel {
         (other.runtimeType == runtimeType &&
             other is _RouteModel &&
             (identical(other.routeId, routeId) || other.routeId == routeId) &&
-            const DeepCollectionEquality().equals(other._route, _route) &&
+            const DeepCollectionEquality()
+                .equals(other._activityRoute, _activityRoute) &&
             (identical(other.updatedDateTime, updatedDateTime) ||
                 other.updatedDateTime == updatedDateTime));
   }
@@ -155,11 +153,11 @@ class _RouteModel implements RouteModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, routeId,
-      const DeepCollectionEquality().hash(_route), updatedDateTime);
+      const DeepCollectionEquality().hash(_activityRoute), updatedDateTime);
 
   @override
   String toString() {
-    return 'RouteModel(routeId: $routeId, route: $route, updatedDateTime: $updatedDateTime)';
+    return 'RouteModel(routeId: $routeId, activityRoute: $activityRoute, updatedDateTime: $updatedDateTime)';
   }
 }
 
@@ -173,7 +171,7 @@ abstract mixin class _$RouteModelCopyWith<$Res>
   @useResult
   $Res call(
       {int routeId,
-      @LatLngConverter() @JsonKey(name: 'activityRouteJson') List<LatLng> route,
+      @LatLngConverter() List<LatLng> activityRoute,
       DateTime updatedDateTime});
 }
 
@@ -190,7 +188,7 @@ class __$RouteModelCopyWithImpl<$Res> implements _$RouteModelCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? routeId = null,
-    Object? route = null,
+    Object? activityRoute = null,
     Object? updatedDateTime = null,
   }) {
     return _then(_RouteModel(
@@ -198,9 +196,9 @@ class __$RouteModelCopyWithImpl<$Res> implements _$RouteModelCopyWith<$Res> {
           ? _self.routeId
           : routeId // ignore: cast_nullable_to_non_nullable
               as int,
-      route: null == route
-          ? _self._route
-          : route // ignore: cast_nullable_to_non_nullable
+      activityRoute: null == activityRoute
+          ? _self._activityRoute
+          : activityRoute // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
       updatedDateTime: null == updatedDateTime
           ? _self.updatedDateTime

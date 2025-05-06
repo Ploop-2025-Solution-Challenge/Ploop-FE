@@ -13,7 +13,7 @@ class RoutePreviewStaticMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final route = routeModel.route;
+    final route = routeModel.activityRoute;
     LatLng? center = routeModel.getCenter();
     late double zoomByRoute;
     if (route.isEmpty) {
