@@ -19,7 +19,8 @@ class RoutePreviewStaticMap extends StatelessWidget {
     if (route.isEmpty) {
       return const Center(child: Text('Error: Empty route'));
     } else {
-      zoomByRoute = routeModel.getBoundsZoom();
+      zoomByRoute = routeModel.getBoundsZoom() - 0.75;
+      // debugPrint('adjusted zoom: $zoomByRoute');
     }
 
     return GoogleMap(

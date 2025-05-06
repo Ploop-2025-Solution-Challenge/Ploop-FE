@@ -61,9 +61,9 @@ extension RouteModelExtension on RouteModel {
 
       debugPrint('maxDiff: $maxDiff');
 
-      if (maxDiff < 0.005) return 15.5;
-      if (maxDiff < 0.01) return 14.5;
-      if (maxDiff < 0.025) return 14;
+      if (maxDiff < 0.005) return 16;
+      if (maxDiff < 0.01) return 15;
+      if (maxDiff < 0.025) return 14.5;
       if (maxDiff < 0.05) return 13;
       if (maxDiff < 0.075) return 12.5;
       if (maxDiff < 0.1) return 12;
