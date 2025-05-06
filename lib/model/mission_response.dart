@@ -8,6 +8,7 @@ part 'mission_response.g.dart';
 abstract class MissionResponse with _$MissionResponse {
   const factory MissionResponse({
     required String partnerName,
+    required String partnerImageUrl,
     required List<Mission> partnerMissions,
     required List<Mission> myMissions,
   }) = _MissionResponse;

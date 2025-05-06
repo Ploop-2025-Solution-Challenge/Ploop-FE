@@ -6,7 +6,7 @@ part of 'world_route_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$worldRouteHash() => r'464fbed0fbfe55dac91fc7c25b2c798166ddfbf9';
+String _$worldRouteHash() => r'740d007cddd2a4d8c3e5c1fb8d92cd3e9155dbc6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const worldRouteProvider = WorldRouteFamily();
 
 /// See also [worldRoute].
-class WorldRouteFamily extends Family<AsyncValue<List<RouteModel>?>> {
+class WorldRouteFamily extends Family<AsyncValue<List<RouteModel>>> {
   /// See also [worldRoute].
   const WorldRouteFamily();
 
@@ -72,7 +72,7 @@ class WorldRouteFamily extends Family<AsyncValue<List<RouteModel>?>> {
 }
 
 /// See also [worldRoute].
-class WorldRouteProvider extends AutoDisposeFutureProvider<List<RouteModel>?> {
+class WorldRouteProvider extends AutoDisposeFutureProvider<List<RouteModel>> {
   /// See also [worldRoute].
   WorldRouteProvider(
     LatLngBounds bounds,
@@ -107,7 +107,7 @@ class WorldRouteProvider extends AutoDisposeFutureProvider<List<RouteModel>?> {
 
   @override
   Override overrideWith(
-    FutureOr<List<RouteModel>?> Function(WorldRouteRef provider) create,
+    FutureOr<List<RouteModel>> Function(WorldRouteRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -124,7 +124,7 @@ class WorldRouteProvider extends AutoDisposeFutureProvider<List<RouteModel>?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<RouteModel>?> createElement() {
+  AutoDisposeFutureProviderElement<List<RouteModel>> createElement() {
     return _WorldRouteProviderElement(this);
   }
 
@@ -144,13 +144,13 @@ class WorldRouteProvider extends AutoDisposeFutureProvider<List<RouteModel>?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin WorldRouteRef on AutoDisposeFutureProviderRef<List<RouteModel>?> {
+mixin WorldRouteRef on AutoDisposeFutureProviderRef<List<RouteModel>> {
   /// The parameter `bounds` of this provider.
   LatLngBounds get bounds;
 }
 
 class _WorldRouteProviderElement
-    extends AutoDisposeFutureProviderElement<List<RouteModel>?>
+    extends AutoDisposeFutureProviderElement<List<RouteModel>>
     with WorldRouteRef {
   _WorldRouteProviderElement(super.provider);
 

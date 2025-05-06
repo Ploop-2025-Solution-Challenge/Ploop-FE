@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MissionResponse {
   String get partnerName;
+  String get partnerImageUrl;
   List<Mission> get partnerMissions;
   List<Mission> get myMissions;
 
@@ -37,6 +38,8 @@ mixin _$MissionResponse {
             other is MissionResponse &&
             (identical(other.partnerName, partnerName) ||
                 other.partnerName == partnerName) &&
+            (identical(other.partnerImageUrl, partnerImageUrl) ||
+                other.partnerImageUrl == partnerImageUrl) &&
             const DeepCollectionEquality()
                 .equals(other.partnerMissions, partnerMissions) &&
             const DeepCollectionEquality()
@@ -48,12 +51,13 @@ mixin _$MissionResponse {
   int get hashCode => Object.hash(
       runtimeType,
       partnerName,
+      partnerImageUrl,
       const DeepCollectionEquality().hash(partnerMissions),
       const DeepCollectionEquality().hash(myMissions));
 
   @override
   String toString() {
-    return 'MissionResponse(partnerName: $partnerName, partnerMissions: $partnerMissions, myMissions: $myMissions)';
+    return 'MissionResponse(partnerName: $partnerName, partnerImageUrl: $partnerImageUrl, partnerMissions: $partnerMissions, myMissions: $myMissions)';
   }
 }
 
@@ -65,6 +69,7 @@ abstract mixin class $MissionResponseCopyWith<$Res> {
   @useResult
   $Res call(
       {String partnerName,
+      String partnerImageUrl,
       List<Mission> partnerMissions,
       List<Mission> myMissions});
 }
@@ -83,6 +88,7 @@ class _$MissionResponseCopyWithImpl<$Res>
   @override
   $Res call({
     Object? partnerName = null,
+    Object? partnerImageUrl = null,
     Object? partnerMissions = null,
     Object? myMissions = null,
   }) {
@@ -90,6 +96,10 @@ class _$MissionResponseCopyWithImpl<$Res>
       partnerName: null == partnerName
           ? _self.partnerName
           : partnerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      partnerImageUrl: null == partnerImageUrl
+          ? _self.partnerImageUrl
+          : partnerImageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       partnerMissions: null == partnerMissions
           ? _self.partnerMissions
@@ -108,6 +118,7 @@ class _$MissionResponseCopyWithImpl<$Res>
 class _MissionResponse implements MissionResponse {
   const _MissionResponse(
       {required this.partnerName,
+      required this.partnerImageUrl,
       required final List<Mission> partnerMissions,
       required final List<Mission> myMissions})
       : _partnerMissions = partnerMissions,
@@ -117,6 +128,8 @@ class _MissionResponse implements MissionResponse {
 
   @override
   final String partnerName;
+  @override
+  final String partnerImageUrl;
   final List<Mission> _partnerMissions;
   @override
   List<Mission> get partnerMissions {
@@ -155,6 +168,8 @@ class _MissionResponse implements MissionResponse {
             other is _MissionResponse &&
             (identical(other.partnerName, partnerName) ||
                 other.partnerName == partnerName) &&
+            (identical(other.partnerImageUrl, partnerImageUrl) ||
+                other.partnerImageUrl == partnerImageUrl) &&
             const DeepCollectionEquality()
                 .equals(other._partnerMissions, _partnerMissions) &&
             const DeepCollectionEquality()
@@ -166,12 +181,13 @@ class _MissionResponse implements MissionResponse {
   int get hashCode => Object.hash(
       runtimeType,
       partnerName,
+      partnerImageUrl,
       const DeepCollectionEquality().hash(_partnerMissions),
       const DeepCollectionEquality().hash(_myMissions));
 
   @override
   String toString() {
-    return 'MissionResponse(partnerName: $partnerName, partnerMissions: $partnerMissions, myMissions: $myMissions)';
+    return 'MissionResponse(partnerName: $partnerName, partnerImageUrl: $partnerImageUrl, partnerMissions: $partnerMissions, myMissions: $myMissions)';
   }
 }
 
@@ -185,6 +201,7 @@ abstract mixin class _$MissionResponseCopyWith<$Res>
   @useResult
   $Res call(
       {String partnerName,
+      String partnerImageUrl,
       List<Mission> partnerMissions,
       List<Mission> myMissions});
 }
@@ -203,6 +220,7 @@ class __$MissionResponseCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? partnerName = null,
+    Object? partnerImageUrl = null,
     Object? partnerMissions = null,
     Object? myMissions = null,
   }) {
@@ -210,6 +228,10 @@ class __$MissionResponseCopyWithImpl<$Res>
       partnerName: null == partnerName
           ? _self.partnerName
           : partnerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      partnerImageUrl: null == partnerImageUrl
+          ? _self.partnerImageUrl
+          : partnerImageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       partnerMissions: null == partnerMissions
           ? _self._partnerMissions

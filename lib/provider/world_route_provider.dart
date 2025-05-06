@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'world_route_provider.g.dart';
 
 @riverpod
-Future<List<RouteModel>?> worldRoute(Ref ref, LatLngBounds bounds) async {
+Future<List<RouteModel>> worldRoute(Ref ref, LatLngBounds bounds) async {
   final jwt = ref.read(jwtNotifierProvider).jwt;
 
   if (jwt != null) {
@@ -22,17 +22,17 @@ Future<List<RouteModel>?> worldRoute(Ref ref, LatLngBounds bounds) async {
       'Authorization': 'Bearer $jwt',
     };
     final response = await http.get(url, headers: headers);
-    // debugPrint('$url, $headers');
 
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      debugPrint('OK: ${responseData[0]['activityRouteJson']}');
+      final List<Map<String, dynamic>> responseData =
+          (jsonDecode(utf8.decode(response.bodyBytes)) as List)
+              .cast<Map<String, dynamic>>();
+      ;
 
       if (responseData != null) {
-        return responseData.map((data) {
-          debugPrint('data: $data');
-          RouteModel.fromJson(data);
-        }).toList();
+        // debugPrint(
+        //     ' : ${responseData.map((route) => RouteModel.fromJson(route)).toList()}');
+        return responseData.map((route) => RouteModel.fromJson(route)).toList();
       } else {
         debugPrint('null responseData');
       }
@@ -42,5 +42,7 @@ Future<List<RouteModel>?> worldRoute(Ref ref, LatLngBounds bounds) async {
   } else {
     debugPrint('error: null jwt');
   }
-  return null;
+  return [
+    RouteModel(routeId: -1, activityRoute: [], updatedDateTime: DateTime.now())
+  ];
 }

@@ -27,7 +27,6 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /* ERROR */
     return Stack(alignment: Alignment.center, children: [
       Image.asset(
         'assets/images/onboarding-bg.jpg',
@@ -107,7 +106,7 @@ class LoginButton extends ConsumerWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const MainScaffold(),
+            builder: (_) => SetRegionPage(countries: countries),
           ),
         );
       }

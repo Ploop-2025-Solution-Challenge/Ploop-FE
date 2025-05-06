@@ -13,13 +13,14 @@ class RoutePreviewStaticMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final route = routeModel.route;
+    final route = routeModel.activityRoute;
     LatLng? center = routeModel.getCenter();
     late double zoomByRoute;
     if (route.isEmpty) {
       return const Center(child: Text('Error: Empty route'));
     } else {
-      zoomByRoute = routeModel.getBoundsZoom();
+      zoomByRoute = routeModel.getBoundsZoom() - 0.75;
+      // debugPrint('adjusted zoom: $zoomByRoute');
     }
 
     return GoogleMap(

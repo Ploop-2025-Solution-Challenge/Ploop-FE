@@ -33,5 +33,8 @@ Future<MissionResponse> missionData(Ref ref) async {
     debugPrint('error: null jwt');
   }
   return const MissionResponse(
-      partnerName: '', partnerMissions: [], myMissions: []);
+      partnerName: '',
+      partnerImageUrl: '',
+      partnerMissions: [],
+      myMissions: []);
 }

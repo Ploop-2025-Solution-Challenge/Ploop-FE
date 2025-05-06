@@ -26,6 +26,7 @@ class MapSample extends ConsumerStatefulWidget {
 
   final Set<Polyline> recommendPolylines;
   final Set<Polyline> ploggingPolylines;
+  final Marker routeMarker;
 
   const MapSample({
     super.key,
@@ -34,6 +35,7 @@ class MapSample extends ConsumerStatefulWidget {
     this.showRoute = false,
     this.isPloggingStarted = false,
     required this.recommendPolylines,
+    required this.routeMarker,
     this.onMapCreated,
     required this.recommend,
     this.currentPosition,
@@ -55,7 +57,7 @@ class MapSampleState extends ConsumerState<MapSample> {
 
   final Set<Marker> _litterMarkers = {};
   final Set<Marker> _binMarkers = {};
-  late Marker _routeMarkers = const Marker(markerId: MarkerId('recommend'));
+  // late Marker _routeMarkers = const Marker(markerId: MarkerId('recommend'));
 
   static const CameraPosition initialPos = CameraPosition(
     // target: LatLng(37.422131, -122.084801),
@@ -158,28 +160,28 @@ class MapSampleState extends ConsumerState<MapSample> {
     }
   }
 
-  void _fetchRecommend(bounds) async {
-    final recommendation =
-        await ref.watch(routeRecommendationProvider(bounds).future);
+  // void _fetchRecommend(bounds) async {
+  //   final recommendation =
+  //       await ref.watch(routeRecommendationProvider(bounds).future);
 
-    if (recommendation != null) {
-      final route = recommendation.recommendationRoute;
-      debugPrint('${LatLng(route[0].latitude, route[0].longitude)}');
-      setState(
-        () {
-          _routeMarkers = Marker(
-            icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
-                width: 36.w, height: 41.h),
-            markerId: const MarkerId('recommend'),
-            position: (LatLng(route[0].latitude, route[0].longitude)),
-            visible: true,
-          );
-        },
-      );
-    } else {
-      debugPrint('null recommendation. not enough trashspot');
-    }
-  }
+  //   if (recommendation != null) {
+  //     final route = recommendation.recommendationRoute;
+  //     debugPrint('${LatLng(route[0].latitude, route[0].longitude)}');
+  //     setState(
+  //       () {
+  //         _routeMarkers = Marker(
+  //           icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+  //               width: 36.w, height: 41.h),
+  //           markerId: const MarkerId('recommend'),
+  //           position: (LatLng(route[0].latitude, route[0].longitude)),
+  //           visible: true,
+  //         );
+  //       },
+  //     );
+  //   } else {
+  //     debugPrint('null recommendation. not enough trashspot');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +196,7 @@ class MapSampleState extends ConsumerState<MapSample> {
     }
 
     if (widget.showRoute) {
-      visibleMarkers.addAll({_routeMarkers});
+      visibleMarkers.addAll({widget.routeMarker});
     }
 
     Set<Polyline> allPolylines = {};

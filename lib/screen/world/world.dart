@@ -62,19 +62,11 @@ class _WorldPageState extends ConsumerState<WorldPage> {
 
   Future<void> _fetchWorldRoute(bounds) async {
     final result = await ref.watch(worldRouteProvider(bounds).future);
-    if (result != null && mounted) {
+    if (mounted) {
+      debugPrint('received route count: ${result.length}');
       setState(() {
         routeData = result;
       });
-    }
-  }
-
-  Future<void> fetchWorldRoutes(WidgetRef ref, LatLngBounds bounds) async {
-    final routes = await ref.read(worldRouteProvider(bounds).future);
-    if (routes != null) {
-      debugPrint('received route count: ${routes.length}');
-    } else {
-      debugPrint('cannot fetch route');
     }
   }
 
@@ -132,7 +124,7 @@ class _WorldPageState extends ConsumerState<WorldPage> {
       if (selectedRoute != null) {
         polylines.add(Polyline(
             polylineId: PolylineId(selectedMarkerId.toString()),
-            points: selectedRoute!.route,
+            points: selectedRoute!.activityRoute,
             color: theme().state,
             visible: isRouteDrawing,
             width: 6));
@@ -157,9 +149,9 @@ class _WorldPageState extends ConsumerState<WorldPage> {
   }
 
   Future<void> _zoomToRoute() async {
-    debugPrint('called zoomToRoute');
+    // debugPrint('called zoomToRoute');
     if (selectedRoute != null) {
-      debugPrint('route is not null');
+      // debugPrint('route is not null');
       final GoogleMapController controller = await _mapController.future;
       controller.animateCamera(
         CameraUpdate.newLatLngZoom(

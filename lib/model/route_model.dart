@@ -11,9 +11,7 @@ part 'route_model.g.dart';
 abstract class RouteModel with _$RouteModel {
   factory RouteModel({
     required int routeId,
-    @LatLngConverter()
-    @JsonKey(name: 'activityRouteJson')
-    required List<LatLng> route,
+    @LatLngConverter() required List<LatLng> activityRoute,
     required DateTime updatedDateTime,
   }) = _RouteModel;
 
@@ -29,12 +27,12 @@ extension RouteModelExtension on RouteModel {
   }
 
   LatLngBounds? createLatLngBounds() {
-    double south = route.first.latitude;
-    double north = route.first.latitude;
-    double west = route.first.longitude;
-    double east = route.first.longitude;
+    double south = activityRoute.first.latitude;
+    double north = activityRoute.first.latitude;
+    double west = activityRoute.first.longitude;
+    double east = activityRoute.first.longitude;
 
-    for (final point in route) {
+    for (final point in activityRoute) {
       south = point.latitude < south ? point.latitude : south;
       north = point.latitude > north ? point.latitude : north;
       west = point.longitude < west ? point.longitude : west;
@@ -63,9 +61,9 @@ extension RouteModelExtension on RouteModel {
 
       debugPrint('maxDiff: $maxDiff');
 
-      if (maxDiff < 0.005) return 15.5;
+      if (maxDiff < 0.005) return 16;
       if (maxDiff < 0.01) return 15;
-      if (maxDiff < 0.025) return 14;
+      if (maxDiff < 0.025) return 14.5;
       if (maxDiff < 0.05) return 13;
       if (maxDiff < 0.075) return 12.5;
       if (maxDiff < 0.1) return 12;

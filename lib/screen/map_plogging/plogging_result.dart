@@ -45,12 +45,6 @@ class PloggingResult extends ConsumerWidget {
                 IconButton(
                   onPressed: () {
                     final activity = ref.read(ploggingActivityNotifierProvider);
-                    debugPrint('miles: ${activity.distanceMiles}');
-                    debugPrint('route: ${activity.activityRoute}');
-                    debugPrint('time: ${activity.timeDuration}');
-                    debugPrint(
-                        'trash count:${activity.trashCollectedCount.toString()}');
-                    debugPrint('id: ${activity.userId}');
                     PloggingActivityService.postPloggingDataToServer(
                         activity, auth.jwt!);
 
@@ -168,12 +162,12 @@ class PloggingResultMap extends ConsumerWidget {
     final profile = ref.read(userInfoNotifierProvider);
     RouteModel model = RouteModel(
         routeId: -1,
-        route: activityRoute,
+        activityRoute: activityRoute,
 
         // userId: 'test',
         updatedDateTime: DateTime.now());
     LatLng? center = model.getCenter();
-    debugPrint('center: $center');
+    // debugPrint('center: $center');
 
     late double zoomByRoute;
 
@@ -181,7 +175,7 @@ class PloggingResultMap extends ConsumerWidget {
       return const Center(child: Text('Error: Empty route'));
     } else {
       zoomByRoute = model.getBoundsZoom();
-      debugPrint('$zoomByRoute');
+      // debugPrint('$zoomByRoute');
     }
 
     return Stack(

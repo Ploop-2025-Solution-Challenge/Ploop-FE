@@ -71,6 +71,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   bool _tracking = false;
   List<LatLng> _ploggingRoute = [];
   Set<Polyline> _ploggingPolylines = {};
+  Marker _routeMarkers = const Marker(markerId: MarkerId('recommend'));
   int distanceFilterValue = 2;
   String motivation = "";
 
@@ -130,38 +131,51 @@ class _MapPageState extends ConsumerState<MapPage> {
     super.dispose();
   }
 
+  // _
+
   /// Draw Polyline of recommended route
-  Future<void> _buildPolyline() async {
+  Future<void> _fetchRecommend() async {
     final GoogleMapController controller = await _mapController.future;
     LatLngBounds bounds = await controller.getVisibleRegion();
-    final recommended =
-        await ref.read(routeRecommendationProvider(bounds).future);
+    debugPrint('$bounds');
+    if (_showRoute) {
+      final recommended =
+          await ref.watch(routeRecommendationProvider(bounds).future);
 
-    if (recommended != null) {
-      setState(() {
-        route = recommended.recommendationRoute;
-        motivation = recommended.motivation;
+      if (recommended != null) {
+        setState(() {
+          route = recommended.recommendationRoute;
+          motivation = recommended.motivation;
 
-        recommend_polylines.add(Polyline(
-            polylineId: PolylineId('recommend'),
-            points: route,
-            color: theme().recommend,
-            visible: _showRoute,
-            width: 6));
+          _routeMarkers = Marker(
+            icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+                width: 36.w, height: 41.h),
+            markerId: const MarkerId('recommend'),
+            position: (LatLng(route[0].latitude, route[0].longitude)),
+            visible: true,
+          );
 
-        _zoomToRoute();
+          recommend_polylines.add(Polyline(
+              polylineId: PolylineId('recommend'),
+              points: route,
+              color: theme().recommend,
+              visible: _showRoute,
+              width: 6));
+
+          _zoomToRoute();
+        });
 
         if (!_showRoute) {
           recommend_polylines.clear();
         }
-      });
+      }
     }
   }
 
   Future<void> _zoomToRoute() async {
     final GoogleMapController controller = await _mapController.future;
-    final RouteModel model =
-        RouteModel(route: route, routeId: 0, updatedDateTime: DateTime.now());
+    final RouteModel model = RouteModel(
+        activityRoute: route, routeId: 0, updatedDateTime: DateTime.now());
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
@@ -608,6 +622,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     isPloggingStarted: _isPloggingStarted,
                     ploggingPolylines: _ploggingPolylines,
                     recommendPolylines: recommend_polylines,
+                    routeMarker: _routeMarkers,
                     recommend: route,
                     currentPosition: currentPos,
                     onMapCreated: (GoogleMapController controller) {
@@ -637,7 +652,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                           isActive: _showRoute,
                           onPressed: () {
                             _toggleRouteMarker();
-                            _buildPolyline();
+                            _fetchRecommend();
                           },
                         ),
                       ],
@@ -671,13 +686,14 @@ class _MapPageState extends ConsumerState<MapPage> {
                     top: 175.h,
                     right: 23.w,
                     child: RouteRecommendReasonWidget(
+                      key: ValueKey(motivation),
                       onClosePressed: () {
                         setState(() {
                           _showRouteReason = false;
                         });
                       },
                       recommendedRoute: route,
-                      motivation: motivation,
+                      motivation: motivation == "" ? "Loading..." : motivation,
                     ),
                   ),
               ],
