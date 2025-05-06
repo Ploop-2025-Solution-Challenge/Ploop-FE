@@ -71,6 +71,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   bool _tracking = false;
   List<LatLng> _ploggingRoute = [];
   Set<Polyline> _ploggingPolylines = {};
+  Marker _routeMarkers = const Marker(markerId: MarkerId('recommend'));
   int distanceFilterValue = 2;
   String motivation = "";
 
@@ -133,10 +134,10 @@ class _MapPageState extends ConsumerState<MapPage> {
   // _
 
   /// Draw Polyline of recommended route
-  Future<void> _buildPolyline() async {
+  Future<void> _fetchRecommend() async {
     final GoogleMapController controller = await _mapController.future;
     LatLngBounds bounds = await controller.getVisibleRegion();
-    // debugPrint('$_showRoute');
+    debugPrint('$bounds');
     if (_showRoute) {
       final recommended =
           await ref.watch(routeRecommendationProvider(bounds).future);
@@ -145,6 +146,14 @@ class _MapPageState extends ConsumerState<MapPage> {
         setState(() {
           route = recommended.recommendationRoute;
           motivation = recommended.motivation;
+
+          _routeMarkers = Marker(
+            icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
+                width: 36.w, height: 41.h),
+            markerId: const MarkerId('recommend'),
+            position: (LatLng(route[0].latitude, route[0].longitude)),
+            visible: true,
+          );
 
           recommend_polylines.add(Polyline(
               polylineId: PolylineId('recommend'),
@@ -613,6 +622,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     isPloggingStarted: _isPloggingStarted,
                     ploggingPolylines: _ploggingPolylines,
                     recommendPolylines: recommend_polylines,
+                    routeMarker: _routeMarkers,
                     recommend: route,
                     currentPosition: currentPos,
                     onMapCreated: (GoogleMapController controller) {
@@ -642,7 +652,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                           isActive: _showRoute,
                           onPressed: () {
                             _toggleRouteMarker();
-                            _buildPolyline();
+                            _fetchRecommend();
                           },
                         ),
                       ],
@@ -676,6 +686,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                     top: 175.h,
                     right: 23.w,
                     child: RouteRecommendReasonWidget(
+                      key: ValueKey(motivation),
                       onClosePressed: () {
                         setState(() {
                           _showRouteReason = false;

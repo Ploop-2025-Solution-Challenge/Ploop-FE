@@ -23,7 +23,6 @@ Future<Recommendation?> routeRecommendation(
       'Authorization': 'Bearer $jwt',
     };
     final response = await http.get(url, headers: headers);
-    // debugPrint('$url, $headers');
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
