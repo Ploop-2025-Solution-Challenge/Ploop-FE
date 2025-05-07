@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'country_list_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<String>> countryList(Ref ref) async {
   final url = Uri.parse('https://restcountries.com/v3.1/all?fields=name');
   final headers = {

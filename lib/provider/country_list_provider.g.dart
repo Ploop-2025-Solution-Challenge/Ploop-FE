@@ -6,11 +6,11 @@ part of 'country_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$countryListHash() => r'eabc313df7032913fecf567cc44861ac1348b516';
+String _$countryListHash() => r'd2b7934a3d05af1eb58ed4ff7b8efb9e0ebbd8bf';
 
 /// See also [countryList].
 @ProviderFor(countryList)
-final countryListProvider = FutureProvider<List<String>>.internal(
+final countryListProvider = AutoDisposeFutureProvider<List<String>>.internal(
   countryList,
   name: r'countryListProvider',
   debugGetCreateSourceHash:
@@ -21,6 +21,6 @@ final countryListProvider = FutureProvider<List<String>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef CountryListRef = FutureProviderRef<List<String>>;
+typedef CountryListRef = AutoDisposeFutureProviderRef<List<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
