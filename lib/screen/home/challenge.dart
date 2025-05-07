@@ -252,7 +252,7 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
   Future getImage(ImageSource imageSource) async {
     final picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    final id = widget.id;
+    // final id = widget.id;
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
 
@@ -261,7 +261,6 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
         if (verifyResult && mounted) {
           Navigator.push(context,
               MaterialPageRoute(builder: (builder) => const VerifySuccess()));
-          // return to home after few seconds?
         } else if (!verifyResult && mounted) {
           Navigator.push(context,
               MaterialPageRoute(builder: (builder) => const VerifyFailed()));

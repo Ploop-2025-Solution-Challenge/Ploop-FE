@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/provider/country_list_provider.dart';
+import 'package:ploop_fe/screen/onboarding/waiting.dart';
 import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
 
@@ -102,11 +103,10 @@ class LoginButton extends ConsumerWidget {
         // check if context is valid
         if (!context.mounted) return;
 
-        final countries = await ref.read(countryListProvider.future);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => SetRegionPage(countries: countries),
+            builder: (builder) => const WaitingScreen(),
           ),
         );
       }
