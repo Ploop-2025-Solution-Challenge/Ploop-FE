@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
+import 'package:ploop_fe/provider/plogging_state_provider.dart';
 import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/map_plogging/map_sample.dart';
@@ -397,6 +398,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   // plogging
   void _startPlogging() {
+    ref.watch(ploggingStateNotifierProvider.notifier).setPloggingState(true);
     setState(() {
       _isMapShrunk = true;
       _isButtonEnabled = false;
@@ -453,6 +455,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       timer.cancel();
       stopLocationUpdate();
     });
+    ref.watch(ploggingStateNotifierProvider.notifier).setPloggingState(false);
   }
 
   void _showPauseModal(BuildContext context) async {
@@ -664,7 +667,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: _isButtonEnabled
-                        ? StartPloggingButton(onPressed: _startPlogging)
+                        ? StartPloggingButton(onPressed: () {
+                            _startPlogging();
+                          })
                         : const SizedBox(
                             height: 0,
                           ),
