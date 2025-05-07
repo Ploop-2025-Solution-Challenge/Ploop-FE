@@ -37,7 +37,7 @@ class ChallengeProgressCard extends ConsumerWidget {
           .length;
 
       final double totalPercentage =
-          (myProgress + partnerProgress) / (totalChallengeCount * 2);
+          (myProgress + partnerProgress) / totalChallengeCount;
       return Container(
         alignment: Alignment.topLeft,
         decoration: BoxDecoration(
@@ -136,20 +136,6 @@ class ChallengeProgressCard extends ConsumerWidget {
         ),
       );
     }, error: (error, stackTrace) {
-      // TEST
-      // return Container(
-      //   decoration: BoxDecoration(
-      //     borderRadius: BorderRadius.circular(8),
-      //     color: Colors.black,
-      //   ),
-      //   width: 370.w,
-      //   height: 214.h,
-      //   child: Text('$error, $stackTrace',
-      //       style: Theme.of(context)
-      //           .textTheme
-      //           .bodySmall
-      //           ?.copyWith(color: GrayScale.gray_100)),
-      // );
       return SizedBox(
         height: 388.h,
         child: Image.asset(
@@ -162,7 +148,7 @@ class ChallengeProgressCard extends ConsumerWidget {
       return SizedBox(
         height: 388.h,
         child: Image.asset(
-          'assets/images/mission_error.png',
+          'assets/images/mission_loading.png',
           width: 370.w,
           height: 388.h,
         ),
@@ -314,7 +300,10 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
               height: 25.h,
               child: TextButton(
                 onPressed: () {
-                  getImage(ImageSource.camera);
+                  if (!_isVerified) {
+                    getImage(ImageSource.camera);
+                  }
+
                   // test
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (builder) => VerifyFailed()));
