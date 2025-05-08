@@ -192,7 +192,7 @@ class _GraphFieldState extends ConsumerState<GraphField> {
                 ],
               ),
               Positioned(
-                bottom: 18.h,
+                bottom: 20.h,
                 child: SizedBox(
                   width: 348.w,
                   height: 228.h,
