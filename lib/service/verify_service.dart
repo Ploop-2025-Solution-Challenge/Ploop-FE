@@ -24,7 +24,6 @@ class VerifyService {
         filename: imageFile.name,
       );
       request.files.add(multipartFile);
-      // request.fields['userMissionId'] = userMissionId.toString();
 
       final streamedResponse = await request.send();
       debugPrint(
@@ -32,9 +31,9 @@ class VerifyService {
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
+        final responseData = jsonDecode(utf8.decode(response.bodyBytes));
         debugPrint('OK: $responseData');
-        return true;
+        return (responseData['verified']);
       } else {
         debugPrint('post failed: ${response.statusCode} ${response.body}');
       }

@@ -93,19 +93,8 @@ class MainPage extends ConsumerWidget {
                                         id: e.userMissionId,
                                       ))
                                   .toList(),
-                              loading: () => const [
-                                // ChallengeCard(
-                                //     title: 'Loading', isVerified: false),
-                                // ChallengeCard(
-                                //     title: 'Loading', isVerified: false),
-                                // ChallengeCard(
-                                //     title: 'Loading', isVerified: false),
-                              ],
-                              error: (err, stack) => [
-                                // Text('error',
-                                //     style:
-                                //         Theme.of(context).textTheme.bodySmall)
-                              ],
+                              loading: () => const [],
+                              error: (err, stack) => [],
                             ),
                       ),
                     ),
