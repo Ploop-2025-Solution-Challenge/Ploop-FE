@@ -94,16 +94,15 @@ class LoginButton extends ConsumerWidget {
         final idToken = auth.idToken;
 
         if (idToken != null) {
-          debugPrint(auth.accessToken);
-          debugPrint('\n');
-          debugPrint(idToken);
+          debugPrint('access: ${auth.accessToken}');
+          debugPrint('idtoken: $idToken');
           await AuthService.sendIdTokenToServer(idToken, ref);
         }
 
         // check if context is valid
         if (!context.mounted) return;
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (builder) => const WaitingScreen(),

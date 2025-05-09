@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/provider/plogging_state_provider.dart';
+import 'package:ploop_fe/screen/onboarding/onboarding.dart';
 import 'package:ploop_fe/screen/splash/flutter_splash.dart';
 import 'package:ploop_fe/theme.dart';
 import 'screen/activity/activity.dart';

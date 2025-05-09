@@ -35,34 +35,37 @@ class VerifyingScreen extends ConsumerWidget {
       }
     });
 
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      color: GrayScale.black,
-      child: SafeArea(
-        child: Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 24.h,
-            children: [
-              SizedBox(
-                width: 85.w,
-                height: 85.h,
-                child: CupertinoActivityIndicator(
-                  color: GrayScale.white,
-                  radius: 42.5.w,
+    return PopScope(
+      canPop: false,
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: GrayScale.black,
+        child: SafeArea(
+          child: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 24.h,
+              children: [
+                SizedBox(
+                  width: 85.w,
+                  height: 85.h,
+                  child: CupertinoActivityIndicator(
+                    color: GrayScale.white,
+                    radius: 42.5.w,
+                  ),
                 ),
-              ),
-              Text(
-                'Verifying in progress...',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge
-                    ?.copyWith(color: GrayScale.white),
-              ),
-              const SizedBox(),
-            ],
+                Text(
+                  'Verifying in progress...',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge
+                      ?.copyWith(color: GrayScale.white),
+                ),
+                const SizedBox(),
+              ],
+            ),
           ),
         ),
       ),

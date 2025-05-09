@@ -312,7 +312,7 @@ class _MapPageState extends ConsumerState<MapPage> {
           Positioned(top: 154.h, left: 16.w, child: child),
     );
     // refresh
-    setState(() {});
+    setState(() {}); // TODO: add something here or after Navigate push.then()
   }
 
   Future<void> checkPermissionWhenStart() async {

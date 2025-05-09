@@ -294,7 +294,7 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
 
   @override
   Widget build(BuildContext context) {
-    final missionDataAsync = ref.watch(missionDataProvider);
+    // final missionDataAsync = ref.watch(missionDataProvider);
 
     return Container(
       width: 131.w,
@@ -328,10 +328,6 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
                     getImage(ImageSource.camera)
                         .then((_) => {ref.watch(missionDataProvider)});
                   }
-
-                  // test
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (builder) => VerifyFailed()));
                 },
                 child: Text(
                   'Verify',
