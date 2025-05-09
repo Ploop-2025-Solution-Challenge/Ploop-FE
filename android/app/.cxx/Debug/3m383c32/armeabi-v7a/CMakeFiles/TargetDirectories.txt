@@ -1,0 +1,2 @@
+/Users/chloe/Desktop/Solution-Challenge/ploop_fe/android/app/.cxx/Debug/3m383c32/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/chloe/Desktop/Solution-Challenge/ploop_fe/android/app/.cxx/Debug/3m383c32/armeabi-v7a/CMakeFiles/rebuild_cache.dir
