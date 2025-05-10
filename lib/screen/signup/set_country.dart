@@ -11,11 +11,11 @@ import 'set_personal_info.dart';
 import 'widgets/custom_dropdown.dart';
 
 class SetRegionPage extends ConsumerStatefulWidget {
-  SetRegionPage({
+  const SetRegionPage({
     super.key,
     required this.countries,
   });
-  List<String> countries;
+  final List<String> countries;
 
   @override
   ConsumerState<SetRegionPage> createState() => _SetRegionPageState();
@@ -30,7 +30,6 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
       firstPage: true,
       question: 'Please select your country',
       title1: 'Country',
-      // TODO: remove const when connecting database
       widget1: CustomDropDownMenu(
         selected: country,
         onSelected: ((val) => setState(() {
@@ -39,7 +38,6 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
             })),
         entryList: widget.countries,
       ),
-
       onButtonPressed: () {
         ref.watch(userPreferenceNotifierProvider.notifier).setCountry(country);
 

@@ -7,6 +7,7 @@ part 'mission.g.dart';
 @freezed
 abstract class Mission with _$Mission {
   const factory Mission({
+    required int userMissionId,
     required String name,
     required bool verified,
   }) = _Mission;

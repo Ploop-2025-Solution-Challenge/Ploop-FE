@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/provider/country_list_provider.dart';
+import 'package:ploop_fe/screen/onboarding/waiting.dart';
 import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
 
@@ -16,9 +17,6 @@ const List<String> scopes = <String>[
 ];
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId: Platform.isAndroid
-      ? '226017564204-qk2q8le5ttafdt4ai88tpuj1i46hno5r.apps.googleusercontent.com'
-      : null,
   scopes: scopes,
 );
 
@@ -93,20 +91,18 @@ class LoginButton extends ConsumerWidget {
         final idToken = auth.idToken;
 
         if (idToken != null) {
-          debugPrint(auth.accessToken);
-          debugPrint('\n');
-          debugPrint(idToken);
+          debugPrint('access: ${auth.accessToken}');
+          debugPrint('idtoken: $idToken');
           await AuthService.sendIdTokenToServer(idToken, ref);
         }
 
         // check if context is valid
         if (!context.mounted) return;
 
-        final countries = await ref.read(countryListProvider.future);
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => SetRegionPage(countries: countries),
+            builder: (builder) => const WaitingScreen(),
           ),
         );
       }
@@ -114,9 +110,9 @@ class LoginButton extends ConsumerWidget {
       debugPrint("Sign-in error: $error");
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed signing in with Google.')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Failed signing in with Google.')),
+      // );
       if (Platform.isIOS) {
         showCupertinoDialog(
           context: context,

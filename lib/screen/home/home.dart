@@ -55,71 +55,65 @@ class MainPage extends ConsumerWidget {
             );
     }
 
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Container(
-          color: Colors.white,
-          // Page Content
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.h,
-            children: [
-              const PloopAppBar(),
-              // Page body
-              Container(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  spacing: 8.h,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return PopScope(
+      child: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            // Page Content
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8.h,
+              children: [
+                const PloopAppBar(),
+                // Page body
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    spacing: 8.h,
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                  // Weekly Challenge
-                  children: [
-                    Text(
-                      'Weekly Challenge',
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
-                    const ChallengeProgressCard(),
-
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: 8.w,
-                        children: ref.watch(missionDataProvider).when(
-                              data: (mission) => mission.myMissions
-                                  .map((e) => ChallengeCard(
-                                      title: e.name, isVerified: e.verified))
-                                  .toList(),
-                              loading: () => const [
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
-                                ChallengeCard(
-                                    title: 'Loading', isVerified: false),
-                              ],
-                              error: (err, stack) => [
-                                Text('error',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall)
-                              ],
-                            ),
+                    // Weekly Challenge
+                    children: [
+                      Text(
+                        'Weekly Challenge',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
-                    ),
-                    SizedBox(
-                      height: 12.h,
-                    ),
+                      const ChallengeProgressCard(),
 
-                    // Today's Record
-                    Text(
-                      "Today's Record",
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
-                    const TodayRecordCard(),
-                  ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          spacing: 8.w,
+                          children: ref.watch(missionDataProvider).when(
+                                data: (mission) => mission.myMissions
+                                    .map((e) => ChallengeCard(
+                                          title: e.name,
+                                          isVerified: e.verified,
+                                          id: e.userMissionId,
+                                        ))
+                                    .toList(),
+                                loading: () => const [],
+                                error: (err, stack) => [],
+                              ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+
+                      // Today's Record
+                      Text(
+                        "Today's Record",
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      const TodayRecordCard(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

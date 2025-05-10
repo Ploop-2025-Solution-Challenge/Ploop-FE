@@ -42,7 +42,7 @@ class MapFilterButton extends StatelessWidget {
             ],
             color: isActive ? theme().color_400 : GrayScale.gray_100,
           ),
-          padding: EdgeInsets.symmetric(vertical: 12.5.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
             label,
             style: Theme.of(context)

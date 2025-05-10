@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ploop_fe/model/mission.dart';
 import 'package:ploop_fe/model/mission_response.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
+import 'package:ploop_fe/screen/home/verify_result.dart';
+import 'package:ploop_fe/screen/home/wait_verifying.dart';
+import 'package:ploop_fe/screen/onboarding/waiting.dart';
+import 'package:ploop_fe/service/verify_service.dart';
 import 'package:ploop_fe/theme.dart';
 
-// maybe consumer widget?
 class ChallengeProgressCard extends ConsumerWidget {
   const ChallengeProgressCard({super.key});
 
@@ -34,7 +39,7 @@ class ChallengeProgressCard extends ConsumerWidget {
           .length;
 
       final double totalPercentage =
-          (myProgress + partnerProgress) / (totalChallengeCount * 2);
+          (myProgress + partnerProgress) / totalChallengeCount;
       return Container(
         alignment: Alignment.topLeft,
         decoration: BoxDecoration(
@@ -145,7 +150,7 @@ class ChallengeProgressCard extends ConsumerWidget {
       return SizedBox(
         height: 388.h,
         child: Image.asset(
-          'assets/images/mission_error.png',
+          'assets/images/mission_loading.png',
           width: 370.w,
           height: 388.h,
         ),
@@ -216,10 +221,14 @@ class ChallengeUserCard extends StatelessWidget {
 
 class ChallengeCard extends ConsumerStatefulWidget {
   const ChallengeCard(
-      {super.key, required this.title, required this.isVerified});
+      {super.key,
+      required this.title,
+      required this.isVerified,
+      required this.id});
 
   final String title;
   final bool isVerified;
+  final int id;
 
   @override
   ConsumerState<ChallengeCard> createState() => ChallengeCardState();
@@ -227,23 +236,7 @@ class ChallengeCard extends ConsumerStatefulWidget {
 
 class ChallengeCardState extends ConsumerState<ChallengeCard> {
   late bool _isVerified;
-  XFile? _image;
-  Future getImage(ImageSource imageSource) async {
-    final picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: imageSource);
-
-    if (pickedFile != null) {
-      _image = XFile(pickedFile.path);
-
-      if (_image != null) {
-        // Navigator.push(context,
-        // MaterialPageRoute(builder: (builder) => const VerifyFailed()));
-        verifyMission();
-      }
-    }
-  }
-
-  void verifyMission() {}
+  String imagePath = "";
 
   @override
   void initState() {
@@ -251,8 +244,58 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
     _isVerified = widget.isVerified;
   }
 
+  Future getImage(ImageSource imageSource) async {
+    final picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+    // final id = widget.id;
+    if (pickedFile != null) {
+      imagePath = pickedFile.path;
+
+      if (mounted) {
+        // Navigate to the VerifyingScreen and wait for result
+        final bool verifyResult = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (builder) =>
+                VerifyingScreen(imagePath: imagePath, id: widget.id),
+          ),
+        );
+
+        if (verifyResult && mounted) {
+          // Show success screen
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const VerifySuccess()));
+
+          setState(() {
+            _isVerified = true;
+          });
+          ref.refresh(missionDataProvider);
+
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
+          });
+        } else if (!verifyResult && mounted) {
+          // Show failed screen
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const VerifyFailed()));
+
+          // Return to main screen after 2 seconds
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // final missionDataAsync = ref.watch(missionDataProvider);
+
     return Container(
       width: 131.w,
       height: 147.h,
@@ -281,10 +324,10 @@ class ChallengeCardState extends ConsumerState<ChallengeCard> {
               height: 25.h,
               child: TextButton(
                 onPressed: () {
-                  getImage(ImageSource.camera);
-                  // test
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (builder) => VerifyFailed()));
+                  if (!_isVerified) {
+                    getImage(ImageSource.camera)
+                        .then((_) => {ref.watch(missionDataProvider)});
+                  }
                 },
                 child: Text(
                   'Verify',
