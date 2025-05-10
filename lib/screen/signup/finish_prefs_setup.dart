@@ -13,7 +13,9 @@ class FinishSetup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final preference = ref.read(userPreferenceNotifierProvider);
 
-    return PrefsPageLayout(
+    return PopScope(
+      canPop: false,
+      child: PrefsPageLayout(
         lastPage: true,
         question: "Well done!\nNow let's go plogging together!",
         onButtonPressed: () {
@@ -28,6 +30,8 @@ class FinishSetup extends ConsumerWidget {
             await UserService.patchUserProfileToServer(preference, jwt!);
             ref.invalidate(userPreferenceNotifierProvider);
           });
-        });
+        },
+      ),
+    );
   }
 }

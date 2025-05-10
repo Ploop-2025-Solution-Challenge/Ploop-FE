@@ -35,35 +35,38 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
       }
     }
 
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      color: GrayScale.white,
-      child: SafeArea(
-        child: Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 64.h,
-            children: [
-              Text('Welcome!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.w600)),
-              if (countryListState is AsyncLoading)
-                SizedBox(
-                  width: 128.w,
-                  child: const LinearProgressIndicator(
-                    trackGap: 0,
-                    color: GrayScale.black,
-                    backgroundColor: GrayScale.gray_100,
-                  ),
-                )
-              else if (countryListState is AsyncError)
-                Text(
-                    '${countryListState.error}: ${countryListState.stackTrace}'),
-            ],
+    return PopScope(
+      canPop: false,
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: GrayScale.white,
+        child: SafeArea(
+          child: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 64.h,
+              children: [
+                Text('Welcome!',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.w600)),
+                if (countryListState is AsyncLoading)
+                  SizedBox(
+                    width: 128.w,
+                    child: const LinearProgressIndicator(
+                      trackGap: 0,
+                      color: GrayScale.black,
+                      backgroundColor: GrayScale.gray_100,
+                    ),
+                  )
+                else if (countryListState is AsyncError)
+                  Text(
+                      '${countryListState.error}: ${countryListState.stackTrace}'),
+              ],
+            ),
           ),
         ),
       ),

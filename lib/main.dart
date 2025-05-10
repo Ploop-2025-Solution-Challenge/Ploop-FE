@@ -214,58 +214,61 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     ploggingState = ref.watch(ploggingStateNotifierProvider).isActive;
 
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(height: 1.h, color: GrayScale.gray_100),
-          NavigationBarTheme(
-            data: NavigationBarThemeData(
-              labelTextStyle: WidgetStateTextStyle.resolveWith(
-                (states) {
-                  final baseStyle = Theme.of(context).textTheme.labelSmall!;
-                  final isSelected = states.contains(WidgetState.selected);
-                  return baseStyle.copyWith(
-                      color: isSelected
-                          ? GrayScale.black
-                          : const Color(0x58000000));
-                },
-              ),
-              height: 65.h,
-              backgroundColor: GrayScale.white,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-              elevation: 0,
-              indicatorColor: Colors.transparent,
-            ),
-            child: NavigationBar(
-              labelBehavior: null,
-              shadowColor: null,
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onTap,
-              destinations: [
-                ...List.generate(
-                  4,
-                  (index) {
-                    final isSelected = _selectedIndex == index;
-                    final double opacity = isSelected ? 1.0 : 0.4;
-
-                    return NavigationDestination(
-                      icon: Opacity(
-                        opacity: opacity,
-                        child: Image.asset(
-                          _iconPaths[index],
-                          height: _iconHeights[index],
-                        ),
-                      ),
-                      label: _labels[index],
-                    );
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 1.h, color: GrayScale.gray_100),
+            NavigationBarTheme(
+              data: NavigationBarThemeData(
+                labelTextStyle: WidgetStateTextStyle.resolveWith(
+                  (states) {
+                    final baseStyle = Theme.of(context).textTheme.labelSmall!;
+                    final isSelected = states.contains(WidgetState.selected);
+                    return baseStyle.copyWith(
+                        color: isSelected
+                            ? GrayScale.black
+                            : const Color(0x58000000));
                   },
                 ),
-              ],
+                height: 65.h,
+                backgroundColor: GrayScale.white,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                elevation: 0,
+                indicatorColor: Colors.transparent,
+              ),
+              child: NavigationBar(
+                labelBehavior: null,
+                shadowColor: null,
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: _onTap,
+                destinations: [
+                  ...List.generate(
+                    4,
+                    (index) {
+                      final isSelected = _selectedIndex == index;
+                      final double opacity = isSelected ? 1.0 : 0.4;
+
+                      return NavigationDestination(
+                        icon: Opacity(
+                          opacity: opacity,
+                          child: Image.asset(
+                            _iconPaths[index],
+                            height: _iconHeights[index],
+                          ),
+                        ),
+                        label: _labels[index],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -78,6 +78,7 @@ class MainPage extends ConsumerWidget {
     }
 
     return PopScope(
+      canPop: false,
       child: Container(
         color: Colors.white,
         child: SafeArea(

@@ -27,6 +27,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
       child: PrefsPageLayout(
         firstPage: true,
         question: 'Please select your country',
