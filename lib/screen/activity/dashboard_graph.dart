@@ -105,7 +105,9 @@ class GraphContainer extends ConsumerWidget {
         );
       },
       loading: () => Container(),
-      error: (err, stack) => Text('error'),
+      error: (err, stack) => Text(
+        'error',
+      ),
     );
   }
 }

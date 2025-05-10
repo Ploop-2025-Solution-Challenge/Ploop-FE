@@ -12,7 +12,7 @@ class LatLngConverter implements JsonConverter<LatLng, List<dynamic>> {
         (json[1] as num).toDouble(), // lng
       );
     }
-    return LatLng(0, 0);
+    return const LatLng(0, 0);
   }
 
   @override

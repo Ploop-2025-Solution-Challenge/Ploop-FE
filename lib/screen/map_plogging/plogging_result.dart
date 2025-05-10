@@ -6,11 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/model/jwt.dart';
-import 'package:ploop_fe/provider/activity_data_provider.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
-import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/service/plogging_service.dart';
 import 'package:ploop_fe/theme.dart';
 
@@ -160,7 +158,7 @@ class PloggingResultMap extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final resultProvider = ref.watch(ploggingActivityNotifierProvider.notifier);
-    final profile = ref.read(userInfoNotifierProvider);
+    // final profile = ref.read(userInfoNotifierProvider);
     RouteModel model = RouteModel(
         routeId: -1,
         activityRoute: activityRoute,

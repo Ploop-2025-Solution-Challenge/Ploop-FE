@@ -32,9 +32,9 @@ class ActivityFilterNotifier extends _$ActivityFilterNotifier {
         start = DateTime(now.year, 1, 1);
         end = DateTime(now.year, 12, 31);
         break;
-      default:
-        start = DateTime.now();
-        end = DateTime.now();
+      // default:
+      //   start = DateTime.now();
+      //   end = DateTime.now();
     }
 
     state = ActivityFilter(

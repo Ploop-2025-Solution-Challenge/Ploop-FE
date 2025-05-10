@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ploop_fe/model/mission.dart';
 import 'package:ploop_fe/model/mission_response.dart';
-import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/screen/home/verify_result.dart';
 import 'package:ploop_fe/screen/home/wait_verifying.dart';
-import 'package:ploop_fe/screen/onboarding/waiting.dart';
-import 'package:ploop_fe/service/verify_service.dart';
 import 'package:ploop_fe/theme.dart';
 
 class ChallengeProgressCard extends ConsumerWidget {
