@@ -400,10 +400,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                     ),
                     TextButton(
                       child: Text(
-                        "Go to settings",
+                        "Go to Settings",
                         style: TextStyle(
                             fontFamily: 'Roboto',
-                            // fontSize: 14.sp,
+                            fontSize: 14.sp,
                             height: 1.43.h,
                             color: GrayScale.black),
                       ),

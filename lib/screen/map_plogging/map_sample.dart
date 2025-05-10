@@ -408,7 +408,14 @@ Future<void> _checkPermission(BuildContext context) async {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   TextButton(
-                    child: const Text("Go to settings"),
+                    child: Text(
+                      "Go to settings",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
+                    ),
                     onPressed: () async {
                       Navigator.of(context).pop();
                       await openAppSettings();
