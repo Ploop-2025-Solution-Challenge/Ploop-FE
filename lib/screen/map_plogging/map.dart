@@ -366,16 +366,47 @@ class _MapPageState extends ConsumerState<MapPage> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text("Background Location Access Needed"),
-                  content: const Text(
-                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  title: Text(
+                    "Background Location Access Needed",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 1.33.h,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  content: Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'.",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 1.43.h,
+                      letterSpacing: 0.25,
+                    ),
+                  ),
                   actions: [
                     TextButton(
-                      child: const Text("Cancel"),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            // fontSize: 17.sp,
+                            height: 1.43.h,
+                            color: GrayScale.black),
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     TextButton(
-                      child: const Text("Go to settings"),
+                      child: Text(
+                        "Go to settings",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            // fontSize: 14.sp,
+                            height: 1.43.h,
+                            color: GrayScale.black),
+                      ),
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await openAppSettings();

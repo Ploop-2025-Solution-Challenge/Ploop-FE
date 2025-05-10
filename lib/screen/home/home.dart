@@ -8,6 +8,7 @@ import 'package:ploop_fe/model/mission.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
+import 'package:ploop_fe/theme.dart';
 import 'ploop_appbar.dart';
 import 'today_record_card.dart';
 
@@ -40,14 +41,36 @@ class MainPage extends ConsumerWidget {
           : showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Something went wrong.'),
-                content: const Text('Please sign in again.'),
+                title: Text(
+                  'Something went wrong.',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.33.h,
+                    letterSpacing: 0,
+                  ),
+                ),
+                content: Text(
+                  'Please sign in again.',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.43.h,
+                    letterSpacing: 0.25,
+                  ),
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
+                    child: Text(
                       'OK',
-                      style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
                     ),
                   ),
                 ],
