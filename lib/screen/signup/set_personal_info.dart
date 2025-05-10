@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
 import 'package:ploop_fe/theme.dart';
@@ -94,22 +95,38 @@ class _SetPersonalInfoPageState extends ConsumerState<SetPersonalInfoPage> {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Oops!'),
+                title: Text(
+                  'Oops!',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.33.h,
+                    letterSpacing: 0,
+                  ),
+                ),
                 content: Text(
                   'Please select your ${age == -1 ? 'birthday' : 'gender'}.',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(letterSpacing: 0.45),
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.43.h,
+                    letterSpacing: 0.25,
+                  ),
                 ),
                 actions: [
                   TextButton(
                     style:
                         TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
+                    child: Text(
                       'OK',
-                      style: TextStyle(color: GrayScale.black),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
                     ),
                   ),
                 ],
