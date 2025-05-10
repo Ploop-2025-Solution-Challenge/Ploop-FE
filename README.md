@@ -18,16 +18,6 @@ Google Developer Group on Campus : SEOULTECH
 
 ## Getting Started
 
-## Components
-
-### Frontend
-
-### Backend
-
-### AI
-
-### Design
-
 ## ⚠️ API Keys are not included in this repository
 
 This app uses Google Map API. To run this app from code, follow these instructions:
