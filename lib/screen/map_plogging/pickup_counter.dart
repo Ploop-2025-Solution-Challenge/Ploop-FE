@@ -37,7 +37,6 @@ class PickupCounter extends StatelessWidget {
   }
 }
 
-// TODO: refactor with notifier provider, consumer widget
 class CounterButton extends StatelessWidget {
   final void Function()? onPressed;
   final String label;

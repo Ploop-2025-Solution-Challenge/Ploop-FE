@@ -24,45 +24,48 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
   Widget build(BuildContext context) {
     final filter = ref.watch(activityFilterNotifierProvider);
 
-    return Container(
-      color: GrayScale.white,
-      child: SafeArea(
-        child: Column(
-          spacing: 8.h,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const PloopAppBar(),
-            Padding(
-              padding: EdgeInsets.all(15.w),
-              child: Column(
-                spacing: 16.h,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Activity',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  DateRangePicker(
-                    ranges: const [Range.W, Range.M, Range.Y],
-                    selected: filter.range,
-                    onChanged: (newRange) {
-                      ref
-                          .read(activityFilterNotifierProvider.notifier)
-                          .update(newRange);
-                    },
-                  ),
-                  DashboardTextWidget(
-                    dateRange: _calculateRange(selectedRange),
-                  ),
-                  GraphField(
-                    viewMode: selectedRange,
-                    dateRange: _calculateRange(selectedRange),
-                    // lineLabels: [],
-                  ),
-                ],
+    return PopScope(
+      canPop: false,
+      child: Container(
+        color: GrayScale.white,
+        child: SafeArea(
+          child: Column(
+            spacing: 8.h,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PloopAppBar(),
+              Padding(
+                padding: EdgeInsets.all(15.w),
+                child: Column(
+                  spacing: 16.h,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Activity',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    DateRangePicker(
+                      ranges: const [Range.W, Range.M, Range.Y],
+                      selected: filter.range,
+                      onChanged: (newRange) {
+                        ref
+                            .read(activityFilterNotifierProvider.notifier)
+                            .update(newRange);
+                      },
+                    ),
+                    DashboardTextWidget(
+                      dateRange: _calculateRange(selectedRange),
+                    ),
+                    GraphField(
+                      viewMode: selectedRange,
+                      dateRange: _calculateRange(selectedRange),
+                      // lineLabels: [],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

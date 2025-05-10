@@ -4,9 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/verify_service.dart';
 import 'package:ploop_fe/theme.dart';
 

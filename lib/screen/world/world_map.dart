@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ploop_fe/model/route_model.dart';
-import 'package:ploop_fe/provider/world_route_provider.dart';
 import 'package:ploop_fe/theme.dart';
 
 class WorldMap extends ConsumerStatefulWidget {

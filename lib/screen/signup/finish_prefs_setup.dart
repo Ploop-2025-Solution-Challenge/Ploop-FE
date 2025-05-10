@@ -5,7 +5,6 @@ import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
 import 'package:ploop_fe/service/user_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FinishSetup extends ConsumerWidget {
   const FinishSetup({super.key});
@@ -14,7 +13,9 @@ class FinishSetup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final preference = ref.read(userPreferenceNotifierProvider);
 
-    return PrefsPageLayout(
+    return PopScope(
+      canPop: false,
+      child: PrefsPageLayout(
         lastPage: true,
         question: "Well done!\nNow let's go plogging together!",
         onButtonPressed: () {
@@ -29,6 +30,8 @@ class FinishSetup extends ConsumerWidget {
             await UserService.patchUserProfileToServer(preference, jwt!);
             ref.invalidate(userPreferenceNotifierProvider);
           });
-        });
+        },
+      ),
+    );
   }
 }

@@ -11,7 +11,6 @@ import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SpecifyPhoto extends ConsumerStatefulWidget {
   final String imagePath;

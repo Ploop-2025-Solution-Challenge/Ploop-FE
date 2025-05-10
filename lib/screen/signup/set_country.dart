@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/provider/user_prefs_provider.dart';
 import 'package:ploop_fe/screen/signup/prefs_page_layout.dart';
 import 'package:ploop_fe/theme.dart';
@@ -28,6 +27,7 @@ class _SetRegionPageState extends ConsumerState<SetRegionPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
       child: PrefsPageLayout(
         firstPage: true,
         question: 'Please select your country',

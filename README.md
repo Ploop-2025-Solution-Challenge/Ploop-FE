@@ -20,11 +20,16 @@ Google Developer Group on Campus : SEOULTECH
 
 ## ⚠️ API Keys are not included in this repository
 
+This app uses Google Map API. To run this app from code, follow these instructions:
+
+- Ask member to get `.env` file.
+- Add `.env` file at the root directory of the project.
+- Follow the next instructions for each platform.
+
 ### iOS
 
-- Ask member to get `GoogleService-Info.plist` file, add it into `ios/Runner` folder.
-- For Google API Keys, Ask member to get `.env` file, add it at the root directory of this project.
+Ask member to get `GoogleService-Info.plist` file, add it into `ios/Runner` folder.
 
 ### Android
 
-- Ask member to get `google-services.json` file, add it into `android/app` folder.
+Ask member to get `google-services.json` file, add it into `android/app` folder.

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/user_info_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/user_response.dart';
 import '../../service/user_service.dart';

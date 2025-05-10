@@ -8,9 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
@@ -410,7 +408,14 @@ Future<void> _checkPermission(BuildContext context) async {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   TextButton(
-                    child: const Text("Go to settings"),
+                    child: Text(
+                      "Go to settings",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
+                    ),
                     onPressed: () async {
                       Navigator.of(context).pop();
                       await openAppSettings();

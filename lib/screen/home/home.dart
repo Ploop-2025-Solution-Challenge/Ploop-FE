@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/model/mission.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/provider/mission_provider.dart';
 import 'package:ploop_fe/screen/home/challenge.dart';
@@ -79,6 +78,7 @@ class MainPage extends ConsumerWidget {
     }
 
     return PopScope(
+      canPop: false,
       child: Container(
         color: Colors.white,
         child: SafeArea(

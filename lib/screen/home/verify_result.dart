@@ -8,6 +8,7 @@ class VerifySuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
       child: Container(
         color: GrayScale.black,
         child: Center(
@@ -35,6 +36,7 @@ class VerifyFailed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: false,
       child: Container(
         color: GrayScale.black,
         child: Center(

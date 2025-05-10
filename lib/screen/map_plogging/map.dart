@@ -400,10 +400,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                     ),
                     TextButton(
                       child: Text(
-                        "Go to settings",
+                        "Go to Settings",
                         style: TextStyle(
                             fontFamily: 'Roboto',
-                            // fontSize: 14.sp,
+                            fontSize: 14.sp,
                             height: 1.43.h,
                             color: GrayScale.black),
                       ),
@@ -556,185 +556,190 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SizedBox.expand(
-        child: Stack(
-          children: [
-            if (_isPloggingStarted)
-              Positioned(
-                bottom: 19.h,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      spacing: 24.h,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 41.w,
-                          children: [
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text(_movedDistance.toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Miles',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            // stopwatch
-
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text(_elapsedTimeFormat.toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Hours',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 12.h,
-                          children: [
-                            Text(
-                              'Picked Up',
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                            PickupCounter(
-                              amount: _pickedAmount,
-                              onIncrement: _increment,
-                              onDecrement: _decrement,
-                            ),
-                          ],
-                        ),
-                        StopPloggingButton(
-                          onPressed: () {
-                            _pausePlogging();
-                            _showPauseModal(context);
-                          },
-                          mode: 'stop',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            Stack(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                  height: _isMapShrunk ? 502.h : double.maxFinite,
-                  child: MapSample(
-                    showLitterArea: _showLitterArea,
-                    showBin: _showBin,
-                    showRoute: _showRoute,
-                    isPloggingStarted: _isPloggingStarted,
-                    ploggingPolylines: _ploggingPolylines,
-                    recommendPolylines: recommend_polylines,
-                    routeMarker: _routeMarkers,
-                    recommend: route,
-                    currentPosition: currentPos,
-                    onMapCreated: (GoogleMapController controller) {
-                      _mapController.complete(controller);
-                    },
-                  ),
-                ),
-                SafeArea(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
-                    child: Row(
-                      spacing: 12.w,
-                      children: [
-                        MapFilterButton(
-                          label: 'Litter Area',
-                          isActive: _showLitterArea,
-                          onPressed: _toggleAreaMarker,
-                        ),
-                        MapFilterButton(
-                          label: 'Bin',
-                          isActive: _showBin,
-                          onPressed: _toggleBinMarker,
-                        ),
-                        MapFilterButton(
-                          label: 'Route Recommendation',
-                          isActive: _showRoute,
-                          onPressed: () {
-                            _toggleRouteMarker();
-                            _fetchRecommend();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  bottom: 32.h,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _isButtonEnabled
-                        ? StartPloggingButton(onPressed: () {
-                            _startPlogging();
-                          })
-                        : const SizedBox(
-                            height: 0,
-                          ),
-                  ),
-                ),
+    return PopScope(
+      canPop: false,
+      child: Container(
+        color: Colors.white,
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              if (_isPloggingStarted)
                 Positioned(
-                  bottom: 32.h,
-                  right: 16.h,
-                  child: !_isPloggingStarted
-                      ? CameraButton(
-                          onPressed: () async {
-                            await getImage(ImageSource.camera);
-                          },
-                        )
-                      : const SizedBox(),
-                ),
-                if (_showRouteReason && _showRoute)
-                  Positioned(
-                    top: 175.h,
-                    right: 23.w,
-                    child: RouteRecommendReasonWidget(
-                      key: ValueKey(motivation),
-                      onClosePressed: () {
-                        setState(() {
-                          _showRouteReason = false;
-                        });
-                      },
-                      recommendedRoute: route,
-                      motivation: motivation == "" ? "Loading..." : motivation,
+                  bottom: 19.h,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        spacing: 24.h,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 41.w,
+                            children: [
+                              Column(
+                                spacing: 2.h,
+                                children: [
+                                  Text(_movedDistance.toStringAsFixed(2),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall),
+                                  Text(
+                                    'Miles',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.copyWith(
+                                          color: GrayScale.gray_300,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              // stopwatch
+
+                              Column(
+                                spacing: 2.h,
+                                children: [
+                                  Text(_elapsedTimeFormat.toStringAsFixed(2),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall),
+                                  Text(
+                                    'Hours',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.copyWith(
+                                          color: GrayScale.gray_300,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            spacing: 12.h,
+                            children: [
+                              Text(
+                                'Picked Up',
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge,
+                              ),
+                              PickupCounter(
+                                amount: _pickedAmount,
+                                onIncrement: _increment,
+                                onDecrement: _decrement,
+                              ),
+                            ],
+                          ),
+                          StopPloggingButton(
+                            onPressed: () {
+                              _pausePlogging();
+                              _showPauseModal(context);
+                            },
+                            mode: 'stop',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-              ],
-            ),
-          ],
+                ),
+              Stack(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
+                    height: _isMapShrunk ? 502.h : double.maxFinite,
+                    child: MapSample(
+                      showLitterArea: _showLitterArea,
+                      showBin: _showBin,
+                      showRoute: _showRoute,
+                      isPloggingStarted: _isPloggingStarted,
+                      ploggingPolylines: _ploggingPolylines,
+                      recommendPolylines: recommend_polylines,
+                      routeMarker: _routeMarkers,
+                      recommend: route,
+                      currentPosition: currentPos,
+                      onMapCreated: (GoogleMapController controller) {
+                        _mapController.complete(controller);
+                      },
+                    ),
+                  ),
+                  SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 26.h),
+                      child: Row(
+                        spacing: 12.w,
+                        children: [
+                          MapFilterButton(
+                            label: 'Litter Area',
+                            isActive: _showLitterArea,
+                            onPressed: _toggleAreaMarker,
+                          ),
+                          MapFilterButton(
+                            label: 'Bin',
+                            isActive: _showBin,
+                            onPressed: _toggleBinMarker,
+                          ),
+                          MapFilterButton(
+                            label: 'Route Recommendation',
+                            isActive: _showRoute,
+                            onPressed: () {
+                              _toggleRouteMarker();
+                              _fetchRecommend();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    bottom: 32.h,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _isButtonEnabled
+                          ? StartPloggingButton(onPressed: () {
+                              _startPlogging();
+                            })
+                          : const SizedBox(
+                              height: 0,
+                            ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 32.h,
+                    right: 16.h,
+                    child: !_isPloggingStarted
+                        ? CameraButton(
+                            onPressed: () async {
+                              await getImage(ImageSource.camera);
+                            },
+                          )
+                        : const SizedBox(),
+                  ),
+                  if (_showRouteReason && _showRoute)
+                    Positioned(
+                      top: 175.h,
+                      right: 23.w,
+                      child: RouteRecommendReasonWidget(
+                        key: ValueKey(motivation),
+                        onClosePressed: () {
+                          setState(() {
+                            _showRouteReason = false;
+                          });
+                        },
+                        recommendedRoute: route,
+                        motivation:
+                            motivation == "" ? "Loading..." : motivation,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

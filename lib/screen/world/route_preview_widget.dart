@@ -80,8 +80,7 @@ class RoutePreviewWidget extends StatelessWidget {
                 elevation: 0,
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed:
-                  onRoutePressed, // TODO: connect to drawpolyline, zoom in by zoomByBound attribute
+              onPressed: onRoutePressed,
               child: Text(
                 "Route",
                 style: Theme.of(context)
