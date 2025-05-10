@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,7 +11,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w700,
       height: 1.21,
-      letterSpacing: 0.40,
+      letterSpacing: Platform.isIOS ? 0.40 : 0.26,
     ),
     // Picked litter display
     /* copy this theme for total challenge status */
@@ -18,7 +20,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'FugazOne',
       // default fontweight
       height: 0.82,
-      letterSpacing: 0.40,
+      letterSpacing: Platform.isIOS ? 0.40 : 0.26,
     ),
     // Data value display
     displaySmall: TextStyle(
@@ -26,14 +28,14 @@ TextTheme ploopTextTheme() {
         fontFamily: 'SF-Pro-Display',
         fontWeight: FontWeight.w700,
         height: 1.27,
-        letterSpacing: -0.45),
+        letterSpacing: Platform.isIOS ? -0.45 : -0.29),
     // Page title
     headlineLarge: TextStyle(
       fontSize: 21.sp,
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w600,
       height: 1.25,
-      letterSpacing: -0.15,
+      letterSpacing: Platform.isIOS ? -0.15 : -0.1,
     ),
     // Page title 2
     headlineMedium: TextStyle(
@@ -41,7 +43,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.25,
-      letterSpacing: -0.45,
+      letterSpacing: Platform.isIOS ? -0.45 : -0.29,
     ),
 
     // Section Title
@@ -50,7 +52,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w600,
       height: 1.33,
-      letterSpacing: 0.12,
+      letterSpacing: Platform.isIOS ? 0.12 : 0.08,
     ),
     // Section title 2
     titleMedium: TextStyle(
@@ -58,7 +60,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.33,
-      letterSpacing: -0.23,
+      letterSpacing: Platform.isIOS ? -0.23 : -0.15,
     ),
     // Button1, Data unit display
     labelLarge: TextStyle(
@@ -66,7 +68,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w600,
       height: 1.29,
-      letterSpacing: -0.08,
+      letterSpacing: Platform.isIOS ? -0.08 : -0.05,
     ),
     // Button2
     labelMedium: TextStyle(
@@ -74,7 +76,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w600,
       height: 1.33,
-      letterSpacing: 0.06,
+      letterSpacing: Platform.isIOS ? 0.06 : -0.04,
     ),
     // Navigation bar
     labelSmall: TextStyle(
@@ -82,7 +84,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.18,
-      letterSpacing: 0.06,
+      letterSpacing: Platform.isIOS ? 0.06 : -0.04,
     ),
     // Content
     /* copy this theme for filter buttons on map */
@@ -91,7 +93,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.29,
-      letterSpacing: -0.43,
+      letterSpacing: Platform.isIOS ? -0.43 : -0.28,
     ),
 
     // Personal challenge status
@@ -100,7 +102,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro-Display',
       fontWeight: FontWeight.w600,
       height: 1.31,
-      letterSpacing: -0.31,
+      letterSpacing: Platform.isIOS ? -0.31 : -0.20,
     ),
     // Challenge profile name
     /* copy this theme for activity details */
@@ -109,7 +111,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.38,
-      letterSpacing: -0.08,
+      letterSpacing: Platform.isIOS ? -0.08 : -0.058,
     ),
   );
 }
@@ -122,7 +124,8 @@ class GrayScale {
   static const Color gray_200 = Color(0xFFC0C0C0);
   static const Color gray_100 = Color(0xFFD2D2D2);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color shadowColor = Color(0x3F000000);
+  static const Color shadowColor = Color.fromARGB(62, 0, 0, 0);
+  static const Color transparentBlack = Color(0xCC2F2F2F);
 }
 
 abstract class ColorTheme {
@@ -130,6 +133,8 @@ abstract class ColorTheme {
   Color get color_500;
   Color get color_400;
   Color get state;
+  Color get route;
+  Color get recommend;
 }
 
 class GreenTheme implements ColorTheme {
@@ -144,6 +149,11 @@ class GreenTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
+
+  @override
+  final Color route = const Color(0xFF10AB37);
 }
 
 // test color theme
@@ -159,6 +169,12 @@ class BlueTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 // test color theme
@@ -174,6 +190,12 @@ class YellowTheme implements ColorTheme {
 
   @override
   final Color state = const Color(0xFFFF5F5F);
+
+  @override
+  final Color route = const Color(0xFF6B9FFF);
+
+  @override
+  final Color recommend = const Color(0xFF6B9FFF);
 }
 
 ColorTheme theme() {

@@ -1,20 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ploop_fe/provider/jwt_provider.dart';
+import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/user_response.dart';
 import '../../service/user_service.dart';
 
-class PloopAppBar extends StatefulWidget {
+class PloopAppBar extends ConsumerStatefulWidget {
   const PloopAppBar({
     super.key,
   });
 
   @override
-  State<PloopAppBar> createState() => _PloopAppBarState();
+  ConsumerState<PloopAppBar> createState() => _PloopAppBarState();
 }
 
-class _PloopAppBarState extends State<PloopAppBar> {
+class _PloopAppBarState extends ConsumerState<PloopAppBar> {
   final Image defaultProfilePic =
       Image.asset('assets/icons/default-user-icon.png');
   late UserResponse userProfile = UserResponse(
@@ -29,13 +35,24 @@ class _PloopAppBarState extends State<PloopAppBar> {
       region: null);
 
   void _getUserProfile() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwt = prefs.getString('jwt');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? jwt = prefs.getString('jwt');
+
+    final jwt = ref.read(jwtNotifierProvider).jwt;
     if (jwt != null) {
       final profile = await UserService.getUserProfile(jwt);
       if (profile != null) {
         setState(() {
           userProfile = profile;
+          // set profile to provider state
+          final profileProvider = ref.watch(userInfoNotifierProvider.notifier);
+          profileProvider.setId(userProfile.id);
+          if (userProfile.nickname != null) {
+            profileProvider.setNickname(userProfile.nickname!);
+          }
+          if (userProfile.picture != null) {
+            profileProvider.setPictureUrl(userProfile.picture!);
+          }
         });
       }
     } else {
@@ -48,6 +65,13 @@ class _PloopAppBarState extends State<PloopAppBar> {
     super.initState();
     _getUserProfile();
   }
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: Platform.isAndroid
+        ? '226017564204-qk2q8le5ttafdt4ai88tpuj1i46hno5r.apps.googleusercontent.com'
+        : null,
+    // scopes: scopes,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +106,7 @@ class _PloopAppBarState extends State<PloopAppBar> {
                 radius: 20.w,
               ),
               Text(
-                // TODO: get saved nickname from server
-                userProfile.nickname ?? 'User',
+                userProfile.nickname ?? 'Loading...',
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ],

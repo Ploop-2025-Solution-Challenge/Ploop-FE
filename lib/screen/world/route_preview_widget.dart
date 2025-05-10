@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/screen/world/route_preview_static_map.dart';
 import 'package:ploop_fe/theme.dart';
 
@@ -50,7 +50,7 @@ class RoutePreviewWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.w),
 
               // route preview image
-              child: Container(
+              child: SizedBox(
                 width: 178.w,
                 height: 157.h,
                 child: RoutePreviewStaticMap(

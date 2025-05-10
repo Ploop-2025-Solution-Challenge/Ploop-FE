@@ -18,7 +18,7 @@ class StartPloggingButton extends StatelessWidget {
       child: Container(
         width: 168.w,
         height: 48.h,
-        padding: EdgeInsets.symmetric(horizontal: 26.5.w, vertical: 12.h),
+        // padding: EdgeInsets.symmetric(horizontal: 26.5.w, vertical: 12.h),
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           color: Colors.black,
@@ -34,21 +34,15 @@ class StartPloggingButton extends StatelessWidget {
             )
           ],
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 10,
-          children: [
-            Text(
-              'Start Plogging',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: theme().color_600,
-                    letterSpacing: 0.06,
-                  ),
-            ),
-          ],
+        child: Center(
+          child: Text(
+            'Start Plogging',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: theme().color_600,
+                  letterSpacing: 0.06,
+                ),
+          ),
         ),
       ),
     );

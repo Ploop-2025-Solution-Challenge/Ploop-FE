@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ploop_fe/model/route_model_test.dart';
+import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/theme.dart';
 
 class RoutePreviewStaticMap extends StatelessWidget {
@@ -13,13 +13,14 @@ class RoutePreviewStaticMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final route = routeModel.route;
+    final route = routeModel.activityRoute;
     LatLng? center = routeModel.getCenter();
     late double zoomByRoute;
     if (route.isEmpty) {
       return const Center(child: Text('Error: Empty route'));
     } else {
-      zoomByRoute = routeModel.getBoundsZoom();
+      zoomByRoute = routeModel.getBoundsZoom() - 0.75;
+      // debugPrint('adjusted zoom: $zoomByRoute');
     }
 
     return GoogleMap(

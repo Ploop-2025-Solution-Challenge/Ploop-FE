@@ -45,6 +45,8 @@ dependencies:
   graphic: ^2.5.1
   fluttertoast: ^8.2.12
   geocoding: ^3.0.0
+  permission_handler: ^12.0.0+1
+  animated_text_kit: ^4.2.3
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +77,8 @@ flutter:
     # images
     - assets/images/onboarding-bg.jpg
     - assets/images/onboarding-deco.png
+    - assets/images/mission_error.png
+    - assets/images/mission_loading.png
 
     # icon assets
     - assets/icons/ios_neutral_rd_na@4x.png

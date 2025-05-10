@@ -1,7 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ploop_fe/screen/signup/set_region.dart';
+import 'package:ploop_fe/main.dart';
+import 'package:ploop_fe/provider/country_list_provider.dart';
+import 'package:ploop_fe/screen/onboarding/waiting.dart';
+import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
 
 const List<String> scopes = <String>[
@@ -18,11 +25,11 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /* ERROR */
     return Stack(alignment: Alignment.center, children: [
       Image.asset(
         'assets/images/onboarding-bg.jpg',
-        width: 402.w,
+        width: double.infinity,
+        height: double.infinity,
         fit: BoxFit.cover,
       ),
       Positioned(
@@ -59,7 +66,7 @@ class OnboardingPage extends StatelessWidget {
                     fontSize: 14.sp,
                     color: Colors.white,
                     height: 1.92,
-                    letterSpacing: -0.08,
+                    letterSpacing: 0.12.sp,
                   ),
             ),
 
@@ -73,10 +80,10 @@ class OnboardingPage extends StatelessWidget {
   }
 }
 
-class LoginButton extends StatelessWidget {
+class LoginButton extends ConsumerWidget {
   const LoginButton({super.key});
 
-  Future<void> _handleSignIn(BuildContext context) async {
+  Future<void> _handleSignIn(BuildContext context, WidgetRef ref) async {
     try {
       final result = await _googleSignIn.signIn();
       if (result != null) {
@@ -84,32 +91,71 @@ class LoginButton extends StatelessWidget {
         final idToken = auth.idToken;
 
         if (idToken != null) {
-          debugPrint(auth.accessToken);
-          debugPrint('\n');
-          debugPrint(idToken);
-          await AuthService.sendIdTokenToServer(idToken);
+          debugPrint('access: ${auth.accessToken}');
+          debugPrint('idtoken: $idToken');
+          await AuthService.sendIdTokenToServer(idToken, ref);
         }
 
         // check if context is valid
         if (!context.mounted) return;
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SetRegionPage()),
+          MaterialPageRoute(
+            builder: (builder) => const WaitingScreen(),
+          ),
         );
       }
     } catch (error) {
       debugPrint("Sign-in error: $error");
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed signing in with Google.')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Failed signing in with Google.')),
+      // );
+      if (Platform.isIOS) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Something went wrong.'),
+            content:
+                const Text('Failed signing in with Google.\nPlease try again.'),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Something went wrong.'),
+            content:
+                const Text('Failed signing in with Google.\nPlease try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // custom sign-in button
     return SizedBox(
       // alignment: Alignment.center,
@@ -125,7 +171,7 @@ class LoginButton extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(15))),
           backgroundColor: Colors.white,
         ),
-        onPressed: () => {_handleSignIn(context)},
+        onPressed: () => {_handleSignIn(context, ref)},
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +180,10 @@ class LoginButton extends StatelessWidget {
             Image.asset('assets/icons/signin-logo.png'),
             Text(
               'Start with Google',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(letterSpacing: 0.12.sp),
             )
           ],
         ),

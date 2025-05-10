@@ -4,7 +4,7 @@ import 'package:ploop_fe/theme.dart';
 
 class CameraButton extends StatelessWidget {
   final VoidCallback onPressed;
-  CameraButton({super.key, required this.onPressed});
+  const CameraButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

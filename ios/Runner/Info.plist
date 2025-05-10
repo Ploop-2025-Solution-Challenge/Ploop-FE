@@ -21,15 +21,17 @@
 		</dict>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to your location while using the app to display your position on the map and recommend plogging routes.
-</string>
+	<string>This app requires access to your location to track your location while plogging and to recommend plogging routes.
+	</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>YourPurposeKey</key>
-		<string>The example App requires temporary access to the device&apos;s precise location.</string>
+		<string>This app requires temporary access to the device&apos;s precise location.</string>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires access to your plogging location in background.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to your camera to take photo of litter area and bins.</string>
+	<string>This app requires access to your camera to verify mission and to take photo of litter area and bins.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

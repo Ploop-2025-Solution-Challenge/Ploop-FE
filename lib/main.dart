@@ -1,15 +1,18 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ploop_fe/screen/map_plogging/specify_photo.dart';
+import 'package:ploop_fe/provider/plogging_state_provider.dart';
+import 'package:ploop_fe/screen/onboarding/onboarding.dart';
 import 'package:ploop_fe/screen/splash/flutter_splash.dart';
 import 'package:ploop_fe/theme.dart';
 import 'screen/activity/activity.dart';
 import 'screen/home/home.dart';
 import 'screen/map_plogging/map.dart';
-import 'screen/onboarding/onboarding.dart';
 import 'screen/world/world.dart';
 
 void main() async {
@@ -22,9 +25,18 @@ void main() async {
       child: MyApp(),
     ),
   );
+
+  if (Platform.isAndroid) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
+  }
 }
 
 Future<void> _passAllApiKeysToIOS() async {
+  if (!Platform.isIOS) return;
   const platform = MethodChannel('com.example.ploopFe/env');
 
   try {
@@ -63,13 +75,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   const MainScaffold({super.key});
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -86,13 +98,84 @@ class _MainScaffoldState extends State<MainScaffold> {
     'assets/icons/Bar_Activity.png',
   ];
 
-  final List<double> _iconHeights = [24, 26, 31, 24];
+  final List<double> _iconHeights = [24.h, 26.h, 31.h, 24.h];
   final List<String> _labels = ['Home', 'Plogging', 'World', 'Activity'];
+  bool ploggingState = false;
 
   void _onTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (!ploggingState) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    } else {
+      if (Platform.isIOS) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Your progress will be lost if you exit now.'),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: false,
+                onPressed: () {
+                  ref
+                      .watch(ploggingStateNotifierProvider.notifier)
+                      .setPloggingState(false);
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Go to page',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Your progress will be lost if you exit now.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  ref
+                      .watch(ploggingStateNotifierProvider.notifier)
+                      .setPloggingState(false);
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Go to page',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -102,6 +185,8 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    ploggingState = ref.watch(ploggingStateNotifierProvider).isActive;
+
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Column(
@@ -120,7 +205,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                           : const Color(0x58000000));
                 },
               ),
-              height: 65,
+              height: 65.h,
               backgroundColor: GrayScale.white,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               elevation: 0,
@@ -140,6 +225,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                     return NavigationDestination(
                       icon: Opacity(
                         opacity: opacity,
+                        // TODO: include lable into image
                         child: Image.asset(
                           _iconPaths[index],
                           height: _iconHeights[index],

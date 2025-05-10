@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graphic/graphic.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/screen/map_plogging/plogging_result.dart';
 import 'package:ploop_fe/screen/map_plogging/stop_plogging_button.dart';
 import 'package:ploop_fe/theme.dart';
 
-class PauseModal extends StatelessWidget {
+class PauseModal extends ConsumerWidget {
   final VoidCallback onFinish;
   final VoidCallback onClose;
   final int amount;
   final double miles;
-  final String formattedTime;
+  final double formattedTime;
+  final List<LatLng> route;
+  final Set<Polyline> polylines;
 
   const PauseModal({
     super.key,
@@ -20,6 +23,8 @@ class PauseModal extends StatelessWidget {
     required this.amount,
     required this.miles,
     required this.formattedTime,
+    required this.route,
+    required this.polylines,
   });
 
   String format(Duration time) {
@@ -28,7 +33,7 @@ class PauseModal extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: ShapeDecoration(
         color: GrayScale.white,
@@ -67,7 +72,7 @@ class PauseModal extends StatelessWidget {
             children: [
               // crossAxisAlignment: CrossAxisAlignment.center,
               Text(
-                "${DateFormat('dd. MM. y - hh:mm a').format(DateTime.now())}",
+                DateFormat('dd. MM. y - hh:mm a').format(DateTime.now()),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600, color: GrayScale.gray_300),
               ),
@@ -91,7 +96,7 @@ class PauseModal extends StatelessWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text('$miles',
+                      Text(miles.toStringAsFixed(2),
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Miles',
@@ -106,7 +111,7 @@ class PauseModal extends StatelessWidget {
                   Column(
                     spacing: 2.h,
                     children: [
-                      Text(formattedTime,
+                      Text(formattedTime.toStringAsFixed(2),
                           style: Theme.of(context).textTheme.displaySmall),
                       Text(
                         'Hours',
@@ -121,14 +126,20 @@ class PauseModal extends StatelessWidget {
 
               StopPloggingButton(
                 onPressed: () {
+                  onFinish();
+
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => PloggingResult(
-                                amount: amount,
-                                miles: miles,
-                                time: formattedTime,
-                              )));
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) => PloggingResult(
+                        amount: amount,
+                        miles: miles,
+                        time: formattedTime,
+                        route: route,
+                        polylines: polylines,
+                      ),
+                    ),
+                  );
                 },
                 mode: 'end',
               ),

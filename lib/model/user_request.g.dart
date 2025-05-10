@@ -11,7 +11,6 @@ _UserRequest _$UserRequestFromJson(Map<String, dynamic> json) => _UserRequest(
       age: (json['age'] as num).toInt(),
       gender: json['gender'] as String,
       country: json['country'] as String,
-      region: json['region'] as String,
       difficulty: json['difficulty'] as String,
       motivation: json['motivation'] as String,
       preferredArea: (json['preferredArea'] as List<dynamic>)
@@ -25,7 +24,6 @@ Map<String, dynamic> _$UserRequestToJson(_UserRequest instance) =>
       'age': instance.age,
       'gender': instance.gender,
       'country': instance.country,
-      'region': instance.region,
       'difficulty': instance.difficulty,
       'motivation': instance.motivation,
       'preferredArea': instance.preferredArea,
