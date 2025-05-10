@@ -51,7 +51,7 @@ class GraphContainer extends ConsumerWidget {
 
     return dataProvider.when(
       data: (activity) {
-        final singleBarWidth = setWidth(348, 16, activity.graphData.length);
+        final singleBarWidth = setWidth(326, 16, activity.graphData.length);
 
         final double maxHeight = 206.h; // 228 - text area 22
 
@@ -60,7 +60,7 @@ class GraphContainer extends ConsumerWidget {
 
         return SizedBox(
           // color: Colors.green,
-          width: 348.w,
+          width: 326.w,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,

@@ -98,7 +98,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     'assets/icons/Bar_Activity.png',
   ];
 
-  final List<double> _iconHeights = [24, 26, 31, 24];
+  final List<double> _iconHeights = [24.h, 26.h, 31.h, 24.h];
   final List<String> _labels = ['Home', 'Plogging', 'World', 'Activity'];
   bool ploggingState = false;
 
@@ -225,6 +225,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                     return NavigationDestination(
                       icon: Opacity(
                         opacity: opacity,
+                        // TODO: include lable into image
                         child: Image.asset(
                           _iconPaths[index],
                           height: _iconHeights[index],
