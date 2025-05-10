@@ -17,9 +17,6 @@ const List<String> scopes = <String>[
 ];
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId: Platform.isAndroid
-      ? '226017564204-qk2q8le5ttafdt4ai88tpuj1i46hno5r.apps.googleusercontent.com'
-      : null,
   scopes: scopes,
 );
 
