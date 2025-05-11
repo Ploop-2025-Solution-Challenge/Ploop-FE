@@ -87,6 +87,9 @@ class WorldMapState extends ConsumerState<WorldMap> {
           markers: _buildMarker(),
           polylines: widget.polylines,
           mapType: MapType.normal,
+          zoomControlsEnabled: false,
+          trafficEnabled: false,
+          mapToolbarEnabled: false,
           initialCameraPosition: initialPos,
           onMapCreated: (controller) {
             try {

@@ -209,6 +209,9 @@ class MapSampleState extends ConsumerState<MapSample> {
           markers: visibleMarkers,
           polylines: allPolylines,
           mapType: MapType.normal,
+          zoomControlsEnabled: false,
+          trafficEnabled: false,
+          mapToolbarEnabled: false,
           initialCameraPosition: initialPos,
           onMapCreated: (controller) async {
             try {
@@ -224,12 +227,6 @@ class MapSampleState extends ConsumerState<MapSample> {
           onCameraIdle: () async {
             GoogleMapController googleMapController = await _controller.future;
             LatLngBounds bounds = await googleMapController.getVisibleRegion();
-
-            // debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
-            // debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
-            // debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
-            // debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
-
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
             // _fetchRecommend(bounds);
