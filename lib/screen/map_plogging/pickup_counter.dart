@@ -21,35 +21,40 @@ class PickupCounter extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CounterButton(
-          label: '-',
+          iconUrl: 'assets/icons/counter-minus.png',
           onPressed: onDecrement,
+          iconWidth: 20.w,
         ),
         Text(
           '$amount',
           style: Theme.of(context).textTheme.displayMedium,
         ),
         CounterButton(
-          label: '+',
+          iconUrl: 'assets/icons/counter-plus.png',
           onPressed: onIncrement,
+          iconWidth: 29.w,
         ),
       ],
     );
   }
 }
 
-// TODO: refactor with notifier provider, consumer widget
 class CounterButton extends StatelessWidget {
   final void Function()? onPressed;
-  final String label;
+  final String iconUrl;
+  final double iconWidth;
 
   const CounterButton(
-      {super.key, required this.label, required this.onPressed});
+      {super.key,
+      required this.iconUrl,
+      required this.onPressed,
+      required this.iconWidth});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        alignment: Alignment.topCenter,
+        alignment: Alignment.center,
         width: 56.w,
         height: 56.h,
         decoration: ShapeDecoration(
@@ -58,17 +63,9 @@ class CounterButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(30.w),
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: GrayScale.gray_300,
-            // backgroundColor: Colors.blue,
-            fontFamily: 'Pretendard',
-            fontSize: 64.sp,
-            height: 0.75,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.64,
-          ),
+        child: Image.asset(
+          iconUrl,
+          width: iconWidth,
         ),
       ),
     );

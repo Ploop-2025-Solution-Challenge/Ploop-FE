@@ -29,13 +29,7 @@ Future<List<RouteModel>> worldRoute(Ref ref, LatLngBounds bounds) async {
               .cast<Map<String, dynamic>>();
       ;
 
-      if (responseData != null) {
-        // debugPrint(
-        //     ' : ${responseData.map((route) => RouteModel.fromJson(route)).toList()}');
-        return responseData.map((route) => RouteModel.fromJson(route)).toList();
-      } else {
-        debugPrint('null responseData');
-      }
+      return responseData.map((route) => RouteModel.fromJson(route)).toList();
     } else {
       debugPrint('${response.statusCode}: ${response.body}');
     }

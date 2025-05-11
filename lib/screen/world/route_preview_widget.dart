@@ -53,8 +53,7 @@ class RoutePreviewWidget extends StatelessWidget {
               child: SizedBox(
                 width: 178.w,
                 height: 157.h,
-                child: RoutePreviewStaticMap(
-                    routeModel: selectedRouteModel), // ***
+                child: RoutePreviewStaticMap(routeModel: selectedRouteModel),
               ),
             ),
           ),
@@ -80,8 +79,7 @@ class RoutePreviewWidget extends StatelessWidget {
                 elevation: 0,
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed:
-                  onRoutePressed, // TODO: connect to drawpolyline, zoom in by zoomByBound attribute
+              onPressed: onRoutePressed,
               child: Text(
                 "Route",
                 style: Theme.of(context)

@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ploop_fe/provider/plogging_state_provider.dart';
-import 'package:ploop_fe/screen/onboarding/onboarding.dart';
 import 'package:ploop_fe/screen/splash/flutter_splash.dart';
 import 'package:ploop_fe/theme.dart';
 import 'screen/activity/activity.dart';
@@ -26,6 +25,7 @@ void main() async {
     ),
   );
 
+  // set home indicator background transparent
   if (Platform.isAndroid) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -36,18 +36,19 @@ void main() async {
 }
 
 Future<void> _passAllApiKeysToIOS() async {
-  if (!Platform.isIOS) return;
-  const platform = MethodChannel('com.example.ploopFe/env');
+  if (Platform.isIOS) {
+    const platform = MethodChannel('com.example.ploopFe/env');
 
-  try {
-    final String mapsApiKey = dotenv.env['GMS_API_KEY'] ?? '';
-    if (mapsApiKey.isNotEmpty) {
-      await platform.invokeMethod('setGoogleMapsApiKey', {
-        'gmsApiKey': mapsApiKey,
-      });
+    try {
+      final String mapsApiKey = dotenv.env['GMS_API_KEY'] ?? '';
+      if (mapsApiKey.isNotEmpty) {
+        await platform.invokeMethod('setGoogleMapsApiKey', {
+          'gmsApiKey': mapsApiKey,
+        });
+      }
+    } catch (e) {
+      debugPrint('Error passing API keys to iOS: $e');
     }
-  } catch (e) {
-    debugPrint('Error passing API keys to iOS: $e');
   }
 }
 
@@ -98,7 +99,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     'assets/icons/Bar_Activity.png',
   ];
 
-  final List<double> _iconHeights = [24.h, 26.h, 31.h, 24.h];
+  final List<double> _iconHeights = [40.h, 39.3.h, 42.h, 40.h];
   final List<String> _labels = ['Home', 'Plogging', 'World', 'Activity'];
   bool ploggingState = false;
 
@@ -146,8 +147,26 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Are you sure?'),
-            content: const Text('Your progress will be lost if you exit now.'),
+            title: Text(
+              'Are you sure?',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w400,
+                height: 1.33.h,
+                letterSpacing: 0,
+              ),
+            ),
+            content: Text(
+              'Your progress will be lost if you exit now.',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                height: 1.43.h,
+                letterSpacing: 0.25,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -159,16 +178,24 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                   });
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   'Go to page',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14.sp,
+                      height: 1.43.h,
+                      color: GrayScale.black),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
+                child: Text(
                   'Cancel',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14.sp,
+                      height: 1.43.h,
+                      color: GrayScale.black),
                 ),
               ),
             ],
@@ -187,58 +214,61 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     ploggingState = ref.watch(ploggingStateNotifierProvider).isActive;
 
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(height: 1.h, color: GrayScale.gray_100),
-          NavigationBarTheme(
-            data: NavigationBarThemeData(
-              labelTextStyle: WidgetStateTextStyle.resolveWith(
-                (states) {
-                  final baseStyle = Theme.of(context).textTheme.labelSmall!;
-                  final isSelected = states.contains(WidgetState.selected);
-                  return baseStyle.copyWith(
-                      color: isSelected
-                          ? GrayScale.black
-                          : const Color(0x58000000));
-                },
-              ),
-              height: 65.h,
-              backgroundColor: GrayScale.white,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              elevation: 0,
-              indicatorColor: Colors.transparent,
-            ),
-            child: NavigationBar(
-              shadowColor: null,
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onTap,
-              destinations: [
-                ...List.generate(
-                  4,
-                  (index) {
-                    final isSelected = _selectedIndex == index;
-                    final double opacity = isSelected ? 1.0 : 0.4;
-
-                    return NavigationDestination(
-                      icon: Opacity(
-                        opacity: opacity,
-                        // TODO: include lable into image
-                        child: Image.asset(
-                          _iconPaths[index],
-                          height: _iconHeights[index],
-                        ),
-                      ),
-                      label: _labels[index],
-                    );
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 1.h, color: GrayScale.gray_100),
+            NavigationBarTheme(
+              data: NavigationBarThemeData(
+                labelTextStyle: WidgetStateTextStyle.resolveWith(
+                  (states) {
+                    final baseStyle = Theme.of(context).textTheme.labelSmall!;
+                    final isSelected = states.contains(WidgetState.selected);
+                    return baseStyle.copyWith(
+                        color: isSelected
+                            ? GrayScale.black
+                            : const Color(0x58000000));
                   },
                 ),
-              ],
+                height: 65.h,
+                backgroundColor: GrayScale.white,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                elevation: 0,
+                indicatorColor: Colors.transparent,
+              ),
+              child: NavigationBar(
+                labelBehavior: null,
+                shadowColor: null,
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: _onTap,
+                destinations: [
+                  ...List.generate(
+                    4,
+                    (index) {
+                      final isSelected = _selectedIndex == index;
+                      final double opacity = isSelected ? 1.0 : 0.4;
+
+                      return NavigationDestination(
+                        icon: Opacity(
+                          opacity: opacity,
+                          child: Image.asset(
+                            _iconPaths[index],
+                            height: _iconHeights[index],
+                          ),
+                        ),
+                        label: _labels[index],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

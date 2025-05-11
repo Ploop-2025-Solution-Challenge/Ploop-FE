@@ -11,7 +11,6 @@ import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SpecifyPhoto extends ConsumerStatefulWidget {
   final String imagePath;
@@ -100,15 +99,36 @@ class _SpecifyPhotoState extends ConsumerState<SpecifyPhoto> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Hold on!'),
-              content:
-                  const Text('You need to select a type before uploading.'),
+              title: Text(
+                'Hold on!',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 1.33.h,
+                  letterSpacing: 0,
+                ),
+              ),
+              content: Text(
+                'You need to select a type before uploading.',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 1.43.h,
+                  letterSpacing: 0.25,
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
+                  child: Text(
                     'OK',
-                    style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14.sp,
+                        height: 1.43.h,
+                        color: GrayScale.black),
                   ),
                 ),
               ],

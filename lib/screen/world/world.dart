@@ -162,49 +162,52 @@ class _WorldPageState extends ConsumerState<WorldPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          bottom: 0,
-          child: Container(
-            color: GrayScale.gray_100,
-            height: 150.h,
-          ),
-        ),
-        WorldMap(
-          data: routeData,
-          selectedMarkerId: selectedMarkerId,
-          onMarkerTap: _handleMarkerTap,
-          isRouteDrawing: isRouteDrawing,
-          enablePreview: enablePreview,
-          selectedRoute: selectedRoute,
-          polylines: polylines,
-          onCameraIdle: _onCameraIdle,
-          onMapCreated: (controller) {
-            _mapController.complete(controller);
-          },
-        ),
-        SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
-          ),
-        ),
-        if (enablePreview && selectedRoute != null)
+    return PopScope(
+      canPop: false,
+      child: Stack(
+        children: [
           Positioned(
-            top: 400.h,
-            left: 28.w,
-            child: RoutePreviewWidget(
-              key: ValueKey(selectedRoute!.routeId), // refresh preview map
-              selectedRouteModel: selectedRoute!,
-              onClosePressed: _togglePreview,
-              onRoutePressed: () {
-                debugPrint('route pressed');
-                _buildPolyline();
-                _drawRouteOnMap();
-              },
+            bottom: 0,
+            child: Container(
+              color: GrayScale.gray_100,
+              height: 150.h,
             ),
           ),
-      ],
+          WorldMap(
+            data: routeData,
+            selectedMarkerId: selectedMarkerId,
+            onMarkerTap: _handleMarkerTap,
+            isRouteDrawing: isRouteDrawing,
+            enablePreview: enablePreview,
+            selectedRoute: selectedRoute,
+            polylines: polylines,
+            onCameraIdle: _onCameraIdle,
+            onMapCreated: (controller) {
+              _mapController.complete(controller);
+            },
+          ),
+          SafeArea(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
+            ),
+          ),
+          if (enablePreview && selectedRoute != null)
+            Positioned(
+              top: 400.h,
+              left: 28.w,
+              child: RoutePreviewWidget(
+                key: ValueKey(selectedRoute!.routeId), // refresh preview map
+                selectedRouteModel: selectedRoute!,
+                onClosePressed: _togglePreview,
+                onRoutePressed: () {
+                  debugPrint('route pressed');
+                  _buildPolyline();
+                  _drawRouteOnMap();
+                },
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

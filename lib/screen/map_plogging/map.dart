@@ -65,7 +65,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Set<Polyline> recommend_polylines = {};
 
-  late StreamSubscription<Position> positionSubscription;
+  StreamSubscription<Position>? positionSubscription;
   Stream<Position>? positionStream;
   Position? currentPos;
   Position? previousPos;
@@ -130,11 +130,10 @@ class _MapPageState extends ConsumerState<MapPage> {
   void dispose() {
     timer.cancel();
     super.dispose();
+    positionSubscription?.cancel();
   }
 
-  // _
-
-  /// Draw Polyline of recommended route
+  // Draw Polyline of recommended route
   Future<void> _fetchRecommend() async {
     final GoogleMapController controller = await _mapController.future;
     LatLngBounds bounds = await controller.getVisibleRegion();
@@ -150,7 +149,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
           _routeMarkers = Marker(
             icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
-                width: 36.w, height: 41.h),
+                width: 36, height: 41),
             markerId: const MarkerId('recommend'),
             position: (LatLng(route[0].latitude, route[0].longitude)),
             visible: true,
@@ -180,8 +179,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(
-              model.getCenter().latitude + 0.0015, model.getCenter().longitude),
+          LatLng(model.getCenter().latitude, model.getCenter().longitude),
           model.getBoundsZoom()),
     );
   }
@@ -261,7 +259,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     }
 
     _tracking = false;
-    positionSubscription.cancel();
+    positionSubscription?.cancel();
   }
 
   void _showToast(String result) {
@@ -366,16 +364,47 @@ class _MapPageState extends ConsumerState<MapPage> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text("Background Location Access Needed"),
-                  content: const Text(
-                      "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                  title: Text(
+                    "Background Location Access Needed",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 1.33.h,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  content: Text(
+                    "To track your plogging route in the background, please set location access to 'Always Allow'.",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 1.43.h,
+                      letterSpacing: 0.25,
+                    ),
+                  ),
                   actions: [
                     TextButton(
-                      child: const Text("Cancel"),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 14.sp,
+                            height: 1.43.h,
+                            color: GrayScale.black),
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     TextButton(
-                      child: const Text("Go to settings"),
+                      child: Text(
+                        "Go to Settings",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 14.sp,
+                            height: 1.43.h,
+                            color: GrayScale.black),
+                      ),
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await openAppSettings();
@@ -390,6 +419,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Future<void> getCurrentLocation() async {
     final pos = await Geolocator.getCurrentPosition();
+
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
@@ -525,185 +555,194 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SizedBox.expand(
-        child: Stack(
-          children: [
-            if (_isPloggingStarted)
-              Positioned(
-                bottom: 19.h,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      spacing: 24.h,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 41.w,
-                          children: [
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text(_movedDistance.toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Miles',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            // stopwatch
-
-                            Column(
-                              spacing: 2.h,
-                              children: [
-                                Text(_elapsedTimeFormat.toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall),
-                                Text(
-                                  'Hours',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(
-                                        color: GrayScale.gray_300,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 12.h,
-                          children: [
-                            Text(
-                              'Picked Up',
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                            PickupCounter(
-                              amount: _pickedAmount,
-                              onIncrement: _increment,
-                              onDecrement: _decrement,
-                            ),
-                          ],
-                        ),
-                        StopPloggingButton(
-                          onPressed: () {
-                            _pausePlogging();
-                            _showPauseModal(context);
-                          },
-                          mode: 'stop',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            Stack(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                  height: _isMapShrunk ? 502.h : double.maxFinite,
-                  child: MapSample(
-                    showLitterArea: _showLitterArea,
-                    showBin: _showBin,
-                    showRoute: _showRoute,
-                    isPloggingStarted: _isPloggingStarted,
-                    ploggingPolylines: _ploggingPolylines,
-                    recommendPolylines: recommend_polylines,
-                    routeMarker: _routeMarkers,
-                    recommend: route,
-                    currentPosition: currentPos,
-                    onMapCreated: (GoogleMapController controller) {
-                      _mapController.complete(controller);
-                    },
-                  ),
-                ),
-                SafeArea(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
-                    child: Row(
-                      spacing: 12.w,
-                      children: [
-                        MapFilterButton(
-                          label: 'Litter Area',
-                          isActive: _showLitterArea,
-                          onPressed: _toggleAreaMarker,
-                        ),
-                        MapFilterButton(
-                          label: 'Bin',
-                          isActive: _showBin,
-                          onPressed: _toggleBinMarker,
-                        ),
-                        MapFilterButton(
-                          label: 'Route Recommendation',
-                          isActive: _showRoute,
-                          onPressed: () {
-                            _toggleRouteMarker();
-                            _fetchRecommend();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  bottom: 32.h,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _isButtonEnabled
-                        ? StartPloggingButton(onPressed: () {
-                            _startPlogging();
-                          })
-                        : const SizedBox(
-                            height: 0,
-                          ),
-                  ),
-                ),
+    return PopScope(
+      canPop: false,
+      child: Container(
+        color: Colors.white,
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              if (_isPloggingStarted)
                 Positioned(
-                  bottom: 32.h,
-                  right: 16.h,
-                  child: !_isPloggingStarted
-                      ? CameraButton(
-                          onPressed: () async {
-                            await getImage(ImageSource.camera);
-                          },
-                        )
-                      : const SizedBox(),
-                ),
-                if (_showRouteReason && _showRoute)
-                  Positioned(
-                    top: 175.h,
-                    right: 23.w,
-                    child: RouteRecommendReasonWidget(
-                      key: ValueKey(motivation),
-                      onClosePressed: () {
-                        setState(() {
-                          _showRouteReason = false;
-                        });
-                      },
-                      recommendedRoute: route,
-                      motivation: motivation == "" ? "Loading..." : motivation,
+                  bottom: 19.h,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      height: 234.h,
+                      color: Colors.white,
+                      child: FittedBox(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 24.h,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 41.w,
+                              children: [
+                                Column(
+                                  spacing: 2.h,
+                                  children: [
+                                    Text(_movedDistance.toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall),
+                                    Text(
+                                      'Miles',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(
+                                            color: GrayScale.gray_300,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                // stopwatch
+
+                                Column(
+                                  spacing: 2.h,
+                                  children: [
+                                    Text(_elapsedTimeFormat.toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall),
+                                    Text(
+                                      'Hours',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(
+                                            color: GrayScale.gray_300,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 12.h,
+                              children: [
+                                Text(
+                                  'Picked Up',
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                ),
+                                PickupCounter(
+                                  amount: _pickedAmount,
+                                  onIncrement: _increment,
+                                  onDecrement: _decrement,
+                                ),
+                              ],
+                            ),
+                            StopPloggingButton(
+                              onPressed: () {
+                                _pausePlogging();
+                                _showPauseModal(context);
+                              },
+                              mode: 'stop',
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-              ],
-            ),
-          ],
+                ),
+              Stack(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
+                    height: _isMapShrunk ? 502.h : double.maxFinite,
+                    child: MapSample(
+                      showLitterArea: _showLitterArea,
+                      showBin: _showBin,
+                      showRoute: _showRoute,
+                      isPloggingStarted: _isPloggingStarted,
+                      ploggingPolylines: _ploggingPolylines,
+                      recommendPolylines: recommend_polylines,
+                      routeMarker: _routeMarkers,
+                      recommend: route,
+                      currentPosition: currentPos,
+                      onMapCreated: (GoogleMapController controller) {
+                        _mapController.complete(controller);
+                      },
+                    ),
+                  ),
+                  SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 26.h),
+                      child: Row(
+                        spacing: 12.w,
+                        children: [
+                          MapFilterButton(
+                            label: 'Litter Area',
+                            isActive: _showLitterArea,
+                            onPressed: _toggleAreaMarker,
+                          ),
+                          MapFilterButton(
+                            label: 'Bin',
+                            isActive: _showBin,
+                            onPressed: _toggleBinMarker,
+                          ),
+                          MapFilterButton(
+                            label: 'Route Recommendation',
+                            isActive: _showRoute,
+                            onPressed: () {
+                              _toggleRouteMarker();
+                              _fetchRecommend();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    bottom: 32.h,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _isButtonEnabled
+                          ? StartPloggingButton(onPressed: () {
+                              _startPlogging();
+                            })
+                          : const SizedBox(
+                              height: 0,
+                            ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 32.h,
+                    right: 16.h,
+                    child: !_isPloggingStarted
+                        ? CameraButton(
+                            onPressed: () async {
+                              await getImage(ImageSource.camera);
+                            },
+                          )
+                        : const SizedBox(),
+                  ),
+                  if (_showRouteReason && _showRoute)
+                    Positioned(
+                      top: 175.h,
+                      right: 23.w,
+                      child: RouteRecommendReasonWidget(
+                        key: ValueKey(motivation),
+                        onClosePressed: () {
+                          setState(() {
+                            _showRouteReason = false;
+                          });
+                        },
+                        recommendedRoute: route,
+                        motivation:
+                            motivation == "" ? "Loading..." : motivation,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

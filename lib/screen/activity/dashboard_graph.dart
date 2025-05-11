@@ -51,7 +51,7 @@ class GraphContainer extends ConsumerWidget {
 
     return dataProvider.when(
       data: (activity) {
-        final singleBarWidth = setWidth(326, 16, activity.graphData.length);
+        final singleBarWidth = setWidth(336, 16, activity.graphData.length);
 
         final double maxHeight = 206.h; // 228 - text area 22
 
@@ -105,7 +105,9 @@ class GraphContainer extends ConsumerWidget {
         );
       },
       loading: () => Container(),
-      error: (err, stack) => Text('error'),
+      error: (err, stack) => Text(
+        'error',
+      ),
     );
   }
 }

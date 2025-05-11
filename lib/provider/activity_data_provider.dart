@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +31,7 @@ Future<ActivityResponse> activityData(
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      debugPrint('OK: $responseData');
+      // debugPrint('OK: $responseData');
       return ActivityResponse.fromJson(responseData);
     } else {
       debugPrint('${response.statusCode}: ${response.body}');

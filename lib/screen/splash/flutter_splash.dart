@@ -1,14 +1,9 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ploop_fe/main.dart';
-import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/screen/onboarding/onboarding.dart';
-import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {

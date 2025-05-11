@@ -8,9 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
-import 'package:ploop_fe/provider/recommendation_provider.dart';
 import 'package:ploop_fe/service/bin_service.dart';
 import 'package:ploop_fe/service/trashspot_service.dart';
 import 'package:ploop_fe/theme.dart';
@@ -110,7 +108,7 @@ class MapSampleState extends ConsumerState<MapSample> {
                   .map(
                     (e) => Marker(
                       icon: AssetMapBitmap('assets/markers/icon_Litter.png',
-                          width: 36.w, height: 41.h),
+                          width: 36, height: 41),
                       markerId: MarkerId('${e.id}'),
                       position: (LatLng(e.latitude, e.longitude)),
                       visible: true,
@@ -145,7 +143,7 @@ class MapSampleState extends ConsumerState<MapSample> {
                   .map(
                     (e) => Marker(
                       icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-                          width: 36.w, height: 41.h),
+                          width: 36, height: 41),
                       markerId: MarkerId('${e.id}'),
                       position: (LatLng(e.latitude, e.longitude)),
                       visible: true,
@@ -211,6 +209,9 @@ class MapSampleState extends ConsumerState<MapSample> {
           markers: visibleMarkers,
           polylines: allPolylines,
           mapType: MapType.normal,
+          zoomControlsEnabled: false,
+          trafficEnabled: false,
+          mapToolbarEnabled: false,
           initialCameraPosition: initialPos,
           onMapCreated: (controller) async {
             try {
@@ -226,12 +227,6 @@ class MapSampleState extends ConsumerState<MapSample> {
           onCameraIdle: () async {
             GoogleMapController googleMapController = await _controller.future;
             LatLngBounds bounds = await googleMapController.getVisibleRegion();
-
-            // debugPrint("lat of SW: ${bounds.southwest.latitude.toString()}");
-            // debugPrint("long of SW: ${bounds.southwest.longitude.toString()}");
-            // debugPrint("lat of NE: ${bounds.northeast.latitude.toString()}");
-            // debugPrint("long of NE: ${bounds.northeast.longitude.toString()}");
-
             _fetchAreaPosition(bounds);
             _fetchBinPosition(bounds);
             // _fetchRecommend(bounds);
@@ -262,9 +257,9 @@ class MapSampleState extends ConsumerState<MapSample> {
               onPressed: (() {
                 _goToCurrentLocation();
               }),
-              icon: const Icon(
-                Icons.my_location,
-                color: Colors.white,
+              icon: Image.asset(
+                'assets/icons/my-location-icon.png',
+                width: 20.w,
               ),
             ),
           ),
@@ -377,16 +372,47 @@ Future<void> _checkPermission(BuildContext context) async {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Background Location Access Needed"),
-                content: const Text(
-                    "To track your plogging route in the background, please set location access to 'Always Allow'."),
+                title: Text(
+                  "Background Location Access Needed",
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.33.h,
+                    letterSpacing: 0,
+                  ),
+                ),
+                content: Text(
+                  "To track your plogging route in the background, please set location access to 'Always Allow'.",
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.43.h,
+                    letterSpacing: 0.25,
+                  ),
+                ),
                 actions: [
                   TextButton(
-                    child: const Text("Cancel"),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
+                    ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   TextButton(
-                    child: const Text("Go to settings"),
+                    child: Text(
+                      "Go to settings",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.sp,
+                          height: 1.43.h,
+                          color: GrayScale.black),
+                    ),
                     onPressed: () async {
                       Navigator.of(context).pop();
                       await openAppSettings();

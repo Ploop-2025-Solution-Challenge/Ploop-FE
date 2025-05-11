@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ploop_fe/main.dart';
-import 'package:ploop_fe/provider/country_list_provider.dart';
 import 'package:ploop_fe/screen/onboarding/waiting.dart';
-import 'package:ploop_fe/screen/signup/set_country.dart';
 import 'package:ploop_fe/service/auth_service.dart';
+import 'package:ploop_fe/theme.dart';
 
 const List<String> scopes = <String>[
   'email',
@@ -25,58 +23,68 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.center, children: [
-      Image.asset(
-        'assets/images/onboarding-bg.jpg',
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
+    return PopScope(
+      canPop: false,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset(
+            'assets/images/onboarding-bg.jpg',
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+              top: 173.h,
+              left: 34.w,
+              child: Image.asset('assets/images/onboarding-deco.png',
+                  fit: BoxFit.cover, width: 334.w)),
+
+          // title text
+          Positioned(
+            top: 91.h,
+            child: Column(
+              children: [
+                DefaultTextStyle(
+                    style:
+                        TextStyle(fontFamily: 'PartialSansKR', fontSize: 30.sp),
+                    child: const Text('Ploop')),
+
+                // space
+                SizedBox(
+                  height: 353.h,
+                ),
+                // Info text
+                Text("Let's do plogging!",
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge
+                        ?.copyWith(color: Colors.white)),
+                SizedBox(
+                  height: 22.h,
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  'Any place.\nAny time.\nMake a move, Make a change.\nPlog with us.',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 14.sp,
+                        color: Colors.white,
+                        height: 1.92,
+                        letterSpacing: 0.12.sp,
+                      ),
+                ),
+
+                SizedBox(
+                  height: 77.h,
+                ),
+                // sign in button
+                const LoginButton(),
+              ],
+            ),
+          ),
+        ],
       ),
-      Positioned(
-          top: 173.h,
-          left: 34.w,
-          child: Image.asset('assets/images/onboarding-deco.png',
-              fit: BoxFit.cover, width: 334.w)),
-
-      // title text
-      Positioned(
-          top: 91.h,
-          child: Column(children: [
-            DefaultTextStyle(
-                style: TextStyle(fontFamily: 'PartialSansKR', fontSize: 30.sp),
-                child: const Text('Ploop')),
-
-            // space
-            SizedBox(
-              height: 353.h,
-            ),
-            // Info text
-            Text("Let's do plogging!",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.white)),
-            SizedBox(
-              height: 22.h,
-            ),
-            Text(
-              textAlign: TextAlign.center,
-              'Any place.\nAny time.\nMake a move, Make a change.\nPlog with us.',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 14.sp,
-                    color: Colors.white,
-                    height: 1.92,
-                    letterSpacing: 0.12.sp,
-                  ),
-            ),
-
-            SizedBox(
-              height: 77.h,
-            ),
-            // sign in button
-            const LoginButton(),
-          ]))
-    ]);
+    );
   }
 }
 
@@ -126,7 +134,9 @@ class LoginButton extends ConsumerWidget {
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
                   'OK',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 122, 255),
+                  ),
                 ),
               ),
             ],
@@ -136,15 +146,36 @@ class LoginButton extends ConsumerWidget {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Something went wrong.'),
-            content:
-                const Text('Failed signing in with Google.\nPlease try again.'),
+            title: Text(
+              'Something went wrong.',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w400,
+                height: 1.33.h,
+                letterSpacing: 0,
+              ),
+            ),
+            content: Text(
+              'Failed signing in with Google.\nPlease try again.',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                height: 1.43.h,
+                letterSpacing: 0.25,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
+                child: Text(
                   'OK',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 122, 255)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14.sp,
+                      height: 1.43.h,
+                      color: GrayScale.black),
                 ),
               ),
             ],

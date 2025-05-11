@@ -6,11 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ploop_fe/main.dart';
 import 'package:ploop_fe/model/jwt.dart';
-import 'package:ploop_fe/provider/activity_data_provider.dart';
 import 'package:ploop_fe/provider/jwt_provider.dart';
 import 'package:ploop_fe/model/route_model.dart';
 import 'package:ploop_fe/provider/plogging_provider.dart';
-import 'package:ploop_fe/provider/user_info_provider.dart';
 import 'package:ploop_fe/service/plogging_service.dart';
 import 'package:ploop_fe/theme.dart';
 
@@ -33,116 +31,121 @@ class PloggingResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthToken auth = ref.read(jwtNotifierProvider);
 
-    return Container(
-      color: GrayScale.white,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: 34.h,
-                ),
-                IconButton(
-                  onPressed: () {
-                    final activity = ref.read(ploggingActivityNotifierProvider);
-                    PloggingActivityService.postPloggingDataToServer(
-                        activity, auth.jwt!);
+    return PopScope(
+      canPop: false,
+      child: Container(
+        color: GrayScale.white,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    height: 34.h,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      final activity =
+                          ref.read(ploggingActivityNotifierProvider);
+                      PloggingActivityService.postPloggingDataToServer(
+                          activity, auth.jwt!);
 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => const MainScaffold()));
-                  },
-                  icon: Image.asset('assets/icons/navigate-back-icon.png'),
-                )
-              ],
-            ),
-            Positioned.fill(
-              top: 55.h,
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  spacing: 40.h,
-                  children: [
-                    Text(
-                      DateFormat('dd. MM. y - hh:mm a').format(DateTime.now()),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: GrayScale.gray_300),
-                    ),
-                    Column(
-                      spacing: 8.h,
-                      children: [
-                        Text(
-                          '$amount',
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                        Text(
-                          'Trash collected',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: GrayScale.gray_300),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: 41.w,
-                      children: [
-                        Column(
-                          spacing: 2.h,
-                          children: [
-                            Text(miles.toStringAsFixed(2),
-                                style:
-                                    Theme.of(context).textTheme.displaySmall),
-                            Text(
-                              'Miles',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(
-                                    color: GrayScale.gray_300,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        // stopwatch
-
-                        Column(
-                          spacing: 2.h,
-                          children: [
-                            Text(time.toStringAsFixed(2),
-                                style:
-                                    Theme.of(context).textTheme.displaySmall),
-                            Text(
-                              'Hours',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(
-                                    color: GrayScale.gray_300,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // image
-                    SizedBox(
-                      width: 305.w,
-                      height: 381.h,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.w),
-                        child: PloggingResultMap(route, polylines),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => const MainScaffold()));
+                    },
+                    icon: Image.asset('assets/icons/navigate-back-icon.png'),
+                  )
+                ],
+              ),
+              Positioned.fill(
+                top: 55.h,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    spacing: 40.h,
+                    children: [
+                      Text(
+                        DateFormat('dd. MM. y - hh:mm a')
+                            .format(DateTime.now()),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: GrayScale.gray_300),
                       ),
-                    ),
-                  ],
+                      Column(
+                        spacing: 8.h,
+                        children: [
+                          Text(
+                            '$amount',
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          Text(
+                            'Trash collected',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: GrayScale.gray_300),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 41.w,
+                        children: [
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text(miles.toStringAsFixed(2),
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Miles',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          // stopwatch
+
+                          Column(
+                            spacing: 2.h,
+                            children: [
+                              Text(time.toStringAsFixed(2),
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                              Text(
+                                'Hours',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      color: GrayScale.gray_300,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      // image
+                      SizedBox(
+                        width: 305.w,
+                        height: 381.h,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.w),
+                          child: PloggingResultMap(route, polylines),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -160,7 +163,7 @@ class PloggingResultMap extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final resultProvider = ref.watch(ploggingActivityNotifierProvider.notifier);
-    final profile = ref.read(userInfoNotifierProvider);
+    // final profile = ref.read(userInfoNotifierProvider);
     RouteModel model = RouteModel(
         routeId: -1,
         activityRoute: activityRoute,
@@ -236,13 +239,15 @@ class _AddressBoxState extends State<AddressBox> {
   Future<void> getAddress(double lat, double lng) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-      // debugPrint('center: $widget.center');
       if (placemarks.isNotEmpty) {
         // debugPrint('not empty');
         final place = placemarks.first;
+        debugPrint(place.toString());
 
         setState(() {
-          address = '${place.locality}, ${place.subLocality}';
+          final area = place.administrativeArea ?? '';
+          final sub = place.subLocality ?? '';
+          address = area.isNotEmpty ? '$area, $sub' : sub;
         });
         // debugPrint('Address: ${placemarks.first}');
       }
