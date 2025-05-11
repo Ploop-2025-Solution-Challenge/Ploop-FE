@@ -239,13 +239,15 @@ class _AddressBoxState extends State<AddressBox> {
   Future<void> getAddress(double lat, double lng) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-      // debugPrint('center: $widget.center');
       if (placemarks.isNotEmpty) {
         // debugPrint('not empty');
         final place = placemarks.first;
+        debugPrint(place.toString());
 
         setState(() {
-          address = '${place.locality}, ${place.subLocality}';
+          final area = place.administrativeArea ?? '';
+          final sub = place.subLocality ?? '';
+          address = area.isNotEmpty ? '$area, $sub' : sub;
         });
         // debugPrint('Address: ${placemarks.first}');
       }

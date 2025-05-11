@@ -65,7 +65,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Set<Polyline> recommend_polylines = {};
 
-  late StreamSubscription<Position> positionSubscription;
+  StreamSubscription<Position>? positionSubscription;
   Stream<Position>? positionStream;
   Position? currentPos;
   Position? previousPos;
@@ -130,11 +130,10 @@ class _MapPageState extends ConsumerState<MapPage> {
   void dispose() {
     timer.cancel();
     super.dispose();
+    positionSubscription?.cancel();
   }
 
-  // _
-
-  /// Draw Polyline of recommended route
+  // Draw Polyline of recommended route
   Future<void> _fetchRecommend() async {
     final GoogleMapController controller = await _mapController.future;
     LatLngBounds bounds = await controller.getVisibleRegion();
@@ -150,7 +149,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
           _routeMarkers = Marker(
             icon: AssetMapBitmap('assets/markers/icon_recommendation.png',
-                width: 36.w, height: 41.h),
+                width: 36, height: 41),
             markerId: const MarkerId('recommend'),
             position: (LatLng(route[0].latitude, route[0].longitude)),
             visible: true,
@@ -180,8 +179,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     controller.animateCamera(
       CameraUpdate.newLatLngZoom(
-          LatLng(
-              model.getCenter().latitude + 0.0015, model.getCenter().longitude),
+          LatLng(model.getCenter().latitude, model.getCenter().longitude),
           model.getBoundsZoom()),
     );
   }
@@ -261,7 +259,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     }
 
     _tracking = false;
-    positionSubscription.cancel();
+    positionSubscription?.cancel();
   }
 
   void _showToast(String result) {
@@ -392,7 +390,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                         "Cancel",
                         style: TextStyle(
                             fontFamily: 'Roboto',
-                            // fontSize: 17.sp,
+                            fontSize: 14.sp,
                             height: 1.43.h,
                             color: GrayScale.black),
                       ),
@@ -421,6 +419,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Future<void> getCurrentLocation() async {
     final pos = await Geolocator.getCurrentPosition();
+
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
@@ -570,78 +569,82 @@ class _MapPageState extends ConsumerState<MapPage> {
                   right: 0,
                   child: Center(
                     child: Container(
+                      height: 234.h,
                       color: Colors.white,
-                      child: Column(
-                        spacing: 24.h,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            spacing: 41.w,
-                            children: [
-                              Column(
-                                spacing: 2.h,
-                                children: [
-                                  Text(_movedDistance.toStringAsFixed(2),
+                      child: FittedBox(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 24.h,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 41.w,
+                              children: [
+                                Column(
+                                  spacing: 2.h,
+                                  children: [
+                                    Text(_movedDistance.toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall),
+                                    Text(
+                                      'Miles',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .displaySmall),
-                                  Text(
-                                    'Miles',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.copyWith(
-                                          color: GrayScale.gray_300,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                              // stopwatch
+                                          .labelLarge
+                                          ?.copyWith(
+                                            color: GrayScale.gray_300,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                // stopwatch
 
-                              Column(
-                                spacing: 2.h,
-                                children: [
-                                  Text(_elapsedTimeFormat.toStringAsFixed(2),
+                                Column(
+                                  spacing: 2.h,
+                                  children: [
+                                    Text(_elapsedTimeFormat.toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall),
+                                    Text(
+                                      'Hours',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .displaySmall),
-                                  Text(
-                                    'Hours',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.copyWith(
-                                          color: GrayScale.gray_300,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 12.h,
-                            children: [
-                              Text(
-                                'Picked Up',
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge,
-                              ),
-                              PickupCounter(
-                                amount: _pickedAmount,
-                                onIncrement: _increment,
-                                onDecrement: _decrement,
-                              ),
-                            ],
-                          ),
-                          StopPloggingButton(
-                            onPressed: () {
-                              _pausePlogging();
-                              _showPauseModal(context);
-                            },
-                            mode: 'stop',
-                          ),
-                        ],
+                                          .labelLarge
+                                          ?.copyWith(
+                                            color: GrayScale.gray_300,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 12.h,
+                              children: [
+                                Text(
+                                  'Picked Up',
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                ),
+                                PickupCounter(
+                                  amount: _pickedAmount,
+                                  onIncrement: _increment,
+                                  onDecrement: _decrement,
+                                ),
+                              ],
+                            ),
+                            StopPloggingButton(
+                              onPressed: () {
+                                _pausePlogging();
+                                _showPauseModal(context);
+                              },
+                              mode: 'stop',
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

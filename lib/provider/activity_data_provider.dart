@@ -31,7 +31,7 @@ Future<ActivityResponse> activityData(
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      debugPrint('OK: $responseData');
+      // debugPrint('OK: $responseData');
       return ActivityResponse.fromJson(responseData);
     } else {
       debugPrint('${response.statusCode}: ${response.body}');
