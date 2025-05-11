@@ -1,7 +1,10 @@
+.vscode
+.idea
+
 # API Keys related
 .env
 ios/Runner/GoogleService-Info.plist
-*/*/google-services.json
+**/google-services.json
 
 # Miscellaneous
 *.class
@@ -11,7 +14,7 @@ ios/Runner/GoogleService-Info.plist
 *.swp
 .buildlog/
 .history
-
+**/.cxx
 
 
 # Flutter repo-specific
