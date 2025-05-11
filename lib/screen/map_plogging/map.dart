@@ -65,7 +65,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Set<Polyline> recommend_polylines = {};
 
-  late StreamSubscription<Position> positionSubscription;
+  StreamSubscription<Position>? positionSubscription;
   Stream<Position>? positionStream;
   Position? currentPos;
   Position? previousPos;
@@ -130,11 +130,10 @@ class _MapPageState extends ConsumerState<MapPage> {
   void dispose() {
     timer.cancel();
     super.dispose();
+    positionSubscription?.cancel();
   }
 
-  // _
-
-  /// Draw Polyline of recommended route
+  // Draw Polyline of recommended route
   Future<void> _fetchRecommend() async {
     final GoogleMapController controller = await _mapController.future;
     LatLngBounds bounds = await controller.getVisibleRegion();
@@ -260,7 +259,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     }
 
     _tracking = false;
-    positionSubscription.cancel();
+    positionSubscription?.cancel();
   }
 
   void _showToast(String result) {
@@ -420,6 +419,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Future<void> getCurrentLocation() async {
     final pos = await Geolocator.getCurrentPosition();
+
     setState(() {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
@@ -569,8 +569,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   right: 0,
                   child: Center(
                     child: Container(
-                      height: (Platform.isIOS ? 338 / 872 : 250 / 872) *
-                          MediaQuery.of(context).size.height,
+                      height: 234.h,
                       color: Colors.white,
                       child: FittedBox(
                         child: Column(

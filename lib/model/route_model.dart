@@ -59,7 +59,7 @@ extension RouteModelExtension on RouteModel {
 
       final maxDiff = latDiff > lngDiff ? latDiff : lngDiff;
 
-      debugPrint('maxDiff: $maxDiff');
+      // debugPrint('maxDiff: $maxDiff');
 
       if (maxDiff < 0.001) return 18;
       if (maxDiff < 0.005) return 16;
