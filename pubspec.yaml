@@ -88,6 +88,9 @@ flutter:
     - assets/icons/Bar_Plogging.png
     - assets/icons/Bar_World.png
     - assets/icons/camera-icon.png
+    - assets/icons/my-location-icon.png
+    - assets/icons/counter-minus.png
+    - assets/icons/counter-plus.png
     - assets/icons/dropdown-down.png
     - assets/icons/dropdown-up.png
     - assets/icons/navigate-back-icon.png

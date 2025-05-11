@@ -53,8 +53,7 @@ class RoutePreviewWidget extends StatelessWidget {
               child: SizedBox(
                 width: 178.w,
                 height: 157.h,
-                child: RoutePreviewStaticMap(
-                    routeModel: selectedRouteModel), // ***
+                child: RoutePreviewStaticMap(routeModel: selectedRouteModel),
               ),
             ),
           ),

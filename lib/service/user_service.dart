@@ -21,7 +21,7 @@ class UserService {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        debugPrint('OK: $responseData');
+        // debugPrint('OK: $responseData');
       } else {
         debugPrint('patch failed: ${response.statusCode} ${response.body}');
       }
@@ -45,7 +45,7 @@ class UserService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        debugPrint('OK: $responseData');
+        // debugPrint('OK: $responseData');
         return UserResponse.fromJson(responseData);
       } else {
         debugPrint('get failed: ${response.statusCode} ${response.body}');

@@ -108,7 +108,7 @@ class MapSampleState extends ConsumerState<MapSample> {
                   .map(
                     (e) => Marker(
                       icon: AssetMapBitmap('assets/markers/icon_Litter.png',
-                          width: 36.w, height: 41.h),
+                          width: 36, height: 41),
                       markerId: MarkerId('${e.id}'),
                       position: (LatLng(e.latitude, e.longitude)),
                       visible: true,
@@ -143,7 +143,7 @@ class MapSampleState extends ConsumerState<MapSample> {
                   .map(
                     (e) => Marker(
                       icon: AssetMapBitmap('assets/markers/icon_Bin.png',
-                          width: 36.w, height: 41.h),
+                          width: 36, height: 41),
                       markerId: MarkerId('${e.id}'),
                       position: (LatLng(e.latitude, e.longitude)),
                       visible: true,
@@ -257,9 +257,9 @@ class MapSampleState extends ConsumerState<MapSample> {
               onPressed: (() {
                 _goToCurrentLocation();
               }),
-              icon: const Icon(
-                Icons.my_location,
-                color: Colors.white,
+              icon: Image.asset(
+                'assets/icons/my-location-icon.png',
+                width: 20.w,
               ),
             ),
           ),

@@ -68,9 +68,9 @@ class WorldMapState extends ConsumerState<WorldMap> {
         markerId: MarkerId(routeModel.routeId.toString()),
         icon: isMarkerSelected
             ? AssetMapBitmap('assets/markers/icon_user_route_selected.png',
-                width: 45.w)
+                width: 45)
             : AssetMapBitmap('assets/markers/icon_user_route_default.png',
-                width: 36.w),
+                width: 36),
         onTap: () => {
           // debugPrint("pressed ${routeModel.routeId}"),
           widget.onMarkerTap(routeModel.routeId)
@@ -110,6 +110,7 @@ class WorldMapState extends ConsumerState<WorldMap> {
           bottom: 32.h,
           right: 16.h,
           child: Container(
+            alignment: Alignment.center,
             width: 44.w,
             height: 44.h,
             decoration: BoxDecoration(
@@ -128,9 +129,9 @@ class WorldMapState extends ConsumerState<WorldMap> {
               onPressed: (() {
                 _goToCurrentLocation();
               }),
-              icon: const Icon(
-                Icons.my_location,
-                color: GrayScale.white,
+              icon: Image.asset(
+                'assets/icons/my-location-icon.png',
+                width: 20.w,
               ),
             ),
           ),
