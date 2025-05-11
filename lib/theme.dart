@@ -84,7 +84,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.18,
-      letterSpacing: Platform.isIOS ? 0.06 : 0.24,
+      letterSpacing: Platform.isIOS ? 0.06 : 0.6,
     ),
     // Content
     /* copy this theme for filter buttons on map */
@@ -111,7 +111,7 @@ TextTheme ploopTextTheme() {
       fontFamily: 'SF-Pro',
       fontWeight: FontWeight.w400,
       height: 1.38,
-      letterSpacing: Platform.isIOS ? -0.08 : 0.058,
+      letterSpacing: Platform.isIOS ? -0.08 : 0.3,
     ),
   );
 }
