@@ -46,7 +46,10 @@ class WorldMapState extends ConsumerState<WorldMap> {
 
   // temporary: GooglePlex position
   static const CameraPosition initialPos = CameraPosition(
-    target: LatLng(37.422131, -122.084801),
+    target: LatLng(
+      37.625664164,
+      127.073833038,
+    ),
     zoom: 6,
   );
 
