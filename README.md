@@ -16,18 +16,18 @@ Google Developer Group on Campus : SEOULTECH
 
 <hr />
 
-## ⚠️ API Keys are not included in this repository
+## ⚠️ API keys are not included in this repository
+To run this app from the source code, please follow the instructions below:
 
-To run this app from code, follow these instructions:
+- Check the submitted prototype folder.
+  - Note: This folder is provided only to the judges.
+- Add `.env` file to the root directory of the `Ploop-FE/` folder.
 
-- Please check submitted prototype folder.
-- Add `.env` file at the root directory of the `Ploop-FE/` folder.
-- Follow the next instructions for each platform.
+Alternatively, you can use your own client IDs and API keys.
+Follow the platform-specific instructions below:
 
 ### iOS
-
-Add `GoogleService-Info.plist` file into `Ploop-FE/ios/Runner` folder.
+Add the `GoogleService-Info.plist` file to the `Ploop-FE/ios/Runner` folder.
 
 ### Android
-
-Add `google-services.json` file into `Ploop-FE/android/app` folder.
+Add the `google-services.json` file to the `Ploop-FE/android/app` folder.
